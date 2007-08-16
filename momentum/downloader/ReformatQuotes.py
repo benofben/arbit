@@ -14,9 +14,10 @@ def ReformatQuoteFile(symbol):
             quotes.append([secondsSince1970, Open, High, Low, Close, Volume, AdjClose])
     inputFile.close()
 
-    #if the IPO was later than TIBX
-    if(quotes[len(quotes)-1][0]>1009947600.0):
-        print "Symbol failed because IPO was too recent."
+    #if the IPO was later than 2002, sorry google
+    ipoTime = time.mktime(time.strptime("2002-1-2", "%Y-%m-%d"))
+    if(quotes[len(quotes)-1][0]>ipoTime):
+        print "Symbol failed because IPO was too recent: " + str(time.ctime(quotes[len(quotes)-1][0]))
         return False
 
     quotes=sorted(quotes, key=operator.itemgetter(0))

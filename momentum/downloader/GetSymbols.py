@@ -1,12 +1,10 @@
-import httplib
-import csv
-
 # Q = NASDAQ, 1 = AMEX, N = NYSE
 exchangeList = ["Q", "1", "N"]
 
 # Dictionary holds a bunch of Symbol and MarketValue
 SymbolDictionary={}
 
+import httplib
 def getSymbolLists(exchange):    
     print "Trying to get exchange " + exchange + "..."
     conn = httplib.HTTPConnection("www.nasdaq.com")
@@ -42,7 +40,8 @@ def writeSymbolToDictionary(Symbol, MarketValue):
         MarketValue=cleanUpMarketValue(MarketValue)
         Symbol = Symbol.replace('^','.')
         SymbolDictionary[Symbol]=MarketValue
-    
+
+import csv
 def getSymbolList(exchange):
     filename = "data/symbols/" + exchange + ".csv"
     inputFile = open(filename, "rb")
@@ -58,12 +57,11 @@ def getSymbolList(exchange):
     inputFile.close()
 
 def printMarketValues(SymbolDictionary):
-    filename="data/marketValue.csv"
+    filename="data/symbols/marketValue.csv"
     outputFile = open(filename, "w")
     for Symbol in SymbolDictionary.keys():
         outputFile.write(Symbol + "," + SymbolDictionary[Symbol] + "\n")
     outputFile.close()
-
 
 import os
 def getSymbols():
@@ -85,6 +83,4 @@ def getSymbols():
 
     printMarketValues(SymbolDictionary)
     
-    print "Saved " + str(i) + " symbols."    
-
-getSymbols()
+    print "Saved " + str(i) + " symbols."

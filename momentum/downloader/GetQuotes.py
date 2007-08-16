@@ -1,20 +1,27 @@
 import httplib
-
+import datetime
+import time
 def getHistoricData(symbol):
     print "Downloading historical data for " + symbol + "..."
     conn = httplib.HTTPConnection("ichart.finance.yahoo.com")
 
     """
     Notes on the yahoo parameters:
-    d=end month-1 (5 = June)
+    d=end month-1
     e=end day
     f=end year
     g=d?
     a=start month-1 (0 = January)
-    b=start day
-    c=start year
-    """ 
-    conn.request("GET", "/table.csv?s=" + symbol + "&d=5&e=17&f=2007&g=d&a=0&b=1&c=2002&ignore=.csvc")
+    b=start day (2)
+    c=start year (2002)
+    """
+    
+    today = datetime.date.today()
+    year = today.strftime("%Y")
+    month = str(int(today.strftime("%m"))-1)
+    day = today.strftime("%d")
+
+    conn.request("GET", "/table.csv?s=" + symbol + "&d=" + month + "&e=" + day + "&f=" + year + "&g=d&a=0&b=2&c=2002&ignore=.csvc")
     response = conn.getresponse()
     print response.status, response.reason
     data = response.read()
