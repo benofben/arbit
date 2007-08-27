@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0">
+
+  <operator name="Root" class="Process">
+      <parameter key="resultfile"	value="C:\momentum\rapidMiner\First Try\rootResults.xml"/>
+      <operator name="ArffExampleSource (Train)" class="ArffExampleSource">
+          <parameter key="data_file"	value="C:\momentum\data\weka\trainBEAS.arff"/>
+          <parameter key="label_attribute"	value="label"/>
+      </operator>
+      <operator name="WrapperXValidation" class="WrapperXValidation">
+          <parameter key="number_of_validations"	value="3"/>
+          <parameter key="sampling_type"	value="linear sampling"/>
+          <operator name="FeatureSelection" class="FeatureSelection">
+              <operator name="NaiveBayes" class="NaiveBayes">
+                  <parameter key="keep_example_set"	value="true"/>
+              </operator>
+              <operator name="ModelApplier" class="ModelApplier">
+                  <list key="application_parameters">
+                  </list>
+              </operator>
+              <operator name="ClassificationPerformance" class="ClassificationPerformance">
+                  <list key="class_weights">
+                    <parameter key="Good"	value="1.0"/>
+                    <parameter key="Bad"	value="10.0"/>
+                  </list>
+                  <parameter key="keep_example_set"	value="true"/>
+                  <parameter key="main_criterion"	value="weighted_mean_precision"/>
+                  <parameter key="weighted_mean_precision"	value="true"/>
+              </operator>
+          </operator>
+          <operator name="NaiveBayes (2)" class="NaiveBayes">
+              <parameter key="keep_example_set"	value="true"/>
+          </operator>
+          <operator name="OperatorChain" class="OperatorChain">
+              <operator name="ModelApplier (2)" class="ModelApplier">
+                  <list key="application_parameters">
+                  </list>
+              </operator>
+              <operator name="ClassificationPerformance (2)" class="ClassificationPerformance">
+                  <list key="class_weights">
+                  </list>
+                  <parameter key="keep_example_set"	value="true"/>
+              </operator>
+          </operator>
+      </operator>
+  </operator>
+
+</process>

@@ -1,0 +1,12 @@
+<operator name="Root" class="Process">
+  <description text="#ylt#p#ygt#Stratified sampling samples examples with the same class distribution as the original data set.#ylt#/p#ygt#"/>
+  <operator name="ExampleSetGenerator" class="ExampleSetGenerator">
+    <parameter key="number_examples"	value="200"/>
+    <parameter key="number_of_attributes"	value="2"/>
+    <parameter key="target_function"	value="random dots classification"/>
+  </operator>
+  <operator name="StratifiedSampling" class="StratifiedSampling">
+    <parameter key="sample_ratio"	value="0.2"/>
+  </operator>
+</operator>
+

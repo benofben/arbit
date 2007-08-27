@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta">
+
+  <operator name="Root" class="Process">
+      <description text="#ylt#p#ygt#This experiment loads a data set containing missing values. The following operator is the ExampleFilter operator which is able to filter out examples fulfilling a given condition. In this case, only examples without missing values should be kept. Unfortunately, only one example is kept which isn't actually very useful for learning purposes :-) #ylt#/p#ygt##ylt#p#ygt#Another useful possibility of this operator is to filter the data set according to values of a single attribute, e.g. to keep only those examples where a certain attribute is greater than, let's say, 5. You can specify several attribute value conditions with || for a logical OR and you can use several ExampleFilter operators in order to simulate a logical AND.
+#ylt#/p#ygt#"/>
+      <operator name="ExampleSource" class="ExampleSource">
+          <parameter key="attributes"	value="../data/labor-negotiations.aml"/>
+      </operator>
+      <operator name="ExampleFilter" class="ExampleFilter">
+          <parameter key="condition_class"	value="no_missing_attributes"/>
+      </operator>
+  </operator>
+
+</process>

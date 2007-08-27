@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="3.4.1">
+
+  <operator name="Root" class="Process">
+      <parameter key="logverbosity"	value="warning"/>
+      <operator name="ExampleSource" class="ExampleSource">
+          <parameter key="attributes"	value="../data/iris.aml"/>
+      </operator>
+      <operator name="AgglomerativeFlatClustering" class="AgglomerativeFlatClustering">
+          <parameter key="k"	value="3"/>
+          <parameter key="mode"	value="CompleteLink"/>
+      </operator>
+      <operator name="SVDReduction" class="SVDReduction">
+      </operator>
+  </operator>
+
+</process>

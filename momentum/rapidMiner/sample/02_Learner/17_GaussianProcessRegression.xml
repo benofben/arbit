@@ -1,0 +1,35 @@
+<operator name="Root" class="Process">
+  <operator name="ExampleSetGenerator" class="ExampleSetGenerator">
+    <parameter key="number_examples"	value="1000"/>
+    <parameter key="number_of_attributes"	value="1"/>
+    <parameter key="sinc_noise_weight"	value="0.3"/>
+    <parameter key="target_function"	value="sinc"/>
+  </operator>
+  <operator name="NoiseGenerator" class="NoiseGenerator">
+    <parameter key="label_noise"	value="0.1"/>
+    <list key="noise">
+    </list>
+  </operator>
+  <operator name="XVal" class="XValidation">
+    <parameter key="number_of_validations"	value="3"/>
+    <operator name="GPLearner" class="GPLearner">
+      <parameter key="kernel_rbf_lengthscale"	value="2.0"/>
+    </operator>
+    <operator name="ApplierChain" class="OperatorChain">
+      <operator name="Test" class="ModelApplier" breakpoints="after">
+        <list key="application_parameters">
+        </list>
+      </operator>
+      <operator name="Evaluation" class="PerformanceEvaluator">
+        <parameter key="absolute"	value="true"/>
+        <list key="additional_performance_criteria">
+        </list>
+        <parameter key="main_criterion"	value="scaled"/>
+        <parameter key="relative"	value="true"/>
+        <parameter key="scaled"	value="true"/>
+        <parameter key="squared"	value="true"/>
+      </operator>
+    </operator>
+  </operator>
+</operator>
+

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="3.4.1">
+
+  <operator name="Root" class="Process">
+      <parameter key="logverbosity"	value="warning"/>
+      <operator name="ExampleSource" class="ExampleSource">
+          <parameter key="attributes"	value="../data/iris.aml"/>
+      </operator>
+      <operator name="KMeans" class="KMeans">
+          <parameter key="k"	value="3"/>
+      </operator>
+      <operator name="IOConsumer" class="IOConsumer">
+          <parameter key="io_object"	value="ClusterModel"/>
+      </operator>
+      <operator name="ChangeAttributeType" class="ChangeAttributeType">
+          <parameter key="name"	value="cluster"/>
+          <parameter key="target_type"	value="label"/>
+      </operator>
+      <operator name="DecisionTree" class="DecisionTree">
+          <parameter key="min_set_size"	value="3"/>
+      </operator>
+  </operator>
+
+</process>

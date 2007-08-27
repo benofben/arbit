@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta">
+<operator name="Root" class="Process">
+    <description text="This operator loads csv data from a file. This data format can for example be exported from Excel. Please note that the first line must contain the attribute names. The label attribute is given as a parameter. "/>
+    <operator name="CSVExampleSource" class="CSVExampleSource">
+        <parameter key="filename"	value="../data/golf.csv"/>
+        <parameter key="label_name"	value="Play"/>
+    </operator>
+</operator>
+</process>
+

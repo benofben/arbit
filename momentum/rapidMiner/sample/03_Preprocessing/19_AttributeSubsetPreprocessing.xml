@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta2">
+
+  <operator name="Root" class="Process">
+      <description text="#ylt#p#ygt#The operator AttributeSubsetPreprocessing is a very powerful extension to the preprocessing operators of RapidMiner. It can be used to perform one or several inner preprocessing operators only on a subset of features. #ylt#/p#ygt##ylt#p#ygt#In this setup, the attribute #yquot#Temperature#yquot# is normalized (but not the other numerical attribute Humidity) and the attribute #yquot#Humidity#yquot# is discretized (but not the other numerical attribute Temperature). The operator can also be used in order to perform a certain preprocessing also on special attributes like the label. For this, you have to activate the parameter #yquot#process_special_attributes#yquot#.
+#ylt#/p#ygt#"/>
+      <operator name="ExampleSource" class="ExampleSource">
+          <parameter key="attributes"	value="C:\home\ingo\workspace\yale\sample\data\golf.aml"/>
+      </operator>
+      <operator name="NormalizationOnTemperature" class="AttributeSubsetPreprocessing">
+          <parameter key="attribute_name_regex"	value="Temperature"/>
+          <operator name="Normalization" class="Normalization">
+          </operator>
+      </operator>
+      <operator name="DiscretizationOnHumidity" class="AttributeSubsetPreprocessing">
+          <parameter key="attribute_name_regex"	value="Humidity"/>
+          <operator name="FrequencyDiscretization" class="FrequencyDiscretization">
+              <parameter key="number_of_bins"	value="3"/>
+          </operator>
+      </operator>
+  </operator>
+
+</process>

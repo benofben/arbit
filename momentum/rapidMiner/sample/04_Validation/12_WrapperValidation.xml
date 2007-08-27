@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta2">
+
+  <operator name="Root" class="Process">
+      <description text="#ylt#p#ygt# Just as for learning, it is also possible that overfitting occurs during preprocessing. In order to estimate the generalization performance of a preprocessing method RapidMiner supports several validation operators for preprocessing steps. The basic idea is the same as for all other validation operators with a slight difference: the first inner operator must produce a transformed example set, the second must produce a model from this transformed data set and the third operator must produce a performance vector of this model on a hold-out test set transformed in the same way.  #ylt#/p#ygt# #ylt#p#ygt#This is a more complex experiment which demonstrates RapidMiner's capability to build experiments from already known building blocks. In this experiment a special variant of a cross validation operator is used to estimate the performance of a feature space transformation, i.e. the simple feature forward selection in this case.#ylt#/p#ygt# #ylt#p#ygt#The complete feature selection block is now the first inner operator of a #ylt#i#ygt#WrapperXValidation#ylt#/i#ygt# which like normal crossvalidation uses a subset for feature space transformation (selection here) and learning based on the determined feature set. A second applier chain is used to estimate the performance on a test set which was not used for learning and feature selection. The estimated performance and an attribute weights vector is returned as result.#ylt#/p#ygt# #ylt#p#ygt#Please note the #ylt#i#ygt#MinMaxWrapper#ylt#/i#ygt# after the inner performance evaluator. This operator encapsulate the given performance criteria in such a way that no longer only average values but also minimum values are calculated during cross validation. Arbitrarily weighted linear combinations of the minimum and the normal average leads to far better generalization capabilities. Just change the weighting parameter to 0.0 or disable the operator in the context menu or delete it from the experiment to see the effect. The performance decreases rapidly when only the average performance is used as selection criterion.#ylt#/p#ygt#"/>
+      <operator name="ExampleSetGenerator" class="ExampleSetGenerator">
+          <parameter key="number_examples"	value="60"/>
+          <parameter key="number_of_attributes"	value="3"/>
+          <parameter key="target_function"	value="sum"/>
+      </operator>
+      <operator name="NoiseGenerator" class="NoiseGenerator">
+          <list key="noise">
+          </list>
+          <parameter key="random_attributes"	value="3"/>
+      </operator>
+      <operator name="WrapperXValidation" class="WrapperXValidation">
+          <parameter key="sampling_type"	value="shuffled sampling"/>
+          <operator name="FeatureSelection" class="FeatureSelection">
+              <operator name="FSXValidation" class="XValidation">
+                  <parameter key="sampling_type"	value="shuffled sampling"/>
+                  <operator name="FSLearner" class="JMySVMLearner">
+                  </operator>
+                  <operator name="FSOperatorChain" class="OperatorChain">
+                      <operator name="FSModelApplier" class="ModelApplier">
+                          <list key="application_parameters">
+                          </list>
+                      </operator>
+                      <operator name="FSEvaluation" class="RegressionPerformance">
+                          <parameter key="squared_error"	value="true"/>
+                      </operator>
+                      <operator name="FSMinMaxWrapper" class="MinMaxWrapper">
+                          <parameter key="minimum_weight"	value="0.5"/>
+                      </operator>
+                  </operator>
+              </operator>
+          </operator>
+          <operator name="Learner" class="JMySVMLearner">
+          </operator>
+          <operator name="OperatorChain" class="OperatorChain">
+              <operator name="ModelApplier" class="ModelApplier">
+                  <list key="application_parameters">
+                  </list>
+              </operator>
+              <operator name="WrapperEvaluation" class="RegressionPerformance">
+                  <parameter key="squared_error"	value="true"/>
+              </operator>
+          </operator>
+      </operator>
+  </operator>
+
+</process>

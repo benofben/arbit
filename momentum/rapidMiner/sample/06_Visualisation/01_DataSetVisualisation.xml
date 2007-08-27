@@ -1,0 +1,8 @@
+<operator name="Root" class="Process">
+  <description text="RapidMiner already provides several plotters in order to visualize the properties of a data set. Each time an ExampleSet is part of the (intermediate) result, the user can select between meta data view, data view and plot view. The plot view provides several 2D and 3D plotters, histogram plots, and other plotters for high-dimensional data sets like survey or parallel plots."/>
+  <operator name="ArffExampleSource" class="ArffExampleSource">
+    <parameter key="data_file"	value="../data/iris.arff"/>
+    <parameter key="label_attribute"	value="class"/>
+  </operator>
+</operator>
+

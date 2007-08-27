@@ -1,0 +1,20 @@
+<operator name="Root" class="Process">
+    <description text="#ylt#p#ygt#This learner creates a neural network allowing numerical predictions for 
+the loaded data set. RapidMiner provides an operator NeuralNet which can be used 
+to learn such a network. Please check the parameters of this operator 
+(tool tip text after holding the mouse pointer a few seconds above the 
+parameter) for further information about the parameters.#ylt#/p#ygt#
+
+#ylt#p#ygt#After this experiment was finished the model is shown which represents 
+the learned neural network. The connections between nodes are painted
+darker if the connection weight is high. You can click on a node in this
+visualization in order to see the actual weights.#ylt#/p#ygt#"/>
+    <operator name="ExampleSource" class="ExampleSource">
+        <parameter key="attributes"	value="../data/polynomial.aml"/>
+    </operator>
+    <operator name="NeuralNet" class="NeuralNet">
+        <list key="hidden_layer_types">
+        </list>
+    </operator>
+</operator>
+

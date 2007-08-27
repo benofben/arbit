@@ -1,0 +1,63 @@
+clear all
+symbols = textread('C:\momentum\data\symbols\successfullyReformattedSymbols.txt', '%s');
+
+% need to find out how much data we have...
+symbol='BEAS'
+filename = strcat('C:\momentum\data\train\', symbol, '.csv');
+stock=load(filename);
+openPrice=stock(:,2);
+
+test_capital=25000;
+fid = fopen('C:\momentum\data\foo2.csv','w');
+
+for time=243:size(openPrice,1)
+    for i=1:size(symbols,1)
+        symbol=symbols{i};
+
+        fprintf('Processing symbol %s for time %i with capital %i.\n', symbol, time, test_capital);
+        filename = strcat('C:\momentum\data\train\', symbol, '.csv');
+        stock=load(filename);
+
+        openPrice=stock(:,2);
+        highPrice=stock(:,3);
+        lowPrice=stock(:,4);
+        closePrice=stock(:,5);
+
+        % train
+        capital(i)=1;
+        for t=time-242:time-1
+            l1=(highPrice(t)-openPrice(t))/openPrice(t);
+
+            if(l1>0.02)
+                capital(i)=capital(i)*1.02;
+            else
+                badDay=(closePrice(t)-openPrice(t))/openPrice(t);
+                capital(i)=capital(i)*(1+badDay);
+            end
+        end
+    end
+
+    % test
+    [y,i]=max(capital);
+    symbol=symbols{i};
+
+    filename = strcat('C:\momentum\data\train\', symbol, '.csv');
+    stock=load(filename);
+
+    openPrice=stock(:,2);
+    highPrice=stock(:,3);
+    lowPrice=stock(:,4);
+    closePrice=stock(:,5);
+
+    l1=(highPrice(time)-openPrice(time))/openPrice(time);
+    if(l1>0.02)
+        test_capital=test_capital*1.02;
+    else
+        badDay=(closePrice(time)-openPrice(time))/openPrice(time);
+        test_capital=test_capital*(1+badDay);
+    end
+    
+    fprintf(fid, '%i, %s, %i\n', time, symbolsi), test_capital);
+end
+
+fclose(fid);

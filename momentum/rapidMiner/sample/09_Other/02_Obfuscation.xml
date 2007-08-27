@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta">
+<operator name="Root" class="Process">
+  <description text="#ylt#p#ygt# Replaces all nominal values and attribute names with random strings. This can be used to anonymize your data. The obfuscation map can be written to file and be used by a DeObfuscator to map the values and names back to the original values. #ylt#/p#ygt# #ylt#p#ygt# You can use a breakpoint after the obfuscator to check that the values were changed. #ylt#/p#ygt# "/>
+  <parameter key="logverbosity"	value="warning"/>
+  <operator name="ExampleSource" class="ExampleSource">
+    <parameter key="attributes"	value="../data/golf.aml"/>
+  </operator>
+  <operator name="Obfuscator" class="Obfuscator">
+    <parameter key="obfuscation_map_file"	value="obfuscating.obf"/>
+  </operator>
+  <operator name="DeObfuscator" class="DeObfuscator">
+    <parameter key="obfuscation_map_file"	value="obfuscating.obf"/>
+  </operator>
+</operator>
+</process>
+

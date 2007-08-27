@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta2">
+
+  <operator name="Root" class="Process">
+      <description text="#ylt#p#ygt#The operator AttributeSubsetPreprocessing is a very powerful extension to the preprocessing operators of RapidMiner. It can be used to perform one or several inner preprocessing operators only on a subset of features (previous process setup).
+#ylt#/p#ygt##ylt#p#ygt#In this setup, all attributes are processed including the special attribute #yquot#label#yquot#. The regular expression for the attribute name is set to #yquot#.*#yquot# indicating that arbitrary attribute names will match. Since the parameter #yquot#process_special_attributes#yquot# is also activated, the inner discretization operator will also be applied to the special attribute label transforming the regression task into a classification task on nominal attributes.
+#ylt#/p#ygt#"/>
+      <operator name="ExampleSetGenerator" class="ExampleSetGenerator">
+          <parameter key="target_function"	value="sum"/>
+      </operator>
+      <operator name="DiscretizationOnSpecialAttributes" class="AttributeSubsetPreprocessing">
+          <parameter key="attribute_name_regex"	value=".*"/>
+          <parameter key="process_special_attributes"	value="true"/>
+          <operator name="FrequencyDiscretization" class="FrequencyDiscretization">
+              <parameter key="number_of_bins"	value="3"/>
+          </operator>
+      </operator>
+  </operator>
+
+</process>

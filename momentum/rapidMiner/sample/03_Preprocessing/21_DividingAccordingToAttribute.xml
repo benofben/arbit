@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta2">
+
+  <operator name="Root" class="Process">
+      <operator name="ExampleSource" class="ExampleSource">
+          <parameter key="attributes"	value="../data/golf.aml"/>
+      </operator>
+      <operator name="SplittingChain" class="OperatorChain">
+          <operator name="IOMultiplier" class="IOMultiplier">
+              <parameter key="io_object"	value="ExampleSet"/>
+          </operator>
+          <operator name="FirstFilter" class="ExampleFilter">
+              <parameter key="condition_class"	value="attribute_value_filter"/>
+              <parameter key="parameter_string"	value="Wind=true"/>
+          </operator>
+          <operator name="IOSelector" class="IOSelector">
+              <parameter key="io_object"	value="ExampleSet"/>
+              <parameter key="select_which"	value="2"/>
+          </operator>
+          <operator name="SecondFilter" class="ExampleFilter">
+              <parameter key="condition_class"	value="attribute_value_filter"/>
+              <parameter key="parameter_string"	value="Wind=false"/>
+          </operator>
+      </operator>
+  </operator>
+
+</process>

@@ -1,0 +1,14 @@
+<operator name="Root" class="Process">
+  <description text="#ylt#p#ygt#This experiment loads the learned model of the previous experiment. Another data set is also loaded and the model is applied to the input data. After performing this experiment the result tab shows an example set with a prediction column.#ylt#/p#ygt#  #ylt#p#ygt#Try the following:#ylt#/p#ygt# #ylt#ul#ygt# #ylt#li#ygt#Right click on the model loader in the tree view and set a breakpoint after this operator (or double click on the operator). When you change into the result view after reaching the breakpoint, you can see both the input example set and the loaded model. Finish the experiment by pressing on the resume button.#ylt#/li#ygt# #ylt#li#ygt# Remove the breakpoint (either from the context menu or by double clicking again) and select the model loader operator in the tree view. You can now drag the operator and move it to a new position by dropping it before the input operator. Start the experiment. The result is the same, the sequence of operators does not matter for the model applier until both desired input types (example set and a model) are delivered.#ylt#/li#ygt# #ylt#li#ygt#Select the Input operator in the tree view. Press the icon with the user symbol or with the graduated person in the icon bar. The number of parameters has changed. RapidMiner provides two user modes. In expert mode all parameters of the operators are shown. In beginner mode only the most important parameters are displayed.#ylt#table#ygt# #ylt#tr#ygt##ylt#td#ygt##ylt#icon#ygt#24/graduate#ylt#/icon#ygt##ylt#/td#ygt##ylt#td#ygt##ylt#i#ygt#Switches the expert mode on (all parameters are shown).#ylt#/i#ygt##ylt#/td#ygt##ylt#/tr#ygt# #ylt#tr#ygt##ylt#td#ygt##ylt#icon#ygt#24/user1#ylt#/icon#ygt##ylt#/td#ygt##ylt#td#ygt##ylt#i#ygt#Switches the expert mode off (#yquot#beginners#yquot# mode, only the most important parameters are shown).#ylt#/i#ygt##ylt#/td#ygt##ylt#/tr#ygt# #ylt#/table#ygt# #ylt#/li#ygt#  #ylt#/ul#ygt#"/>
+  <operator name="Input" class="ExampleSource">
+    <parameter key="attributes"	value="../data/golf.test.aml"/>
+  </operator>
+  <operator name="ModelLoader" class="ModelLoader">
+    <parameter key="model_file"	value="model.mod"/>
+  </operator>
+  <operator name="Applier" class="ModelApplier">
+    <list key="application_parameters">
+    </list>
+  </operator>
+</operator>
+

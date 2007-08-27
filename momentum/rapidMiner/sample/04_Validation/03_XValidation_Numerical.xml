@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta2">
+
+  <operator name="Root" class="Process">
+      <description text="#ylt#p#ygt# In many cases not the learned model is of interest but the accuracy of the model. One possible solution to estimate the predictiveness of the learned model is to apply it to labeled test data and calculate the number of prediction errors (or other performance criteria). Since labeled data is rare, other approaches to estimate the performance of a learning scheme are often used. This experiment demonstrates #yquot#cross validation#yquot# in RapidMiner.#ylt#/p#ygt#  #ylt#table#ygt# #ylt#tr#ygt# #ylt#td#ygt##ylt#icon#ygt#groups/24/validation#ylt#/icon#ygt##ylt#/td#ygt# #ylt#td#ygt##ylt#p#ygt#Cross validation divides the labelled data in training and test sets. Models are learned on training data and applied on test data. The prediction errors are calculated and averaged for all subsets. This building block can be used as inner operator for several wrappers like feature generation / selection operators. #ylt#/p#ygt##ylt#/td#ygt# #ylt#/tr#ygt# #ylt#/table#ygt#    #ylt#p#ygt# This is the first example of a more complex experiment. The operators build a tree structure. For now it is enough to accept that the cross validation operator demands an example set as input and delivers a vector of performance values as output. Additionally it manages the division into training and test examples. The training examples are used as input for the training learner which delivers a model. This model and the test examples form the input of the applier chain which delivers the performance for this test set. The results for all possible test sets are collected by the cross validation operator. Finally the average is built and delivered as result. #ylt#/p#ygt#     #ylt#p#ygt#One of the hardest things for the RapidMiner beginner is often to get an idea of the #ylt#b#ygt#data flow#ylt#/b#ygt#. The solution is surprisingly simple: the data flow resembles a depth-first-search through the tree structure. For example, after processing the training set with the first child of the cross validation the learned model, is delivered to the second child (the applier chain). This basic data flow idea is always the same for all experiments and thinking in this flow will become very convenient for the experienced user.#ylt#/p#ygt# #ylt#p#ygt#Try the following:#ylt#/p#ygt# #ylt#ul#ygt##ylt#li#ygt#Start the experiment. The result is a performance estimation of the learning scheme on the input data.#ylt#/li#ygt#  #ylt#li#ygt#Select the Evaluation operator and select other performance criteria. The main criterion is used for performance comparisons, for example in a wrapper.#ylt#/li#ygt#  #ylt#li#ygt#Replace the cross validation #yquot#XVal#yquot# by other evaluation schemes and run the experiment with them. Alternatively you can check how other learners perform on this data and replace the Training operator.#ylt#/li#ygt##ylt#/ul#ygt#"/>
+      <operator name="Input" class="ExampleSource">
+          <parameter key="attributes"	value="../data/polynomial.aml"/>
+      </operator>
+      <operator name="XVal" class="XValidation">
+          <parameter key="sampling_type"	value="shuffled sampling"/>
+          <operator name="Training" class="LibSVMLearner">
+              <parameter key="C"	value="1000.0"/>
+              <list key="class_weights">
+              </list>
+              <parameter key="kernel_type"	value="poly"/>
+              <parameter key="svm_type"	value="epsilon-SVR"/>
+          </operator>
+          <operator name="ApplierChain" class="OperatorChain">
+              <operator name="Test" class="ModelApplier">
+                  <list key="application_parameters">
+                  </list>
+              </operator>
+              <operator name="Evaluation" class="RegressionPerformance">
+                  <parameter key="absolute_error"	value="true"/>
+                  <parameter key="correlation"	value="true"/>
+                  <parameter key="normalized_absolute_error"	value="true"/>
+                  <parameter key="relative_error"	value="true"/>
+                  <parameter key="root_mean_squared_error"	value="true"/>
+                  <parameter key="root_relative_squared_error"	value="true"/>
+                  <parameter key="squared_error"	value="true"/>
+              </operator>
+          </operator>
+      </operator>
+  </operator>
+
+</process>

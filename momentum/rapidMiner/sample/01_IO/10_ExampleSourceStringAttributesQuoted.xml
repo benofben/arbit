@@ -1,0 +1,8 @@
+<operator name="Root" class="Process">
+  <description text="This experiment is the same as #yquot#01_ExampleSource.xml#yquot#. The attribute values contain more than one string. In this case the values are not separated by a tabular or another character which is not contained in the attribute values, but are grouped by quotes. This must be indicated by using the ExampleSource parameter #yquot#use_quotes#yquot#. However, since quoting might slow down the data reading, it is not recommended to use quotes at all."/>
+  <operator name="Input" class="ExampleSource">
+    <parameter key="attributes"	value="../data/string_attribute_quoted.aml"/>
+    <parameter key="use_quotes"	value="true"/>
+  </operator>
+</operator>
+

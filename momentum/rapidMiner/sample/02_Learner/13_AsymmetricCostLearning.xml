@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0">
+
+  <operator name="Root" class="Process">
+      <description text="#ylt#p#ygt#This experiment demonstrates how a threshold can be obtained from a soft classifier and applied to an independent test set.#ylt#/p#ygt##ylt#ol#ygt##ylt#li#ygt#The learner used in this experiment makes soft predictions instead of crisp classifications.  The prediction confidences delivered by all learners in RapidMiner which are able to handle nominal labels (classification) will be used as soft predictions. #ylt#br#ygt##ylt#icon#ygt#groups/24/learner#ylt#/icon#ygt##ylt#/li#ygt##ylt#li#ygt#The ThresholdFinder is used to determine the best threshold with respect to class weights. In this case, a wrong classification of the first class (negative) will cause costs five times bigger than the other error. #ylt#br#ygt##ylt#icon#ygt#groups/24/postprocessing#ylt#/icon#ygt##ylt#/li#ygt##ylt#li#ygt#Please note that a ModelApplier must be performed on the test set before a threshold can be found. Since this model must be applied again later, the model applier keeps the input model. #ylt#br#ygt##ylt#icon#ygt#operators/24/model_applier#ylt#/icon#ygt##ylt#/li#ygt##ylt#li#ygt#The IOConsumer ensures that the prediction is made on the correct data set.  #ylt#br#ygt##ylt#icon#ygt#operators/24/io_consumer#ylt#/icon#ygt##ylt#/li#ygt##ylt#li#ygt#The last steps apply the model and the threshold on the data set at hand. #ylt#br#ygt##ylt#icon#ygt#groups/24/validation#ylt#/icon#ygt##ylt#/li#ygt##ylt#/ol#ygt#"/>
+      <parameter key="logverbosity"	value="status"/>
+      <parameter key="random_seed"	value="1903"/>
+      <operator name="TrainingSetGenerator" class="ExampleSetGenerator">
+          <parameter key="number_of_attributes"	value="20"/>
+          <parameter key="target_function"	value="polynomial classification"/>
+      </operator>
+      <operator name="NearestNeighbors" class="NearestNeighbors">
+          <parameter key="k"	value="10"/>
+      </operator>
+      <operator name="TestSetGenerator" class="ExampleSetGenerator">
+          <parameter key="number_of_attributes"	value="20"/>
+          <parameter key="target_function"	value="polynomial classification"/>
+      </operator>
+      <operator name="TestModelApplier" class="ModelApplier">
+          <list key="application_parameters">
+          </list>
+          <parameter key="keep_model"	value="true"/>
+      </operator>
+      <operator name="ThresholdFinder" class="ThresholdFinder">
+          <parameter key="misclassification_costs_second"	value="2.0"/>
+      </operator>
+      <operator name="IOConsumer" class="IOConsumer">
+          <parameter key="io_object"	value="ExampleSet"/>
+      </operator>
+      <operator name="ApplySetGenerator" class="ExampleSetGenerator">
+          <parameter key="number_examples"	value="200"/>
+          <parameter key="number_of_attributes"	value="20"/>
+          <parameter key="target_function"	value="polynomial classification"/>
+      </operator>
+      <operator name="ApplyModelApplier" class="ModelApplier">
+          <list key="application_parameters">
+          </list>
+      </operator>
+      <operator name="ThresholdApplier" class="ThresholdApplier">
+      </operator>
+      <operator name="Performance" class="Performance">
+      </operator>
+  </operator>
+
+</process>

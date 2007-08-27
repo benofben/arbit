@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta">
+<operator name="Root" class="Process">
+  <description text="#ylt#p#ygt#Please note that you have to configure some database parameters before this experiment can be used. Please refer to the documentation of the DatabaseExampleSource operator or to the other DatabaseExampleSource sample experiment for more information.#ylt#/p#ygt# #ylt#p#ygt#This is an example for working directly on databases (the parameter #yquot#work_on_databases#yquot# of the DatabaseExampleSource operator was checked). If you encounter any problems with this working mode you should not check this parameter which will cause RapidMiner to load the example set from the database into main memory.#ylt#/p#ygt#
+#ylt#p#ygt#Please note that for the #yquot#work_on_databases#yquot# mode it is not allowed to specify arbitrary SQL query statements but all data must be derived from one table specified with the parameter table_name. For most database systems it is necessary that this table contains a primary key column in order to work properly.#ylt#/p#ygt#"/>
+  <parameter key="logverbosity"	value="minimum"/>
+  <operator name="Input" class="DatabaseExampleSource">
+    <parameter key="database_url"	value="jdbc:mysql://serverNameOrIP:port/database"/>
+    <parameter key="id_attribute"	value="COLUMN_ID"/>
+    <parameter key="label_attribute"	value="COLUMN_LABEL"/>
+    <parameter key="table_name"	value="TABLE_NAME"/>
+    <parameter key="username"	value="testuser"/>
+    <parameter key="work_on_database"	value="true"/>
+  </operator>
+  <operator name="XValidation" class="XValidation">
+    <parameter key="leave_one_out"	value="true"/>
+    <operator name="Training" class="J48">
+    </operator>
+    <operator name="ApplierChain" class="OperatorChain">
+      <operator name="Applier" class="ModelApplier">
+        <list key="application_parameters">
+        </list>
+      </operator>
+      <operator name="Evaluation" class="PerformanceEvaluator">
+        <parameter key="accuracy"	value="true"/>
+        <list key="additional_performance_criteria">
+        </list>
+        <parameter key="classification_error"	value="true"/>
+        <parameter key="fallout"	value="true"/>
+        <parameter key="false_negative"	value="true"/>
+        <parameter key="false_positive"	value="true"/>
+        <parameter key="main_criterion"	value="accuracy"/>
+        <parameter key="precision"	value="true"/>
+        <parameter key="recall"	value="true"/>
+        <parameter key="true_negative"	value="true"/>
+        <parameter key="true_positive"	value="true"/>
+      </operator>
+    </operator>
+  </operator>
+</operator>
+</process>

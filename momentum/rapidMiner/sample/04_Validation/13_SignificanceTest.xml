@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta2">
+
+  <operator name="Root" class="Process">
+      <description text="#ylt#p#ygt#Many RapidMiner operators can be used to estimate the performance of a learner, a preprocessing step, or a feature space on one or several data sets. The result of these validation operators is a performance vector collecting the values of a set of performance criteria. For each criterion, the mean value and standard deviation are given. #ylt#/p#ygt#  #ylt#p#ygt#The question is how these performance vectors can be compared? Statistical significance tests like ANOVA or pairwise t-tests can be used to calculate the probability that the actual mean values are different. #ylt#/p#ygt# #ylt#p#ygt# We assume that you have achieved several performance vectors and want to compare them. In this experiment we use the same data set for both cross validations (hence the IOMultiplier) and estimate the performance of a linear learning scheme and a RBF based SVM. #ylt#/p#ygt# #ylt#p#ygt# Run the experiment and compare the results: the probabilities for a significant difference are equal since only two performance vectors were created. In this case the SVM is probably better suited for the data set at hand since the actual mean values are probably different.#ylt#/p#ygt##ylt#p#ygt#Please note that performance vectors like all other objects which can be passed between RapidMiner operators can be written into and loaded from a file.#ylt#/p#ygt#"/>
+      <operator name="ExampleSetGenerator" class="ExampleSetGenerator">
+          <parameter key="attributes_lower_bound"	value="-40.0"/>
+          <parameter key="attributes_upper_bound"	value="30.0"/>
+          <parameter key="number_examples"	value="80"/>
+          <parameter key="number_of_attributes"	value="1"/>
+          <parameter key="target_function"	value="one variable non linear"/>
+      </operator>
+      <operator name="IOMultiplier" class="IOMultiplier">
+          <parameter key="io_object"	value="ExampleSet"/>
+      </operator>
+      <operator name="XValidation" class="XValidation">
+          <parameter key="sampling_type"	value="shuffled sampling"/>
+          <operator name="LibSVMLearner" class="LibSVMLearner">
+              <parameter key="svm_type"	value="nu-SVR"/>
+          </operator>
+          <operator name="OperatorChain" class="OperatorChain">
+              <operator name="ModelApplier" class="ModelApplier">
+                  <list key="application_parameters">
+                  </list>
+              </operator>
+              <operator name="RegressionPerformance" class="RegressionPerformance">
+                  <parameter key="absolute_error"	value="true"/>
+              </operator>
+          </operator>
+      </operator>
+      <operator name="XValidation (2)" class="XValidation">
+          <parameter key="sampling_type"	value="shuffled sampling"/>
+          <operator name="LinearRegression" class="LinearRegression">
+          </operator>
+          <operator name="OperatorChain (2)" class="OperatorChain">
+              <operator name="ModelApplier (2)" class="ModelApplier">
+                  <list key="application_parameters">
+                  </list>
+              </operator>
+              <operator name="RegressionPerformance (2)" class="RegressionPerformance">
+                  <parameter key="absolute_error"	value="true"/>
+              </operator>
+          </operator>
+      </operator>
+      <operator name="T-Test" class="T-Test">
+      </operator>
+      <operator name="Anova" class="Anova">
+      </operator>
+  </operator>
+
+</process>

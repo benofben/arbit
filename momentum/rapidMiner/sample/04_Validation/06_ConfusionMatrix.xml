@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta2">
+
+  <operator name="Root" class="Process">
+      <description text="The performance criteria accuracy and classification_error produces a confusion matrix for both binary and multi classification tasks. This confusion matrix even holds the information for per-class performance."/>
+      <operator name="ExampleSetGenerator" class="ExampleSetGenerator">
+          <parameter key="number_examples"	value="500"/>
+          <parameter key="number_of_attributes"	value="2"/>
+          <parameter key="target_function"	value="multi classification"/>
+      </operator>
+      <operator name="XValidation" class="XValidation">
+          <operator name="NearestNeighbors" class="NearestNeighbors">
+          </operator>
+          <operator name="OperatorChain" class="OperatorChain">
+              <operator name="ModelApplier" class="ModelApplier">
+                  <list key="application_parameters">
+                  </list>
+              </operator>
+              <operator name="ClassificationPerformance" class="ClassificationPerformance">
+                  <parameter key="accuracy"	value="true"/>
+                  <list key="class_weights">
+                  </list>
+                  <parameter key="kappa"	value="true"/>
+              </operator>
+          </operator>
+      </operator>
+  </operator>
+
+</process>

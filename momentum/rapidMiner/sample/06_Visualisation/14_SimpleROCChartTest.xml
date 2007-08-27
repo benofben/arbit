@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta2">
+
+  <operator name="Root" class="Process">
+      <description text="In this experiment a ROC Chart is created from the learned model and a test set delivered by the SimpleValidation chain. Since the ROCChart operator returns both the data set and the model, the rest of the validation chain can remain as usual and additional performance criteria can be calculated."/>
+      <operator name="ExampleSetGenerator" class="ExampleSetGenerator">
+          <parameter key="number_examples"	value="500"/>
+          <parameter key="number_of_attributes"	value="2"/>
+          <parameter key="target_function"	value="sum classification"/>
+      </operator>
+      <operator name="NoiseGenerator" class="NoiseGenerator">
+          <parameter key="label_noise"	value="0.1"/>
+          <list key="noise">
+          </list>
+          <parameter key="random_attributes"	value="8"/>
+      </operator>
+      <operator name="SimpleValidation" class="SimpleValidation">
+          <operator name="JMySVMLearner" class="JMySVMLearner">
+              <parameter key="C"	value="1.0"/>
+              <parameter key="keep_example_set"	value="true"/>
+          </operator>
+          <operator name="OperatorChain" class="OperatorChain">
+              <operator name="ROCChart" class="ROCChart">
+              </operator>
+              <operator name="ModelApplier" class="ModelApplier">
+                  <list key="application_parameters">
+                  </list>
+              </operator>
+              <operator name="BinominalClassificationPerformance" class="BinominalClassificationPerformance">
+                  <parameter key="AUC"	value="true"/>
+              </operator>
+          </operator>
+      </operator>
+  </operator>
+
+</process>

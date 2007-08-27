@@ -1,0 +1,20 @@
+<operator name="Root" class="Process">
+    <description text="Please run the ParameterOptimization experiment before! The optimal parameter set found in the optimization experiment was written into a file and is loaded in this experiment. The parameter setter uses the parameter set for the LibSVM learning scheme."/>
+    <parameter key="logverbosity"	value="minimum"/>
+    <operator name="Input" class="ExampleSource">
+        <parameter key="attributes"	value="../data/polynomial.aml"/>
+    </operator>
+    <operator name="ParameterLoader" class="ParameterSetLoader">
+        <parameter key="parameter_file"	value="parameters.par"/>
+    </operator>
+    <operator name="ParameterSetter" class="ParameterSetter">
+        <list key="name_map">
+        </list>
+    </operator>
+    <operator name="Training" class="LibSVMLearner">
+        <parameter key="C"	value="250.0"/>
+        <parameter key="kernel_type"	value="poly"/>
+        <parameter key="svm_type"	value="epsilon-SVR"/>
+    </operator>
+</operator>
+

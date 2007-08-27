@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta2">
+
+  <operator name="Root" class="Process">
+      <description text="#ylt#p#ygt#This experiment uses two important preprocessing operators: First the frequency discretization operator,  which discretizes numerical attributes by putting the values into bins of equal size. Second, the filter operator nominal to binominal creates for each possible nominal value of a polynominal attribute a new binominal (binary) feature which is true if the example had the particular nominal value.#ylt#/p#ygt##ylt#p#ygt#These preprocessing operators are necessary since particular learning schemes can not handle attributes  of certain value types. For example, the very efficient frequent item set mining operator FPGrowth used in this process setup can only handle binominal features and no numerical or polynominal ones.#ylt#/p#ygt##ylt#p#ygt#The next operator is the frequent item set mining operator FPGrowth. This operator  efficiently calculates attribute value sets often occuring together. From these  so called frequent item sets the most confident rules are calculated. with the association rule generator.#ylt#/p#ygt##ylt#p#ygt#The result will be displayed in a rule browser where desired conclusion can be selected in a selection list on the left side. As for all other tables available in RapidMiner you can sort the columns by clicking on the column header. Pressing CTRL during these clicks allows the selection for up to three sorting columns.
+#ylt#/p#ygt#
+"/>
+      <parameter key="logverbosity"	value="warning"/>
+      <operator name="ExampleSource" class="ExampleSource">
+          <parameter key="attributes"	value="../data/iris.aml"/>
+      </operator>
+      <operator name="Preprocessing" class="OperatorChain">
+          <operator name="FrequencyDiscretization" class="FrequencyDiscretization">
+              <parameter key="number_of_bins"	value="5"/>
+          </operator>
+          <operator name="Nominal2Binominal" class="Nominal2Binominal">
+          </operator>
+      </operator>
+      <operator name="FPGrowth" class="FPGrowth">
+          <parameter key="min_support"	value="0.1"/>
+      </operator>
+      <operator name="AssociationRuleGenerator" class="AssociationRuleGenerator">
+          <parameter key="min_confidence"	value="0.7"/>
+      </operator>
+  </operator>
+
+</process>

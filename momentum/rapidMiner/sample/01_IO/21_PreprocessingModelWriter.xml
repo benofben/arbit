@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta">
+
+  <operator name="Root" class="Process">
+      <description text="#ylt#p#ygt#This experiment generates a data set and performs a normalization (a z-transformation, i.e. the mean is 0 and the standard deviation 1 afterwards). Please note that some preprocessing operators like the Normalization operator are also able to deliver a model, namely a preprocessing model. The parameter #yquot#return_preprocessing_model#yquot# of the Normalization operator must be checked in order to create such a model.#ylt#/p#ygt#  #ylt#p#ygt# This model can be used in order to apply the same transformation on test data which has not have been seen before. The preprocessing model is automatically combined with a prediction model, in this experiment a nearest-neighbors model delivered by IBk. The combined model can then be written into a file and later on reloaded and applied to new data sets. Combined models thus guarantee that the same preprocessing steps with the same settings are also applied to new data sets. #ylt#/p#ygt# #ylt#p#ygt# Please note that after the experiment has finished you can see the combined model in the result tab and use the model selector on the left hand to select the model which should be displayed. #ylt#/p#ygt#"/>
+      <operator name="ExampleSetGenerator" class="ExampleSetGenerator">
+          <parameter key="target_function"	value="polynomial classification"/>
+      </operator>
+      <operator name="NoiseGenerator" class="NoiseGenerator">
+          <list key="noise">
+          </list>
+          <parameter key="random_attributes"	value="3"/>
+      </operator>
+      <operator name="Normalization" class="Normalization">
+          <parameter key="return_preprocessing_model"	value="true"/>
+      </operator>
+      <operator name="NearestNeighbors" class="NearestNeighbors">
+          <parameter key="k"	value="3"/>
+      </operator>
+      <operator name="ModelWriter" class="ModelWriter">
+          <parameter key="model_file"	value="combined_model.mod"/>
+      </operator>
+  </operator>
+
+</process>

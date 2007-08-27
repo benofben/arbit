@@ -1,0 +1,889 @@
+<object-stream>
+  <PerformanceVector id="1">
+    <currentValues id="2">
+      <entry>
+        <string>root_mean_squared_error</string>
+        <double>0.4556064142567305</double>
+      </entry>
+      <entry>
+        <string>kappa</string>
+        <double>0.43759232456467556</double>
+      </entry>
+      <entry>
+        <string>correlation</string>
+        <double>0.3937641483387414</double>
+      </entry>
+      <entry>
+        <string>normalized_absolute_error</string>
+        <double>2.244444444444431</double>
+      </entry>
+      <entry>
+        <string>spearman_rho</string>
+        <double>0.393134842716513</double>
+      </entry>
+      <entry>
+        <string>kendall_tau</string>
+        <double>0.38023700505904484</double>
+      </entry>
+      <entry>
+        <string>logistic_loss</string>
+        <double>0.4391251611723996</double>
+      </entry>
+      <entry>
+        <string>weighted_mean_precision</string>
+        <double>0.6884734297913763</double>
+      </entry>
+      <entry>
+        <string>soft_margin_loss</string>
+        <double>0.38586437440305593</double>
+      </entry>
+      <entry>
+        <string>relative_error</string>
+        <double>0.38586437440305593</double>
+      </entry>
+      <entry>
+        <string>margin</string>
+        <double>0.3333333333333333</double>
+      </entry>
+      <entry>
+        <string>squared_correlation</string>
+        <double>0.15505020451693435</double>
+      </entry>
+      <entry>
+        <string>absolute_error</string>
+        <double>0.38586437440305593</double>
+      </entry>
+      <entry>
+        <string>accuracy</string>
+        <double>0.6905444126074498</double>
+      </entry>
+      <entry>
+        <string>classification_error</string>
+        <double>0.3094555873925502</double>
+      </entry>
+      <entry>
+        <string>weighted_mean_recall</string>
+        <double>0.5872264997661115</double>
+      </entry>
+      <entry>
+        <string>root_relative_squared_error</string>
+        <double>2.650110642926647</double>
+      </entry>
+      <entry>
+        <string>squared_error</string>
+        <double>0.20757720471187552</double>
+      </entry>
+    </currentValues>
+    <comparator class="com.rapidminer.operator.performance.PerformanceVector$DefaultComparator" id="3"/>
+    <mainCriterion>first</mainCriterion>
+    <averagesList id="4">
+      <kappa id="5">
+        <counter id="6">
+          <int-array id="7">
+            <int>70</int>
+            <int>34</int>
+            <int>2</int>
+          </int-array>
+          <int-array id="8">
+            <int>37</int>
+            <int>157</int>
+            <int>3</int>
+          </int-array>
+          <int-array id="9">
+            <int>15</int>
+            <int>17</int>
+            <int>14</int>
+          </int-array>
+        </counter>
+        <classNames id="10">
+          <string>Bad</string>
+          <string>Good</string>
+          <string>OK</string>
+        </classNames>
+        <classNameMap id="11">
+          <entry>
+            <string>Good</string>
+            <int>1</int>
+          </entry>
+          <entry>
+            <string>OK</string>
+            <int>2</int>
+          </entry>
+          <entry>
+            <string>Bad</string>
+            <int>0</int>
+          </entry>
+        </classNameMap>
+        <labelAttribute class="PolynominalAttribute" id="12">
+          <nominalMapping class="PolynominalMapping" id="13">
+            <symbolToIndexMap id="14">
+              <entry>
+                <string>Good</string>
+                <int>1</int>
+              </entry>
+              <entry>
+                <string>OK</string>
+                <int>2</int>
+              </entry>
+              <entry>
+                <string>Bad</string>
+                <int>0</int>
+              </entry>
+            </symbolToIndexMap>
+            <indexToSymbolMap id="15">
+              <string>Bad</string>
+              <string>Good</string>
+              <string>OK</string>
+            </indexToSymbolMap>
+          </nominalMapping>
+          <name>label</name>
+          <valueType>1</valueType>
+          <blockType>3</blockType>
+          <index>18</index>
+          <defaultValue>0.0</defaultValue>
+          <statistics class="linked-list" id="16">
+            <NominalStatistics id="17">
+              <mode>1</mode>
+              <maxCounter>197</maxCounter>
+              <scores id="18">
+                <int>106</int>
+                <int>197</int>
+                <int>46</int>
+              </scores>
+              <attribute class="PolynominalAttribute" reference="12"/>
+            </NominalStatistics>
+            <UnknownStatistics id="19">
+              <unknownCounter>0</unknownCounter>
+            </UnknownStatistics>
+          </statistics>
+          <constructionDescription id="20">
+            <generatingFunctionName>label</generatingFunctionName>
+            <attribute class="PolynominalAttribute" reference="12"/>
+          </constructionDescription>
+        </labelAttribute>
+        <predictedLabelAttribute class="PolynominalAttribute" id="21">
+          <nominalMapping class="PolynominalMapping" id="22">
+            <symbolToIndexMap id="23">
+              <entry>
+                <string>Good</string>
+                <int>1</int>
+              </entry>
+              <entry>
+                <string>OK</string>
+                <int>2</int>
+              </entry>
+              <entry>
+                <string>Bad</string>
+                <int>0</int>
+              </entry>
+            </symbolToIndexMap>
+            <indexToSymbolMap id="24">
+              <string>Bad</string>
+              <string>Good</string>
+              <string>OK</string>
+            </indexToSymbolMap>
+          </nominalMapping>
+          <name>prediction(label)</name>
+          <valueType>1</valueType>
+          <blockType>3</blockType>
+          <index>20</index>
+          <defaultValue>0.0</defaultValue>
+          <statistics class="linked-list" id="25">
+            <NominalStatistics id="26">
+              <mode>-1</mode>
+              <maxCounter>0</maxCounter>
+            </NominalStatistics>
+            <UnknownStatistics id="27">
+              <unknownCounter>0</unknownCounter>
+            </UnknownStatistics>
+          </statistics>
+          <constructionDescription id="28">
+            <generatingFunctionName>prediction</generatingFunctionName>
+            <generatingFunctionArguments id="29">
+              <com.rapidminer.example.ConstructionDescription reference="20"/>
+            </generatingFunctionArguments>
+            <attribute class="PolynominalAttribute" reference="21"/>
+          </constructionDescription>
+        </predictedLabelAttribute>
+        <type>0</type>
+        <meanSum>NaN</meanSum>
+        <meanSquaredSum>NaN</meanSquaredSum>
+        <averageCount>0</averageCount>
+        <actions class="linked-list" id="30">
+          <com.rapidminer.operator.ResultObjectAdapter_-1 id="31" serialization="custom">
+            <javax.swing.AbstractAction>
+              <default>
+                <enabled>true</enabled>
+              </default>
+              <int>2</int>
+              <string>Name</string>
+              <string>Save...</string>
+              <string>ShortDescription</string>
+              <string>Save this MultiClassificationPerformance to disk.</string>
+            </javax.swing.AbstractAction>
+            <com.rapidminer.operator.ResultObjectAdapter_-1>
+              <default>
+                <outer-class class="kappa" reference="5"/>
+              </default>
+            </com.rapidminer.operator.ResultObjectAdapter_-1>
+          </com.rapidminer.operator.ResultObjectAdapter_-1>
+        </actions>
+      </kappa>
+      <kappa id="32">
+        <counter id="33">
+          <int-array id="34">
+            <int>70</int>
+            <int>34</int>
+            <int>2</int>
+          </int-array>
+          <int-array id="35">
+            <int>37</int>
+            <int>157</int>
+            <int>3</int>
+          </int-array>
+          <int-array id="36">
+            <int>15</int>
+            <int>17</int>
+            <int>14</int>
+          </int-array>
+        </counter>
+        <classNames id="37">
+          <string>Bad</string>
+          <string>Good</string>
+          <string>OK</string>
+        </classNames>
+        <classNameMap id="38">
+          <entry>
+            <string>Good</string>
+            <int>1</int>
+          </entry>
+          <entry>
+            <string>OK</string>
+            <int>2</int>
+          </entry>
+          <entry>
+            <string>Bad</string>
+            <int>0</int>
+          </entry>
+        </classNameMap>
+        <labelAttribute class="PolynominalAttribute" reference="12"/>
+        <predictedLabelAttribute class="PolynominalAttribute" reference="21"/>
+        <type>1</type>
+        <meanSum>NaN</meanSum>
+        <meanSquaredSum>NaN</meanSquaredSum>
+        <averageCount>0</averageCount>
+        <actions class="linked-list" id="39">
+          <com.rapidminer.operator.ResultObjectAdapter_-1 id="40" serialization="custom">
+            <javax.swing.AbstractAction>
+              <default>
+                <enabled>true</enabled>
+              </default>
+              <int>2</int>
+              <string>Name</string>
+              <string>Save...</string>
+              <string>ShortDescription</string>
+              <string>Save this MultiClassificationPerformance to disk.</string>
+            </javax.swing.AbstractAction>
+            <com.rapidminer.operator.ResultObjectAdapter_-1>
+              <default>
+                <outer-class class="kappa" reference="32"/>
+              </default>
+            </com.rapidminer.operator.ResultObjectAdapter_-1>
+          </com.rapidminer.operator.ResultObjectAdapter_-1>
+        </actions>
+      </kappa>
+      <kappa id="41">
+        <counter id="42">
+          <int-array id="43">
+            <int>70</int>
+            <int>34</int>
+            <int>2</int>
+          </int-array>
+          <int-array id="44">
+            <int>37</int>
+            <int>157</int>
+            <int>3</int>
+          </int-array>
+          <int-array id="45">
+            <int>15</int>
+            <int>17</int>
+            <int>14</int>
+          </int-array>
+        </counter>
+        <classNames id="46">
+          <string>Bad</string>
+          <string>Good</string>
+          <string>OK</string>
+        </classNames>
+        <classNameMap id="47">
+          <entry>
+            <string>Good</string>
+            <int>1</int>
+          </entry>
+          <entry>
+            <string>OK</string>
+            <int>2</int>
+          </entry>
+          <entry>
+            <string>Bad</string>
+            <int>0</int>
+          </entry>
+        </classNameMap>
+        <labelAttribute class="PolynominalAttribute" reference="12"/>
+        <predictedLabelAttribute class="PolynominalAttribute" reference="21"/>
+        <type>2</type>
+        <meanSum>NaN</meanSum>
+        <meanSquaredSum>NaN</meanSquaredSum>
+        <averageCount>0</averageCount>
+        <actions class="linked-list" id="48">
+          <com.rapidminer.operator.ResultObjectAdapter_-1 id="49" serialization="custom">
+            <javax.swing.AbstractAction>
+              <default>
+                <enabled>true</enabled>
+              </default>
+              <int>2</int>
+              <string>Name</string>
+              <string>Save...</string>
+              <string>ShortDescription</string>
+              <string>Save this MultiClassificationPerformance to disk.</string>
+            </javax.swing.AbstractAction>
+            <com.rapidminer.operator.ResultObjectAdapter_-1>
+              <default>
+                <outer-class class="kappa" reference="41"/>
+              </default>
+            </com.rapidminer.operator.ResultObjectAdapter_-1>
+          </com.rapidminer.operator.ResultObjectAdapter_-1>
+        </actions>
+      </kappa>
+      <weighted__mean__precision id="50">
+        <counter id="51">
+          <int-array id="52">
+            <int>70</int>
+            <int>34</int>
+            <int>2</int>
+          </int-array>
+          <int-array id="53">
+            <int>37</int>
+            <int>157</int>
+            <int>3</int>
+          </int-array>
+          <int-array id="54">
+            <int>15</int>
+            <int>17</int>
+            <int>14</int>
+          </int-array>
+        </counter>
+        <classNames id="55">
+          <string>Bad</string>
+          <string>Good</string>
+          <string>OK</string>
+        </classNames>
+        <classNameMap id="56">
+          <entry>
+            <string>Good</string>
+            <int>1</int>
+          </entry>
+          <entry>
+            <string>OK</string>
+            <int>2</int>
+          </entry>
+          <entry>
+            <string>Bad</string>
+            <int>0</int>
+          </entry>
+        </classNameMap>
+        <type>0</type>
+        <classWeights id="57">
+          <double>1.0</double>
+          <double>1.0</double>
+          <double>1.0</double>
+        </classWeights>
+        <weightSum>3.0</weightSum>
+        <labelAttribute class="PolynominalAttribute" reference="12"/>
+        <predictedLabelAttribute class="PolynominalAttribute" reference="21"/>
+        <meanSum>NaN</meanSum>
+        <meanSquaredSum>NaN</meanSquaredSum>
+        <averageCount>0</averageCount>
+        <actions class="linked-list" id="58">
+          <com.rapidminer.operator.ResultObjectAdapter_-1 id="59" serialization="custom">
+            <javax.swing.AbstractAction>
+              <default>
+                <enabled>true</enabled>
+              </default>
+              <int>2</int>
+              <string>Name</string>
+              <string>Save...</string>
+              <string>ShortDescription</string>
+              <string>Save this WeightedMultiClassPerformance to disk.</string>
+            </javax.swing.AbstractAction>
+            <com.rapidminer.operator.ResultObjectAdapter_-1>
+              <default>
+                <outer-class class="weighted_mean_precision" reference="50"/>
+              </default>
+            </com.rapidminer.operator.ResultObjectAdapter_-1>
+          </com.rapidminer.operator.ResultObjectAdapter_-1>
+        </actions>
+      </weighted__mean__precision>
+      <weighted__mean__precision id="60">
+        <counter id="61">
+          <int-array id="62">
+            <int>70</int>
+            <int>34</int>
+            <int>2</int>
+          </int-array>
+          <int-array id="63">
+            <int>37</int>
+            <int>157</int>
+            <int>3</int>
+          </int-array>
+          <int-array id="64">
+            <int>15</int>
+            <int>17</int>
+            <int>14</int>
+          </int-array>
+        </counter>
+        <classNames id="65">
+          <string>Bad</string>
+          <string>Good</string>
+          <string>OK</string>
+        </classNames>
+        <classNameMap id="66">
+          <entry>
+            <string>Good</string>
+            <int>1</int>
+          </entry>
+          <entry>
+            <string>OK</string>
+            <int>2</int>
+          </entry>
+          <entry>
+            <string>Bad</string>
+            <int>0</int>
+          </entry>
+        </classNameMap>
+        <type>1</type>
+        <classWeights id="67">
+          <double>1.0</double>
+          <double>1.0</double>
+          <double>1.0</double>
+        </classWeights>
+        <weightSum>3.0</weightSum>
+        <labelAttribute class="PolynominalAttribute" reference="12"/>
+        <predictedLabelAttribute class="PolynominalAttribute" reference="21"/>
+        <meanSum>NaN</meanSum>
+        <meanSquaredSum>NaN</meanSquaredSum>
+        <averageCount>0</averageCount>
+        <actions class="linked-list" id="68">
+          <com.rapidminer.operator.ResultObjectAdapter_-1 id="69" serialization="custom">
+            <javax.swing.AbstractAction>
+              <default>
+                <enabled>true</enabled>
+              </default>
+              <int>2</int>
+              <string>Name</string>
+              <string>Save...</string>
+              <string>ShortDescription</string>
+              <string>Save this WeightedMultiClassPerformance to disk.</string>
+            </javax.swing.AbstractAction>
+            <com.rapidminer.operator.ResultObjectAdapter_-1>
+              <default>
+                <outer-class class="weighted_mean_precision" reference="60"/>
+              </default>
+            </com.rapidminer.operator.ResultObjectAdapter_-1>
+          </com.rapidminer.operator.ResultObjectAdapter_-1>
+        </actions>
+      </weighted__mean__precision>
+      <kendall__tau id="70">
+        <counter>349</counter>
+        <value>0.393134842716513</value>
+        <type>0</type>
+        <meanSum>NaN</meanSum>
+        <meanSquaredSum>NaN</meanSquaredSum>
+        <averageCount>0</averageCount>
+        <actions class="linked-list" id="71">
+          <com.rapidminer.operator.ResultObjectAdapter_-1 id="72" serialization="custom">
+            <javax.swing.AbstractAction>
+              <default>
+                <enabled>true</enabled>
+              </default>
+              <int>2</int>
+              <string>Name</string>
+              <string>Save...</string>
+              <string>ShortDescription</string>
+              <string>Save this RankCorrelation to disk.</string>
+            </javax.swing.AbstractAction>
+            <com.rapidminer.operator.ResultObjectAdapter_-1>
+              <default>
+                <outer-class class="kendall_tau" reference="70"/>
+              </default>
+            </com.rapidminer.operator.ResultObjectAdapter_-1>
+          </com.rapidminer.operator.ResultObjectAdapter_-1>
+        </actions>
+      </kendall__tau>
+      <kendall__tau id="73">
+        <counter>349</counter>
+        <value>0.38023700505904484</value>
+        <type>1</type>
+        <meanSum>NaN</meanSum>
+        <meanSquaredSum>NaN</meanSquaredSum>
+        <averageCount>0</averageCount>
+        <actions class="linked-list" id="74">
+          <com.rapidminer.operator.ResultObjectAdapter_-1 id="75" serialization="custom">
+            <javax.swing.AbstractAction>
+              <default>
+                <enabled>true</enabled>
+              </default>
+              <int>2</int>
+              <string>Name</string>
+              <string>Save...</string>
+              <string>ShortDescription</string>
+              <string>Save this RankCorrelation to disk.</string>
+            </javax.swing.AbstractAction>
+            <com.rapidminer.operator.ResultObjectAdapter_-1>
+              <default>
+                <outer-class class="kendall_tau" reference="73"/>
+              </default>
+            </com.rapidminer.operator.ResultObjectAdapter_-1>
+          </com.rapidminer.operator.ResultObjectAdapter_-1>
+        </actions>
+      </kendall__tau>
+      <absolute__error id="76">
+        <sum>134.66666666666652</sum>
+        <squaresSum>72.44444444444456</squaresSum>
+        <exampleCount>349</exampleCount>
+        <predictedAttribute class="PolynominalAttribute" reference="21"/>
+        <labelAttribute class="PolynominalAttribute" reference="12"/>
+        <meanSum>NaN</meanSum>
+        <meanSquaredSum>NaN</meanSquaredSum>
+        <averageCount>0</averageCount>
+        <actions class="linked-list" id="77">
+          <com.rapidminer.operator.ResultObjectAdapter_-1 id="78" serialization="custom">
+            <javax.swing.AbstractAction>
+              <default>
+                <enabled>true</enabled>
+              </default>
+              <int>2</int>
+              <string>Name</string>
+              <string>Save...</string>
+              <string>ShortDescription</string>
+              <string>Save this AbsoluteError to disk.</string>
+            </javax.swing.AbstractAction>
+            <com.rapidminer.operator.ResultObjectAdapter_-1>
+              <default>
+                <outer-class class="absolute_error" reference="76"/>
+              </default>
+            </com.rapidminer.operator.ResultObjectAdapter_-1>
+          </com.rapidminer.operator.ResultObjectAdapter_-1>
+        </actions>
+      </absolute__error>
+      <relative__error id="79">
+        <sum>134.66666666666652</sum>
+        <squaresSum>72.44444444444456</squaresSum>
+        <exampleCount>349</exampleCount>
+        <predictedAttribute class="PolynominalAttribute" reference="21"/>
+        <labelAttribute class="PolynominalAttribute" reference="12"/>
+        <meanSum>NaN</meanSum>
+        <meanSquaredSum>NaN</meanSquaredSum>
+        <averageCount>0</averageCount>
+        <actions class="linked-list" id="80">
+          <com.rapidminer.operator.ResultObjectAdapter_-1 id="81" serialization="custom">
+            <javax.swing.AbstractAction>
+              <default>
+                <enabled>true</enabled>
+              </default>
+              <int>2</int>
+              <string>Name</string>
+              <string>Save...</string>
+              <string>ShortDescription</string>
+              <string>Save this RelativeError to disk.</string>
+            </javax.swing.AbstractAction>
+            <com.rapidminer.operator.ResultObjectAdapter_-1>
+              <default>
+                <outer-class class="relative_error" reference="79"/>
+              </default>
+            </com.rapidminer.operator.ResultObjectAdapter_-1>
+          </com.rapidminer.operator.ResultObjectAdapter_-1>
+        </actions>
+      </relative__error>
+      <normalized__absolute__error id="82">
+        <predictedAttribute class="PolynominalAttribute" reference="21"/>
+        <labelAttribute class="PolynominalAttribute" reference="12"/>
+        <deviationSum>134.66666666666652</deviationSum>
+        <relativeSum>60.000000000000284</relativeSum>
+        <trueLabelSum>289.0</trueLabelSum>
+        <exampleCounter>349</exampleCounter>
+        <meanSum>NaN</meanSum>
+        <meanSquaredSum>NaN</meanSquaredSum>
+        <averageCount>0</averageCount>
+        <actions class="linked-list" id="83">
+          <com.rapidminer.operator.ResultObjectAdapter_-1 id="84" serialization="custom">
+            <javax.swing.AbstractAction>
+              <default>
+                <enabled>true</enabled>
+              </default>
+              <int>2</int>
+              <string>Name</string>
+              <string>Save...</string>
+              <string>ShortDescription</string>
+              <string>Save this NormalizedAbsoluteError to disk.</string>
+            </javax.swing.AbstractAction>
+            <com.rapidminer.operator.ResultObjectAdapter_-1>
+              <default>
+                <outer-class class="normalized_absolute_error" reference="82"/>
+              </default>
+            </com.rapidminer.operator.ResultObjectAdapter_-1>
+          </com.rapidminer.operator.ResultObjectAdapter_-1>
+        </actions>
+      </normalized__absolute__error>
+      <root__mean__squared__error id="85">
+        <sum>72.44444444444456</sum>
+        <squaresSum>26.419753086419746</squaresSum>
+        <exampleCount>349</exampleCount>
+        <predictedAttribute class="PolynominalAttribute" reference="21"/>
+        <labelAttribute class="PolynominalAttribute" reference="12"/>
+        <meanSum>NaN</meanSum>
+        <meanSquaredSum>NaN</meanSquaredSum>
+        <averageCount>0</averageCount>
+        <actions class="linked-list" id="86">
+          <com.rapidminer.operator.ResultObjectAdapter_-1 id="87" serialization="custom">
+            <javax.swing.AbstractAction>
+              <default>
+                <enabled>true</enabled>
+              </default>
+              <int>2</int>
+              <string>Name</string>
+              <string>Save...</string>
+              <string>ShortDescription</string>
+              <string>Save this RootMeanSquaredError to disk.</string>
+            </javax.swing.AbstractAction>
+            <com.rapidminer.operator.ResultObjectAdapter_-1>
+              <default>
+                <outer-class class="root_mean_squared_error" reference="85"/>
+              </default>
+            </com.rapidminer.operator.ResultObjectAdapter_-1>
+          </com.rapidminer.operator.ResultObjectAdapter_-1>
+        </actions>
+      </root__mean__squared__error>
+      <root__relative__squared__error id="88">
+        <predictedAttribute class="PolynominalAttribute" reference="21"/>
+        <labelAttribute class="PolynominalAttribute" reference="12"/>
+        <deviationSum>72.44444444444456</deviationSum>
+        <relativeSum>10.315186246418351</relativeSum>
+        <trueLabelSum>289.0</trueLabelSum>
+        <exampleCounter>349</exampleCounter>
+        <meanSum>NaN</meanSum>
+        <meanSquaredSum>NaN</meanSquaredSum>
+        <averageCount>0</averageCount>
+        <actions class="linked-list" id="89">
+          <com.rapidminer.operator.ResultObjectAdapter_-1 id="90" serialization="custom">
+            <javax.swing.AbstractAction>
+              <default>
+                <enabled>true</enabled>
+              </default>
+              <int>2</int>
+              <string>Name</string>
+              <string>Save...</string>
+              <string>ShortDescription</string>
+              <string>Save this RootRelativeSquaredError to disk.</string>
+            </javax.swing.AbstractAction>
+            <com.rapidminer.operator.ResultObjectAdapter_-1>
+              <default>
+                <outer-class class="root_relative_squared_error" reference="88"/>
+              </default>
+            </com.rapidminer.operator.ResultObjectAdapter_-1>
+          </com.rapidminer.operator.ResultObjectAdapter_-1>
+        </actions>
+      </root__relative__squared__error>
+      <squared__error id="91">
+        <sum>72.44444444444456</sum>
+        <squaresSum>26.419753086419746</squaresSum>
+        <exampleCount>349</exampleCount>
+        <predictedAttribute class="PolynominalAttribute" reference="21"/>
+        <labelAttribute class="PolynominalAttribute" reference="12"/>
+        <meanSum>NaN</meanSum>
+        <meanSquaredSum>NaN</meanSquaredSum>
+        <averageCount>0</averageCount>
+        <actions class="linked-list" id="92">
+          <com.rapidminer.operator.ResultObjectAdapter_-1 id="93" serialization="custom">
+            <javax.swing.AbstractAction>
+              <default>
+                <enabled>true</enabled>
+              </default>
+              <int>2</int>
+              <string>Name</string>
+              <string>Save...</string>
+              <string>ShortDescription</string>
+              <string>Save this SquaredError to disk.</string>
+            </javax.swing.AbstractAction>
+            <com.rapidminer.operator.ResultObjectAdapter_-1>
+              <default>
+                <outer-class class="squared_error" reference="91"/>
+              </default>
+            </com.rapidminer.operator.ResultObjectAdapter_-1>
+          </com.rapidminer.operator.ResultObjectAdapter_-1>
+        </actions>
+      </squared__error>
+      <correlation id="94">
+        <labelAttribute class="PolynominalAttribute" reference="12"/>
+        <predictedLabelAttribute class="PolynominalAttribute" reference="21"/>
+        <exampleCount>349</exampleCount>
+        <sumLabel>289.0</sumLabel>
+        <sumPredict>246.0</sumPredict>
+        <sumLabelPredict>253.0</sumLabelPredict>
+        <sumLabelSqr>381.0</sumLabelSqr>
+        <sumPredictSqr>284.0</sumPredictSqr>
+        <meanSum>NaN</meanSum>
+        <meanSquaredSum>NaN</meanSquaredSum>
+        <averageCount>0</averageCount>
+        <actions class="linked-list" id="95">
+          <com.rapidminer.operator.ResultObjectAdapter_-1 id="96" serialization="custom">
+            <javax.swing.AbstractAction>
+              <default>
+                <enabled>true</enabled>
+              </default>
+              <int>2</int>
+              <string>Name</string>
+              <string>Save...</string>
+              <string>ShortDescription</string>
+              <string>Save this CorrelationCriterion to disk.</string>
+            </javax.swing.AbstractAction>
+            <com.rapidminer.operator.ResultObjectAdapter_-1>
+              <default>
+                <outer-class class="correlation" reference="94"/>
+              </default>
+            </com.rapidminer.operator.ResultObjectAdapter_-1>
+          </com.rapidminer.operator.ResultObjectAdapter_-1>
+        </actions>
+      </correlation>
+      <squared__correlation id="97">
+        <labelAttribute class="PolynominalAttribute" reference="12"/>
+        <predictedLabelAttribute class="PolynominalAttribute" reference="21"/>
+        <exampleCount>349</exampleCount>
+        <sumLabel>289.0</sumLabel>
+        <sumPredict>246.0</sumPredict>
+        <sumLabelPredict>253.0</sumLabelPredict>
+        <sumLabelSqr>381.0</sumLabelSqr>
+        <sumPredictSqr>284.0</sumPredictSqr>
+        <meanSum>NaN</meanSum>
+        <meanSquaredSum>NaN</meanSquaredSum>
+        <averageCount>0</averageCount>
+        <actions class="linked-list" id="98">
+          <com.rapidminer.operator.ResultObjectAdapter_-1 id="99" serialization="custom">
+            <javax.swing.AbstractAction>
+              <default>
+                <enabled>true</enabled>
+              </default>
+              <int>2</int>
+              <string>Name</string>
+              <string>Save...</string>
+              <string>ShortDescription</string>
+              <string>Save this SquaredCorrelationCriterion to disk.</string>
+            </javax.swing.AbstractAction>
+            <com.rapidminer.operator.ResultObjectAdapter_-1>
+              <default>
+                <outer-class class="squared_correlation" reference="97"/>
+              </default>
+            </com.rapidminer.operator.ResultObjectAdapter_-1>
+          </com.rapidminer.operator.ResultObjectAdapter_-1>
+        </actions>
+      </squared__correlation>
+      <margin id="100">
+        <margin>0.3333333333333333</margin>
+        <counter>1</counter>
+        <meanSum>NaN</meanSum>
+        <meanSquaredSum>NaN</meanSquaredSum>
+        <averageCount>0</averageCount>
+        <actions class="linked-list" id="101">
+          <com.rapidminer.operator.ResultObjectAdapter_-1 id="102" serialization="custom">
+            <javax.swing.AbstractAction>
+              <default>
+                <enabled>true</enabled>
+              </default>
+              <int>2</int>
+              <string>Name</string>
+              <string>Save...</string>
+              <string>ShortDescription</string>
+              <string>Save this Margin to disk.</string>
+            </javax.swing.AbstractAction>
+            <com.rapidminer.operator.ResultObjectAdapter_-1>
+              <default>
+                <outer-class class="margin" reference="100"/>
+              </default>
+            </com.rapidminer.operator.ResultObjectAdapter_-1>
+          </com.rapidminer.operator.ResultObjectAdapter_-1>
+        </actions>
+      </margin>
+      <soft__margin__loss id="103">
+        <margin>0.38586437440305593</margin>
+        <counter>1</counter>
+        <meanSum>NaN</meanSum>
+        <meanSquaredSum>NaN</meanSquaredSum>
+        <averageCount>0</averageCount>
+        <actions class="linked-list" id="104">
+          <com.rapidminer.operator.ResultObjectAdapter_-1 id="105" serialization="custom">
+            <javax.swing.AbstractAction>
+              <default>
+                <enabled>true</enabled>
+              </default>
+              <int>2</int>
+              <string>Name</string>
+              <string>Save...</string>
+              <string>ShortDescription</string>
+              <string>Save this SoftMarginLoss to disk.</string>
+            </javax.swing.AbstractAction>
+            <com.rapidminer.operator.ResultObjectAdapter_-1>
+              <default>
+                <outer-class class="soft_margin_loss" reference="103"/>
+              </default>
+            </com.rapidminer.operator.ResultObjectAdapter_-1>
+          </com.rapidminer.operator.ResultObjectAdapter_-1>
+        </actions>
+      </soft__margin__loss>
+      <logistic__loss id="106">
+        <loss>0.4391251611723996</loss>
+        <counter>1</counter>
+        <meanSum>NaN</meanSum>
+        <meanSquaredSum>NaN</meanSquaredSum>
+        <averageCount>0</averageCount>
+        <actions class="linked-list" id="107">
+          <com.rapidminer.operator.ResultObjectAdapter_-1 id="108" serialization="custom">
+            <javax.swing.AbstractAction>
+              <default>
+                <enabled>true</enabled>
+              </default>
+              <int>2</int>
+              <string>Name</string>
+              <string>Save...</string>
+              <string>ShortDescription</string>
+              <string>Save this LogisticLoss to disk.</string>
+            </javax.swing.AbstractAction>
+            <com.rapidminer.operator.ResultObjectAdapter_-1>
+              <default>
+                <outer-class class="logistic_loss" reference="106"/>
+              </default>
+            </com.rapidminer.operator.ResultObjectAdapter_-1>
+          </com.rapidminer.operator.ResultObjectAdapter_-1>
+        </actions>
+      </logistic__loss>
+    </averagesList>
+    <actions class="linked-list" id="109">
+      <com.rapidminer.operator.ResultObjectAdapter_-1 id="110" serialization="custom">
+        <javax.swing.AbstractAction>
+          <default>
+            <enabled>true</enabled>
+          </default>
+          <int>2</int>
+          <string>Name</string>
+          <string>Save...</string>
+          <string>ShortDescription</string>
+          <string>Save this PerformanceVector to disk.</string>
+        </javax.swing.AbstractAction>
+        <com.rapidminer.operator.ResultObjectAdapter_-1>
+          <default>
+            <outer-class class="PerformanceVector" reference="1"/>
+          </default>
+        </com.rapidminer.operator.ResultObjectAdapter_-1>
+      </com.rapidminer.operator.ResultObjectAdapter_-1>
+    </actions>
+    <source>ClassificationPerformance</source>
+  </PerformanceVector>

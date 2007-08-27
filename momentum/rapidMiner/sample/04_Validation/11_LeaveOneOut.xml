@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta2">
+
+  <operator name="Root" class="Process">
+      <description text="#ylt#p#ygt#This experiment is basically the same as experiment #yquot#04_XValidation_Nominal.xml#yquot#. There are two differences: the first one is that the parameter #yquot#leave_one_out#yquot# of the XValidation operator is set to true. The cross validation use exactly as many iterations as are examples in the input data set which turns the XValidation into a leave-one-out estimation operator.#ylt#/p#ygt##ylt#p#ygt#The second difference is that another preprocessing operator is used called MissingValueReplenishment. This operator uses a simple strategy in order to 
+replace missing attribute values by a fixed value, e.g. the average of all other non-missing values. 
+#ylt#/p#ygt#"/>
+      <operator name="ExampleSource" class="ExampleSource">
+          <parameter key="attributes"	value="../data/labor-negotiations.aml"/>
+      </operator>
+      <operator name="XValidation" class="XValidation">
+          <parameter key="number_of_validations"	value="5"/>
+          <operator name="DecisionTree" class="DecisionTree">
+          </operator>
+          <operator name="OperatorChain" class="OperatorChain">
+              <operator name="ModelApplier" class="ModelApplier">
+                  <list key="application_parameters">
+                  </list>
+              </operator>
+              <operator name="Performance" class="Performance">
+              </operator>
+          </operator>
+      </operator>
+  </operator>
+
+</process>

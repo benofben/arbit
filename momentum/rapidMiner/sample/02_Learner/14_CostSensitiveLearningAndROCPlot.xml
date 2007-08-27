@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0">
+
+  <operator name="Root" class="Process">
+      <description text="#ylt#p#ygt# We use the confidence values delivered by the learner used in this experiment (soft predictions instead of crisp classifications). All RapidMiner learners deliver these confidence values in addition to the predicted values. They can be read as sort of a guarantee of the learner that the corresponding crisp prediction is actually the true label. Thus it is called confidence. #ylt#/p#ygt# #ylt#p#ygt# In many binary classification scenarios an error for a wrong prediction does not cause the same costs for both classes. A learning scheme should take these asymmetric costs into account. By using the prediction confidences we can turn all classification learners in cost sensitive learners. Therefore, we adjust the confidence threshold for doing some predictions (usually 0.5). #ylt#/p#ygt# #ylt#p#ygt# A ThresholdFinder can be used to determine the best threshold with respect to class weights. The following ThresholdApplier maps the soft predictions (confidences) to crisp classifications with respect to the determined threshold value. The ThresholdFinder can also produce a ROC curve for several thresholds. This is a nice visualization for the performance of a learning scheme. The experiment stops every time the ROC curve is plotted until you press the Ok button (5 times). The parameter #yquot#show_ROC_plot#yquot# determines if the ROC plot should be displayed at all. #ylt#/p#ygt# #ylt#p#ygt# Further information about the validation operators used in this experiment can be found in the corresponding sample directory and, of course, in the operator reference of the RapidMiner tutorial. #ylt#/p#ygt#"/>
+      <parameter key="logverbosity"	value="warning"/>
+      <parameter key="random_seed"	value="2000"/>
+      <operator name="ExampleSetGenerator" class="ExampleSetGenerator">
+          <parameter key="attributes_lower_bound"	value="0.0"/>
+          <parameter key="attributes_upper_bound"	value="25.0"/>
+          <parameter key="number_examples"	value="500"/>
+          <parameter key="number_of_attributes"	value="2"/>
+          <parameter key="target_function"	value="random dots classification"/>
+      </operator>
+      <operator name="XVal" class="XValidation">
+          <parameter key="number_of_validations"	value="5"/>
+          <operator name="LibSVMLearner" class="LibSVMLearner">
+              <parameter key="gamma"	value="1.0"/>
+          </operator>
+          <operator name="OperatorChain" class="OperatorChain">
+              <operator name="ModelApplier" class="ModelApplier">
+                  <list key="application_parameters">
+                  </list>
+              </operator>
+              <operator name="ThresholdFinder" class="ThresholdFinder">
+                  <parameter key="show_roc_plot"	value="true"/>
+              </operator>
+              <operator name="ThresholdApplier" class="ThresholdApplier">
+              </operator>
+              <operator name="PerformanceEvaluator" class="PerformanceEvaluator">
+                  <parameter key="AUC"	value="true"/>
+                  <parameter key="accuracy"	value="true"/>
+                  <list key="additional_performance_criteria">
+                  </list>
+                  <list key="class_weights">
+                  </list>
+                  <parameter key="main_criterion"	value="accuracy"/>
+                  <parameter key="precision"	value="true"/>
+                  <parameter key="recall"	value="true"/>
+              </operator>
+          </operator>
+      </operator>
+  </operator>
+
+</process>

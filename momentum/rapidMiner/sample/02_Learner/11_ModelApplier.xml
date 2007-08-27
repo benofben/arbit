@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta">
+
+  <operator name="Root" class="Process">
+      <description text="#ylt#table#ygt##ylt#tr#ygt##ylt#td#ygt#The ModelApplier operator is one of the most important RapidMiner operators.    It can be used to apply a previously learned model to (unseen) data.    #ylt#/td#ygt##ylt#td#ygt##ylt#icon#ygt#operators/24/model_applier #ylt#/icon#ygt##ylt#/td#ygt##ylt#/tr#ygt##ylt#/table#ygt##ylt#p#ygt#In this experiment we first load some training data and learn a decision tree model. This model is then applied to the test data set with help of  the model applier. You can add a breakpoint 
+after the learner operator (from the context menu or by double clicking) in order to inspect the learned model. In this case, you have to resume the experiment by clicking on the resume button.
+#ylt#/p#ygt#"/>
+      <operator name="TrainingInput" class="ExampleSource">
+          <parameter key="attributes"	value="../data/golf.aml"/>
+      </operator>
+      <operator name="DecisionTree" class="DecisionTree">
+      </operator>
+      <operator name="TestInput" class="ExampleSource">
+          <parameter key="attributes"	value="../data/golf.test.aml"/>
+      </operator>
+      <operator name="ModelApplier" class="ModelApplier">
+          <list key="application_parameters">
+          </list>
+      </operator>
+  </operator>
+
+</process>

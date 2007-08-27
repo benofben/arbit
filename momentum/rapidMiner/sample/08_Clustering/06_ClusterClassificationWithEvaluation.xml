@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta2">
+
+  <operator name="Root" class="Process">
+      <parameter key="logverbosity"	value="warning"/>
+      <operator name="ExampleSource" class="ExampleSource">
+          <parameter key="attributes"	value="../data/iris.aml"/>
+      </operator>
+      <operator name="KMeans" class="KMeans">
+          <parameter key="k"	value="3"/>
+      </operator>
+      <operator name="ClusterModel2ExampleSet" class="ClusterModel2ExampleSet">
+          <parameter key="add_label"	value="true"/>
+      </operator>
+      <operator name="XValidation" class="XValidation">
+          <operator name="DecisionTree" class="DecisionTree">
+          </operator>
+          <operator name="OperatorChain" class="OperatorChain">
+              <operator name="ModelApplier" class="ModelApplier">
+                  <list key="application_parameters">
+                  </list>
+              </operator>
+              <operator name="ClassificationPerformance" class="ClassificationPerformance">
+                  <list key="class_weights">
+                  </list>
+                  <parameter key="classification_error"	value="true"/>
+              </operator>
+          </operator>
+      </operator>
+  </operator>
+
+</process>

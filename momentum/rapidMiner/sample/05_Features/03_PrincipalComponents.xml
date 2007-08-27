@@ -1,0 +1,12 @@
+<operator name="Root" class="Process">
+  <description text="The calculation of principal components is often used as a feature transforming preprocessing step. It can reduce the dimensionality of the data set at hand while the major data variance is preserved. Perform the experiment and check out the plot view of the Iris data set loaded and transformed by this experiment."/>
+  <operator name="ArffExampleSource" class="ArffExampleSource">
+    <parameter key="data_file"	value="../data/iris.arff"/>
+    <parameter key="label_attribute"	value="class"/>
+  </operator>
+  <operator name="Normalization" class="Normalization">
+  </operator>
+  <operator name="PrincipalComponents" class="PrincipalComponentsGenerator">
+  </operator>
+</operator>
+

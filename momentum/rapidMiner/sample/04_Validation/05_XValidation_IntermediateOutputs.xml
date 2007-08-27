@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta2">
+
+  <operator name="Root" class="Process">
+      <description text="#ylt#p#ygt#Sometimes the inner intermediate results of an operator which performs a loop (like cross validation) are of interest. The ExampleSetWriter in this experiment demonstrates a way to write the intermediate output into a file using the macro %{a} in the parameter string.#ylt#/p#ygt##ylt#p#ygt#Another possibility would be to embed the Training learner in an OperatorChain operator and add an additional ModelWriter. This would also write down the intermediate models.#ylt#/p#ygt#"/>
+      <operator name="Input" class="ExampleSource">
+          <parameter key="attributes"	value="../data/polynomial.aml"/>
+      </operator>
+      <operator name="XVal" class="XValidation">
+          <parameter key="sampling_type"	value="shuffled sampling"/>
+          <operator name="Training" class="LibSVMLearner">
+              <parameter key="C"	value="1000.0"/>
+              <list key="class_weights">
+              </list>
+              <parameter key="kernel_type"	value="poly"/>
+              <parameter key="svm_type"	value="epsilon-SVR"/>
+          </operator>
+          <operator name="ApplierChain" class="OperatorChain">
+              <operator name="Test" class="ModelApplier">
+                  <list key="application_parameters">
+                  </list>
+              </operator>
+              <operator name="ExampleSetWriter" class="ExampleSetWriter">
+                  <parameter key="example_set_file"	value="xval_%a.dat"/>
+                  <parameter key="format"	value="special_format"/>
+                  <parameter key="special_format"	value="True: $l  Pred: $p"/>
+              </operator>
+              <operator name="RegressionPerformance" class="RegressionPerformance">
+                  <parameter key="absolute_error"	value="true"/>
+                  <parameter key="correlation"	value="true"/>
+                  <parameter key="main_criterion"	value="root_mean_squared_error"/>
+                  <parameter key="relative_error"	value="true"/>
+                  <parameter key="root_mean_squared_error"	value="true"/>
+                  <parameter key="squared_error"	value="true"/>
+              </operator>
+          </operator>
+      </operator>
+  </operator>
+
+</process>

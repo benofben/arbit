@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta">
+
+  <operator name="Root" class="Process">
+      <description text="#ylt#p#ygt#The normalization operator supports both z-transformation on zero mean with standard deviation 1 and range normalization into a predefined range.
+#ylt#/p#ygt#"/>
+      <operator name="ArffExampleSource" class="ArffExampleSource">
+          <parameter key="data_file"	value="../data/iris.arff"/>
+          <parameter key="label_attribute"	value="class"/>
+      </operator>
+      <operator name="Normalization" class="Normalization">
+      </operator>
+  </operator>
+
+</process>

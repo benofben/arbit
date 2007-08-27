@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta">
+<operator name="Root" class="Process">
+  <description text="#ylt#p#ygt#  Sometimes it is interesting how learning schemes or other data mining operators perform on noisy data. The noise operator simply adds white noise to the input data. The standard deviation of the noise can be set for each attribute independently. Additionally some random attributes can be added to the input example set. #ylt#/p#ygt#  #ylt#p#ygt# Try the following: #ylt#ul#ygt# #ylt#li#ygt#Change the number of additional random attributes and perform the experiment again. In the result display the number of random attributes has changed.#ylt#/li#ygt#   #ylt#li#ygt#Please change the view mode in the Result display from #yquot#table view#yquot# to #yquot#plot view#yquot#. The built in plotter of RapidMiner can plot your data in several ways. Simply select the axis and the value to plot. 3D plot can be made if #yquot#gnuplot#yquot# is installed and configured. Another possible way to plot 3 dimensions is to use the color plot provided by the usual RapidMiner plotter if three dimensions are selected.#ylt#/li#ygt# #ylt#li#ygt#Of course there are many more preprocessing operators available in RapidMiner. Please refer to the operator reference in the RapidMiner Tutorial. Check also the group of preprocessing operators and try some in this experiment (e.g. normalization)#ylt#/li#ygt# #ylt#/ul#ygt# #ylt#/p#ygt#   "/>
+  <operator name="ExampleSource" class="ExampleSource">
+    <parameter key="attributes"	value="../data/polynomial.aml"/>
+  </operator>
+  <operator name="NoiseGenerator" class="NoiseGenerator">
+    <parameter key="label_noise"	value="0.01"/>
+    <parameter key="linear_factor"	value="2.0"/>
+    <list key="noise">
+      <parameter key="a1"	value="0.5"/>
+      <parameter key="a3"	value="0.2"/>
+    </list>
+    <parameter key="offset"	value="5.0"/>
+    <parameter key="random_attributes"	value="3"/>
+  </operator>
+</operator>
+</process>
+

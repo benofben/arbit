@@ -1,0 +1,9 @@
+<operator name="Root" class="Process">
+  <description text="#ylt#p#ygt#In cases where a learning scheme cannot handle numerical attributes it might be necessary to apply a discretization step. In this experiment we use FrequencyDiscretization which tries to identify split points in a way that all bins contain the same number of examples.#ylt#/p#ygt#"/>
+  <operator name="ExampleSource" class="ExampleSource">
+    <parameter key="attributes"	value="../data/sonar.aml"/>
+  </operator>
+  <operator name="FrequencyDiscretization" class="FrequencyDiscretization">
+  </operator>
+</operator>
+

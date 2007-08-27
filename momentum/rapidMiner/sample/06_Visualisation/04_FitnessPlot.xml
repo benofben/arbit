@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta2">
+
+  <operator name="Root" class="Process">
+      <description text="#ylt#p#ygt#This experiment is basically the same as one of the feature selection experiments discussed before. This time, we want to discuss the ProcessLog operator. This operator collects some values each time is applied. In this experiment, the operator is invoked once for each generation of the evolutionary algorithm. Please have a look at the parameter list of the ProcessLog operator. You can see which values are collected, in this case the current generation and the current performance values. #ylt#/p#ygt##ylt#p#ygt#Start the experiment and change to the result tab. Even while the experiment is running the results are plotted online. Just select the number of generations for the x axis and one (or more) values from the selection list. The result can also be written into a data or graphics file. #ylt#/p#ygt##ylt#/p#ygt#"/>
+      <parameter key="random_seed"	value="1977"/>
+      <operator name="ExampleSetGenerator" class="ExampleSetGenerator">
+          <parameter key="attributes_lower_bound"	value="0.0"/>
+          <parameter key="number_examples"	value="150"/>
+          <parameter key="number_of_attributes"	value="4"/>
+          <parameter key="target_function"	value="sum"/>
+      </operator>
+      <operator name="NoiseGenerator" class="NoiseGenerator">
+          <parameter key="label_noise"	value="0.0"/>
+          <parameter key="linear_factor"	value="10.0"/>
+          <list key="noise">
+          </list>
+          <parameter key="random_attributes"	value="8"/>
+      </operator>
+      <operator name="GeneticAlgorithm" class="GeneticAlgorithm">
+          <parameter key="maximum_number_of_generations"	value="10"/>
+          <parameter key="p_crossover"	value="0.9"/>
+          <parameter key="population_size"	value="2"/>
+          <parameter key="selection_scheme"	value="Boltzmann"/>
+          <operator name="OperatorChain" class="OperatorChain">
+              <operator name="XValidation" class="XValidation">
+                  <parameter key="number_of_validations"	value="3"/>
+                  <parameter key="sampling_type"	value="shuffled sampling"/>
+                  <operator name="NearestNeighbors" class="NearestNeighbors">
+                  </operator>
+                  <operator name="OperatorChain (2)" class="OperatorChain">
+                      <operator name="ModelApplier" class="ModelApplier">
+                          <list key="application_parameters">
+                          </list>
+                      </operator>
+                      <operator name="RegressionPerformance" class="RegressionPerformance">
+                          <parameter key="main_criterion"	value="root_relative_squared_error"/>
+                          <parameter key="root_mean_squared_error"	value="true"/>
+                          <parameter key="root_relative_squared_error"	value="true"/>
+                      </operator>
+                  </operator>
+              </operator>
+              <operator name="ProcessLog" class="ProcessLog">
+                  <list key="log">
+                    <parameter key="generation"	value="operator.GeneticAlgorithm.value.generation"/>
+                    <parameter key="current_best_performance"	value="operator.GeneticAlgorithm.value.performance"/>
+                    <parameter key="global_best_performance"	value="operator.GeneticAlgorithm.value.best"/>
+                  </list>
+              </operator>
+          </operator>
+      </operator>
+  </operator>
+
+</process>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta">
+
+  <operator name="Root" class="Process">
+      <description text="#ylt#p#ygt#Often it is necessary to write the model into a file in order to apply it later on new and unseen data. In this experiment, a decision tree is learned from a data set and written into a file with the ModelWriter operator.#ylt#/p#ygt##ylt#p#ygt#Try the following:#ylt#p#ygt##ylt#ul#ygt##ylt#li#ygt#Select the Learner in the tree view and replace it by another learning scheme which can handle numerical and nominal attributes like #yquot#Decision stump#yquot#. All RapidMiner learners - including all the learners from the Weka machine learning library - can be found in the subgroups beneath #yquot#Learner#yquot#.#ylt#table#ygt##ylt#tr#ygt##ylt#td#ygt##ylt#icon#ygt#groups/24/learner#ylt#/icon#ygt##ylt#/td#ygt##ylt#td#ygt##ylt#i#ygt#A learner is used in order to build a model from data. By the way, all Weka learners and many other Weka operators are fully integrated in RapidMiner.#ylt#/i#ygt##ylt#/td#ygt##ylt#/tr#ygt##ylt#/table#ygt##ylt#/li#ygt##ylt#li#ygt#Right click on the Input operator and select #yquot#breakpoint after#yquot# (you could also make a double click on the operator which toggles the breakpoint state). Start the experiment. After a short time the message viewer displays #yquot#breakpoint reached#yquot# and you can change to the Results tab to check the intermediate results. In this case the intermediate result is the already known example set. #ylt#table#ygt##ylt#tr#ygt##ylt#td#ygt##ylt#icon#ygt#24/breakpoint_down#ylt#/icon#ygt##ylt#/td#ygt##ylt#td#ygt##ylt#i#ygt#Images similar to this appear in the tree view next to the operator with a breakpoint#ylt#/i#ygt##ylt#/td#ygt##ylt#/tr#ygt##ylt#/table#ygt##ylt#/li#ygt##ylt#li#ygt#Pressing the #yquot#Resume#yquot# icon in the icon bar (the Pause symbol which used to be the #yquot#Play#yquot# button) let you resume your experiment. You can also disable operators, for example the learning operator. Disabled operators does not perform any action. #ylt#table#ygt##ylt#tr#ygt##ylt#td#ygt##ylt#icon#ygt#24/media_pause#ylt#/icon#ygt##ylt#/td#ygt##ylt#td#ygt##ylt#i#ygt#Press this icon to resume an experiment after stopping at a breakpoint.#ylt#/i#ygt##ylt#/td#ygt##ylt#/tr#ygt##ylt#/table#ygt##ylt#/li#ygt##ylt#/ul#ygt##ylt#p#ygt#Please note that many operators like learners consume their input by default. This behavior can be changed for many of those operators using a parameter keep_***. Alternatively, the operator IOMultiplier could be used before the consuming operator is applied.
+#ylt#/p#ygt#"/>
+      <operator name="Input" class="ExampleSource">
+          <parameter key="attributes"	value="../data/golf.aml"/>
+      </operator>
+      <operator name="DecisionTree" class="DecisionTree">
+      </operator>
+      <operator name="ModelWriter" class="ModelWriter">
+          <parameter key="model_file"	value="model.mod"/>
+      </operator>
+  </operator>
+
+</process>

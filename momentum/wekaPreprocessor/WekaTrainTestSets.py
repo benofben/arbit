@@ -1,46 +1,93 @@
 import csv
-def CreateTrainingSetForWekaForSymbol(symbol, beta, marketValue):
-    inputFilename = "data/train/" + symbol + ".csv"
+def CreateTrainingSetForWekaForSymbol(stats, train, test, isFirstSymbol):
+    inputFilename = "data/train/" + stats['symbol'] + ".csv"
     inputFile = open(inputFilename, "rb")
-
-    header='Low0, Low1, Low2, High0, High1, High2, Vol0, Vol1, Vol2, Close, y\n'
     
-    train=open("data/weka/train" + symbol + ".csv", 'w')
-    train.write(header)
-
-    test=open("data/weka/test" + symbol + ".csv", 'w')
-    test.write(header)
-
     reader = csv.reader(inputFile)
 
-    quotes=[]
+    # q holds all the quotes for a symbol
+    q={}
+    q['Date']=[]
+    q['Open']=[]
+    q['High']=[]
+    q['Low']=[]
+    q['Close']=[]
+    q['Volume']=[]
+    q['AdjClose']=[]
+    
     for Date, Open, High, Low, Close, Volume, AdjClose in reader:
-        quotes.append([float(Date), float(Open), float(High), float(Low), float(Close), float(Volume), float(AdjClose)])
+        q['Date'].append(float(Date))
+        q['Open'].append(float(Open))
+        q['High'].append(float(High))
+        q['Low'].append(float(Low))
+        q['Close'].append(float(Close))
+        q['Volume'].append(float(Volume))
+        q['AdjClose'].append(float(AdjClose))
 
-    for i in range(3,len(quotes)):
-        Low0 = quotes[i-3][3]
-        Low1 = quotes[i-2][3]
-        Low2 = quotes[i-1][3]
-        High0 = quotes[i-3][2]
-        High1 = quotes[i-2][2]
-        High2 = quotes[i-1][2]
-        Vol0 = quotes[i-3][5]
-        Vol1 = quotes[i-2][5]
-        Vol2 = quotes[i-1][5]
-        Close = quotes[i-1][4]
-        Open = quotes[i][1]
-        if(float(quotes[i][2])>float(quotes[i][1])*1.02):
-            y='B';
+    window=4
+
+    # copy some symbol-wide statistics that were passed in
+    a={}
+    for key, value in stats.iteritems():
+        a[key]=stats[key]
+
+    # compute average price and volume
+    pAvg = 0
+    vAvg = 0
+    total = 1
+    for i in range(window,len(q['Open'])/2):
+        pAvg = pAvg + q['Open'][i]
+        vAvg = vAvg + q['Volume'][i]
+        total = total + 1
+    pAvg = pAvg / total
+    vAvg = vAvg / total
+
+    a['pGoodDay']=0
+    for i in range(window,len(q['Open'])/2):
+        a['pGoodDay']=a['pGoodDay']+((q['High'][i]-q['Open'][i])/q['Open'][i])
+#    a['pGoodDay']=a['pGoodDay']/(len(q['Open'])/2)
+            
+    for i in range(window,len(q['Open'])):
+        a['l1'] = (q['High'][i-1]-q['Open'][i-1])/q['Open'][i-1]
+        a['dailyReturn1'] = (q['Close'][i-1]-q['Close'][i-2])/q['Close'][i-2]
+        a['tradingDayReturn1'] = (q['Open'][i-1]-q['Close'][i-1])/q['Open'][i-1]
+        
+        if(q['High'][i]>q['Open'][i]*1.02):
+            a['label']='Good'
+        elif(q['Close'][i]>q['Open'][i]):
+            a['label']='OK'
+        elif(q['Close'][i]>q['Open'][i]*0.98):
+            a['label']='Bad'
         else:
-            y='N';
+            a['label']='Very Bad'
 
-        outString = str(Low0) + "," + str(Low1) + "," + str(Low2) + "," + str(High0) + "," + str(High1) + "," + str(High2) + "," + str(Vol0) + "," + str(Vol1) + "," + str(Vol2) + "," + str(Close) + "," + str(y) +'\n'
+        # Build the header string
+        if i==window:
+            if isFirstSymbol==1:
+                header=''
+                for key, value in a.iteritems():
+                    if(key != 'label'):
+                        header=header + key + ','
+                header = header + 'label\n'
+                train.write(header)
+                test.write(header)
 
-        if i<len(quotes)/2:
+        # Build the string containing the data
+        outString=''
+        for key, value in a.iteritems():
+            if(key != 'label'):
+                outString = outString + str(value) + ','
+        outString = outString + a['label'] + '\n'
+
+        # only print some outStrings
+        # if(a['l1']>0.08 or a['dailyReturn1']<-0.06 or a['tradingDayReturn1']>0.08):
+        # if(a['l1']>0.08 or a['tradingDayReturn1']>0.08):
+        # if(a['beta']>2.5):
+        if i<len(q['Open'])/2:
             train.write(outString)
         else:
             test.write(outString)
-    train.close()
+            
     inputFile.close()
 
 def LoadPredictor(filename):
@@ -63,19 +110,39 @@ def CreateTrainingSetForWeka():
     beta = LoadPredictor("beta.csv")
     marketValue = LoadPredictor("marketValue.csv")
 
-    if os.path.exists("data/weka"):
-        shutil.rmtree("data/weka")
-    os.mkdir("data/weka")
+    train=open("data/weka/train" + ".csv", 'w')
+    test=open("data/weka/test" + ".csv", 'w')
+
+#    if os.path.exists("data/weka"):
+#        shutil.rmtree("data/weka")
+#    os.mkdir("data/weka")
 
     symbols=downloader.ReformatQuotes.GetSymbols('data/train')
+    isFirstSymbol = 1
     while symbols:
         symbol = symbols.pop()
         print "Making weka file for " + symbol + ". " + str(len(symbols)) + " remaining."
-        CreateTrainingSetForWekaForSymbol(symbol, beta[symbol], marketValue[symbol])
+
+        stats={}
+        stats['symbol']=symbol
+        stats['beta']=float(beta[symbol])
+        # stats['marketValue']=float(marketValue[symbol])
+
+        CreateTrainingSetForWekaForSymbol(stats, train, test, isFirstSymbol)
+        isFirstSymbol = 0
         
-def CreateTrainingSetForWeka(symbol):
+    train.close()
+    test.close()
+        
+def CreateTrainingSetForWeka2(symbol):
     beta = LoadPredictor("beta.csv")
     marketValue = LoadPredictor("marketValue.csv")
 
+    train=open("data/weka/train" + symbol + ".csv", 'w')
+    test=open("data/weka/test" + symbol + ".csv", 'w')
+
     print "Making weka file for " + symbol + ".\n"
-    CreateTrainingSetForWekaForSymbol(symbol, beta[symbol], marketValue[symbol])
+    CreateTrainingSetForWekaForSymbol(symbol, beta[symbol], marketValue[symbol], train, test)
+
+    train.close()
+    test.close()

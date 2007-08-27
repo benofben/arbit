@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta2">
+
+  <operator name="Root" class="Process">
+      <description text="This operator is very similar to the previous experiment #yquot#14_IterativeWeightOptimization.xml#yquot# but it does not relearn the attribute weights between iterations. Therefore, it is also very similar to the WeightGuidedFeatureSelection experiment but it contains an explicit AttributeWeightSelection operator which can be tuned."/>
+      <operator name="ExampleSource" class="ExampleSource">
+          <parameter key="attributes"	value="../data/sonar.aml"/>
+      </operator>
+      <operator name="JMySVMLearner" class="JMySVMLearner">
+          <parameter key="calculate_weights"	value="true"/>
+          <parameter key="keep_example_set"	value="true"/>
+          <parameter key="scale"	value="false"/>
+      </operator>
+      <operator name="IOConsumer" class="IOConsumer">
+          <parameter key="io_object"	value="Model"/>
+      </operator>
+      <operator name="WeightOptimization" class="WeightOptimization">
+          <parameter key="min_diff"	value="0.025"/>
+          <parameter key="parameter"	value="Selection.weight"/>
+          <operator name="Selection" class="AttributeWeightSelection">
+              <parameter key="weight"	value="4.1085982245585295E-4"/>
+          </operator>
+          <operator name="XValidation" class="XValidation">
+              <parameter key="number_of_validations"	value="3"/>
+              <operator name="EvaluationLearner" class="JMySVMLearner">
+                  <parameter key="scale"	value="false"/>
+              </operator>
+              <operator name="EvaluationChain" class="OperatorChain">
+                  <operator name="ModelApplier" class="ModelApplier">
+                      <list key="application_parameters">
+                      </list>
+                  </operator>
+                  <operator name="ClassificationPerformance" class="ClassificationPerformance">
+                  </operator>
+              </operator>
+          </operator>
+      </operator>
+  </operator>
+
+</process>

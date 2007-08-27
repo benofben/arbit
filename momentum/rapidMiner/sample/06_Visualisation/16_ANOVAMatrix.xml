@@ -1,0 +1,9 @@
+<operator name="Root" class="Process">
+    <description text="This operator calculates the complete matrix of ANOVA probabilities for all numerical attribute defined by the groups defined by all nominal attributes."/>
+    <operator name="ExampleSource" class="ExampleSource">
+        <parameter key="attributes"	value="../data/golf.aml"/>
+    </operator>
+    <operator name="ANOVAMatrix" class="ANOVAMatrix">
+    </operator>
+</operator>
+

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta2">
+
+  <operator name="Root" class="Process">
+      <description text="#ylt#p#ygt# Beside cross validation (XValidation operator) there are several validation schemes which can be used in order to estimate the performance of a learner. You can build a random hold out set (test set) with the SimpleValidation operator and evaluate the model performance on this unseen test data. The basic setup is the same as for XValidation: the first inner operator must produce a model and the second inner operator must be able to handle the create model and the test example set and must provide a PerformanceVector. #ylt#/p#ygt# #ylt#p#ygt# This experiment loads ARFF data with the ArffExampleSource operator and performs a random split validation chain. Since the label has three class values, multi class learning is done with a classification by regression approach. #ylt#/p#ygt#"/>
+      <operator name="ArffExampleSource" class="ArffExampleSource">
+          <parameter key="data_file"	value="../data/iris.arff"/>
+          <parameter key="label_attribute"	value="class"/>
+      </operator>
+      <operator name="SimpleValidation" class="SimpleValidation">
+          <operator name="ClassificationByRegression" class="ClassificationByRegression">
+              <operator name="LinearRegression" class="LinearRegression">
+              </operator>
+          </operator>
+          <operator name="ApplierChain" class="OperatorChain">
+              <operator name="Test" class="ModelApplier">
+                  <list key="application_parameters">
+                  </list>
+              </operator>
+              <operator name="Performance" class="Performance">
+              </operator>
+          </operator>
+      </operator>
+  </operator>
+
+</process>

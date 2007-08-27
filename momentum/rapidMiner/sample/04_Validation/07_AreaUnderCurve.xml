@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta2">
+
+  <operator name="Root" class="Process">
+      <description text="#ylt#p#ygt# In this experiment we calculate a widely used performance criterion: the area under a ROC curve (AUC). RapidMiner allows the calculation of this AUC criterion for all binary classification tasks and learners. Just select AUC like all other performance criteria as a parameter of the PerformanceEvaluator operator. #ylt#/p#ygt# #ylt#p#ygt# You can actually display a ROC curve by using a ThresholdFinder which makes use of the soft predictions (confidence values) instead of crisp classifications. A ThresholdFinder can be used to determine the best threshold with respect to class weights. Please check out the experiment CostSensitiveLearningAndROCPlot.xml for further details. #ylt#/p#ygt#"/>
+      <parameter key="random_seed"	value="2000"/>
+      <operator name="ExampleSetGenerator" class="ExampleSetGenerator">
+          <parameter key="attributes_lower_bound"	value="0.0"/>
+          <parameter key="attributes_upper_bound"	value="25.0"/>
+          <parameter key="number_examples"	value="500"/>
+          <parameter key="number_of_attributes"	value="2"/>
+          <parameter key="target_function"	value="random dots classification"/>
+      </operator>
+      <operator name="XVal" class="XValidation">
+          <parameter key="number_of_validations"	value="5"/>
+          <operator name="LibSVMLearner" class="LibSVMLearner">
+              <parameter key="gamma"	value="1.0"/>
+          </operator>
+          <operator name="ApplierChain" class="OperatorChain">
+              <operator name="ModelApplier" class="ModelApplier">
+                  <list key="application_parameters">
+                  </list>
+              </operator>
+              <operator name="BinominalClassificationPerformance" class="BinominalClassificationPerformance">
+                  <parameter key="AUC"	value="true"/>
+              </operator>
+          </operator>
+      </operator>
+  </operator>
+
+</process>

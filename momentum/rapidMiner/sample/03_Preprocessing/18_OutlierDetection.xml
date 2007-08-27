@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta2">
+
+  <operator name="Root" class="Process">
+      <description text="#ylt#p#ygt#This setup demonstrates how outliers can be detected by RapidMiner and removed afterwards with an example filter operator. If you plot the data set after the breakpoint was reached, you can select the outlier column for example in a scatter plot of the two data dimensions and see which points are classified as outliers. These points are then filtered after the process was resumed.#ylt#/p#ygt#"/>
+      <parameter key="random_seed"	value="1977"/>
+      <operator name="ExampleSetGenerator" class="ExampleSetGenerator">
+          <parameter key="number_examples"	value="200"/>
+          <parameter key="number_of_attributes"	value="2"/>
+          <parameter key="target_function"	value="gaussian mixture clusters"/>
+      </operator>
+      <operator name="DistanceBasedOutlierDetection" class="DistanceBasedOutlierDetection" breakpoints="after">
+          <parameter key="number_of_outliers"	value="12"/>
+      </operator>
+      <operator name="ExampleFilter" class="ExampleFilter">
+          <parameter key="condition_class"	value="attribute_value_filter"/>
+          <parameter key="parameter_string"	value="Outlier=false"/>
+      </operator>
+  </operator>
+
+</process>

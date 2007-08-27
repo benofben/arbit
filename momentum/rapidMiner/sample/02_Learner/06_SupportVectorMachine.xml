@@ -1,0 +1,11 @@
+<operator name="Root" class="Process">
+  <description text="For many learning tasks, Support Vector Machines are among the best suited learning schemes.They adapt the idea of structural risk minimization and allows for non-linear generalizations with help of kernel functions."/>
+  <operator name="ExampleSource" class="ExampleSource">
+    <parameter key="attributes"	value="../data/polynomial.aml"/>
+  </operator>
+  <operator name="JMySVMLearner" class="JMySVMLearner">
+    <parameter key="kernel_degree"	value="3"/>
+    <parameter key="kernel_type"	value="polynomial"/>
+  </operator>
+</operator>
+

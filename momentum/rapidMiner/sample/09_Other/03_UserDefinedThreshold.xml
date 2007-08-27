@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta">
+
+  <operator name="Root" class="Process">
+      <description text="This experiment setup can be used to specify a user defined threshold for mapping prediction confidences to crisp predictions. Just change the threshold parameter of the operator ThresholdCreator and see what happens."/>
+      <operator name="ExampleSetGenerator" class="ExampleSetGenerator">
+          <parameter key="number_examples"	value="200"/>
+          <parameter key="target_function"	value="interaction classification"/>
+      </operator>
+      <operator name="XValidation" class="XValidation">
+          <operator name="NearestNeighbors" class="NearestNeighbors">
+              <parameter key="k"	value="10"/>
+          </operator>
+          <operator name="OperatorChain" class="OperatorChain">
+              <operator name="ModelApplier" class="ModelApplier">
+                  <list key="application_parameters">
+                  </list>
+              </operator>
+              <operator name="ThresholdCreator" class="ThresholdCreator">
+                  <parameter key="first_class"	value="negative"/>
+                  <parameter key="second_class"	value="positive"/>
+                  <parameter key="threshold"	value="0.8"/>
+              </operator>
+              <operator name="ThresholdApplier" class="ThresholdApplier">
+              </operator>
+              <operator name="PerformanceEvaluator" class="PerformanceEvaluator">
+                  <parameter key="accuracy"	value="true"/>
+                  <list key="additional_performance_criteria">
+                  </list>
+                  <list key="class_weights">
+                  </list>
+                  <parameter key="main_criterion"	value="accuracy"/>
+              </operator>
+          </operator>
+      </operator>
+  </operator>
+
+</process>

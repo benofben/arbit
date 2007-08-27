@@ -4,7 +4,7 @@ fprintf('Computing beta for stocks...\n')
 
 symbols = textread('C:\momentum\data\symbols\successfullyReformattedSymbols.txt', '%s');
 
-for i=1:size(symbols,1) %the last line is a newline
+for i=1:size(symbols,1)
     symbol=symbols{i};
     b(i)=computeBetaForFile(symbol);
 end
@@ -14,3 +14,5 @@ for i=1:size(symbols,1) %the last line is a newline
     fprintf(fid,'%s,%f\n',char(symbols(i)), b(i));
 end
 fclose(fid);
+
+save b b

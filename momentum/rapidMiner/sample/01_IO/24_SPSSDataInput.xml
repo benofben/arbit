@@ -1,0 +1,17 @@
+<operator name="Root" class="Process">
+    <description text="#ylt#p#ygt#
+The SPSSExampleSource operator can directly read data from SPSS files. 
+This operator, unlike most of the other input operators, does not provide 
+a  parameter field where the user can define which of the attributes should 
+be used as label. Therefore, a preprocessing operator named ChangeAttributeType 
+is used to change the type of the attribute INCOME to label. 
+#ylt#/p#ygt#"/>
+    <operator name="SPSSExampleSource" class="SPSSExampleSource">
+        <parameter key="filename"	value="../data/spss_data.sav"/>
+    </operator>
+    <operator name="ChangeAttributeType" class="ChangeAttributeType">
+        <parameter key="name"	value="INCOME"/>
+        <parameter key="target_type"	value="label"/>
+    </operator>
+</operator>
+

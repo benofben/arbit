@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta">
+
+  <operator name="Root" class="Process">
+      <description text="The C45ExampleSource operator can read the file format used by Quinlans C4.5 decision tree learner. You have to specify the filestem,  the name file or the data file. In this experiment we use a DecisionTree learner which is very similar to the original C45 in order to learn a decision tree. Please note, however, that once the data is loaded you can also use any other learner provided by RapidMiner in order to generate a model. Justreplace the DecisionTree learner operator by another operator which is ableto handle this type of data."/>
+      <operator name="C45ExampleSource" class="C45ExampleSource">
+          <parameter key="c45_filestem"	value="../data/vote.data"/>
+      </operator>
+      <operator name="DecisionTree" class="DecisionTree">
+          <parameter key="min_set_size"	value="3"/>
+      </operator>
+  </operator>
+
+</process>

@@ -1,0 +1,42 @@
+<attributeset default_source="iris.dat">
+
+  <attribute
+    name         = "a1"
+    sourcecol    = "1"
+    valuetype    = "real"
+  />
+  
+  <attribute
+    name         = "a2"
+    sourcecol    = "2"
+    valuetype    = "real"
+  />
+  
+  <attribute
+    name         = "a3"
+    sourcecol    = "3"
+    valuetype    = "real"
+  />
+  
+  <attribute
+    name         = "a4"
+    sourcecol    = "4"
+    valuetype    = "real"
+  />
+  
+  <label
+    name         = "label"
+    sourcecol    = "5"
+    valuetype    = "nominal">
+    <value>Iris-setosa</value>
+    <value>Iris-versicolor</value>
+    <value>Iris-virginica</value>
+  </label>
+  
+  <id
+    name         = "id"
+    sourcecol    = "6"
+    valuetype    = "nominal"
+  />
+  
+</attributeset>

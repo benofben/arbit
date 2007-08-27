@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta2">
+
+  <operator name="Root" class="Process">
+      <description text="#ylt#p#ygt#RapidMiner offers a way to log the time an operator needs. Each operator provide two values #yquot#looptime#yquot# and #yquot#time#yquot# which can be logged as usual by means of the ProcessLog operator. The looptime only differs from the time if the operator performs a kind of a loop.#ylt#/p#ygt#  #ylt#p#ygt#In this case, the total time of a cross validation operator and the time needed for each iteration is logged and can be plotted online or after the experiment has finished. Just change to the Results tab after the experiment has started and plot the values #yquot#looptime#yquot# and #yquot#totaltime#yquot# agains the #yquot#iteration#yquot#, e.g. with the usual Scatter plot.#ylt#/p#ygt#  #ylt#p#ygt#Please note that in order to get accurate results for the looptime the ProcessLog operator should be placed as the last operator in the loop which time should be logged.#ylt#/p#ygt#"/>
+      <operator name="ExampleSetGenerator" class="ExampleSetGenerator">
+          <parameter key="number_examples"	value="1000"/>
+          <parameter key="number_of_attributes"	value="50"/>
+          <parameter key="target_function"	value="sum classification"/>
+      </operator>
+      <operator name="XValidation" class="XValidation">
+          <operator name="JMySVMLearner" class="JMySVMLearner">
+          </operator>
+          <operator name="OperatorChain" class="OperatorChain">
+              <operator name="ModelApplier" class="ModelApplier">
+                  <list key="application_parameters">
+                  </list>
+              </operator>
+              <operator name="Performance" class="Performance">
+              </operator>
+              <operator name="ProcessLog" class="ProcessLog">
+                  <list key="log">
+                    <parameter key="iteration"	value="operator.XValidation.value.iteration"/>
+                    <parameter key="looptime"	value="operator.XValidation.value.looptime"/>
+                    <parameter key="totaltime"	value="operator.XValidation.value.time"/>
+                  </list>
+              </operator>
+          </operator>
+      </operator>
+  </operator>
+
+</process>

@@ -1,0 +1,18 @@
+<operator name="Root" class="Process">
+  <description text="The operator ExampleSetJoin in this experiment builds a join of two given example sets. Please note that attributes with equal names will be renamed during the joining process. The example sets must provide an Id attribute in order to determine corrsponding examples. After reaching the breakpoint you can inspect the input example sets. After resuming the experiment the joined example set will be the result."/>
+  <operator name="FirstExampleSetGenerator" class="ExampleSetGenerator">
+    <parameter key="target_function"	value="sum classification"/>
+  </operator>
+  <operator name="FirstIdTagging" class="IdTagging">
+  </operator>
+  <operator name="SecondExampleSetGenerator" class="ExampleSetGenerator">
+    <parameter key="number_of_attributes"	value="10"/>
+    <parameter key="target_function"	value="sum classification"/>
+  </operator>
+  <operator name="SecondIdTagging" class="IdTagging" breakpoints="after">
+  </operator>
+  <operator name="ExampleSetJoin" class="ExampleSetJoin">
+    <parameter key="remove_double_attributes"	value="false"/>
+  </operator>
+</operator>
+

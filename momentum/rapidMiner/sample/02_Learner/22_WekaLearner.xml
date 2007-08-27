@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta">
+
+  <operator name="Root" class="Process">
+      <description text="All learners of the Weka machine learning library are included in RapidMiner. The can be used in exactly the same way as all other operators. Beside the learners, all attibute evaluation and clustering schemes of Weka are also integrated into RapidMiner."/>
+      <operator name="ExampleSource" class="ExampleSource">
+          <parameter key="attributes"	value="../data/iris.aml"/>
+      </operator>
+      <operator name="W-JRip" class="W-JRip">
+      </operator>
+  </operator>
+
+</process>

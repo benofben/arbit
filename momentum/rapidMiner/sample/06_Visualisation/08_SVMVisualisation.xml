@@ -1,0 +1,20 @@
+<operator name="Root" class="Process">
+  <description text="#ylt#p#ygt#
+This experiment demonstrates the visualization possibilities for Support Vector Machines (SVM) and other kernel based large margin models. The result of this experiment will be an SVM model for which you can change to a plot view. Several dimensions are provided for plotting purposes including the training set labels, the alpha values (Lagrange multiplier), the information if a training example is a support vector, the function values (predictions) for the training examples and of course the attribute values for all training examples. This data together with the powerful RapidMiner plotting mechanism allows for different types of SVM visualizations. Just try some of them.
+#ylt#/p#ygt#
+#ylt#p#ygt#
+We would suggest that you at least try to plot the #yquot#function values#yquot# against the #yquot#alpha#yquot# values in a usual scatter plot. This might give you a good hint if the used kernel function is appropriate for your data set. The same applies for the quartile plots of  the function values and the alphas colorized by the label.
+#ylt#/p#ygt#
+#ylt#p#ygt#
+An often desired feature is a colorized density plot of the function values. You can achieve this in the plot view of SVM models by changing the plotter to #yquot#Density#yquot#, selecting two attributes for the x- and y-axis, e.g. #yquot#attribute1#yquot# and #yquot#attribute2#yquot# in this example, and setting the #yquot#Density Color#yquot# to the column #yquot#function value#yquot#. This will lead to the desired density plot. If you set the #yquot#Point Color#yquot# to #yquot#support vector#yquot# or #yquot#alpha#yquot#, you will also get insight in which points are support vectors.
+#ylt#/p#ygt#"/>
+  <operator name="ExampleSetGenerator" class="ExampleSetGenerator">
+    <parameter key="number_examples"	value="200"/>
+    <parameter key="number_of_attributes"	value="2"/>
+    <parameter key="target_function"	value="sum classification"/>
+  </operator>
+  <operator name="JMySVMLearner" class="JMySVMLearner">
+    <parameter key="C"	value="10.0"/>
+  </operator>
+</operator>
+

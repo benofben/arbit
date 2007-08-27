@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta2">
+
+  <operator name="Root" class="Process">
+      <description text="#ylt#p#ygt# Often the different operators have many parameters and it is not clear which parameter values are best for the learning task at hand. The parameter optimization operator helps to find an optimal parameter set for the used operators. #ylt#/p#ygt#  #ylt#p#ygt# The inner crossvalidation estimates the performance for each parameter set. In this experiment two parameters of the SVM are tuned. The result can be plotted in 3D (using gnuplot) or in color mode. #ylt#/p#ygt#  #ylt#p#ygt# Try the following: #ylt#ul#ygt# #ylt#li#ygt#Start the experiment. The result is the best parameter set and the performance which was achieved with this parameter set.#ylt#/li#ygt# #ylt#li#ygt#Edit the parameter list of the ParameterOptimization operator to find another parameter set.#ylt#/li#ygt# #ylt#/ul#ygt# #ylt#/p#ygt# "/>
+      <operator name="Input" class="ExampleSource">
+          <parameter key="attributes"	value="../data/polynomial.aml"/>
+      </operator>
+      <operator name="ParameterOptimization" class="GridParameterOptimization">
+          <list key="parameters">
+            <parameter key="Training.C"	value="50,100,150,200,250"/>
+            <parameter key="Training.degree"	value="1,2,3,4,5"/>
+          </list>
+          <operator name="Validation" class="XValidation">
+              <parameter key="sampling_type"	value="shuffled sampling"/>
+              <operator name="Training" class="LibSVMLearner">
+                  <parameter key="C"	value="250.0"/>
+                  <parameter key="epsilon"	value="0.01"/>
+                  <parameter key="kernel_type"	value="poly"/>
+                  <parameter key="svm_type"	value="epsilon-SVR"/>
+              </operator>
+              <operator name="ApplierChain" class="OperatorChain">
+                  <operator name="Test" class="ModelApplier">
+                      <list key="application_parameters">
+                      </list>
+                  </operator>
+                  <operator name="Evaluation" class="RegressionPerformance">
+                      <parameter key="absolute_error"	value="true"/>
+                      <parameter key="normalized_absolute_error"	value="true"/>
+                      <parameter key="root_mean_squared_error"	value="true"/>
+                      <parameter key="squared_error"	value="true"/>
+                  </operator>
+              </operator>
+          </operator>
+          <operator name="Log" class="ProcessLog">
+              <parameter key="filename"	value="paraopt.log"/>
+              <list key="log">
+                <parameter key="C"	value="operator.Training.parameter.C"/>
+                <parameter key="degree"	value="operator.Training.parameter.degree"/>
+                <parameter key="absolute"	value="operator.Validation.value.performance"/>
+              </list>
+          </operator>
+      </operator>
+      <operator name="ParameterSetWriter" class="ParameterSetWriter">
+          <parameter key="parameter_file"	value="parameters.par"/>
+      </operator>
+      <operator name="GnuplotWriter" class="GnuplotWriter">
+          <parameter key="additional_parameters"	value="set grid"/>
+          <parameter key="name"	value="Log"/>
+          <parameter key="output_file"	value="parameter_optimization.gnu"/>
+          <parameter key="values"	value="absolute"/>
+          <parameter key="x_axis"	value="C"/>
+          <parameter key="y_axis"	value="degree"/>
+      </operator>
+  </operator>
+
+</process>

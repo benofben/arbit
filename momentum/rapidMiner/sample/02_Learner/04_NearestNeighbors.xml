@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta">
+
+  <operator name="Root" class="Process">
+      <description text="This learner uses a simple nearest neighbors classifier. This instance based classifiers just uses the other instances closest to the instance at hand in order to determine a prediction."/>
+      <operator name="ArffExampleSource" class="ArffExampleSource">
+          <parameter key="data_file"	value="../data/iris.arff"/>
+          <parameter key="label_attribute"	value="class"/>
+      </operator>
+      <operator name="NearestNeighbors" class="NearestNeighbors">
+          <parameter key="k"	value="3"/>
+      </operator>
+  </operator>
+
+</process>

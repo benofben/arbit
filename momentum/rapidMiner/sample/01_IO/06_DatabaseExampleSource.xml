@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta">
+<operator name="Root" class="Process">
+  <description text="#ylt#p#ygt#This sample experiment must be configured properly before using. Specify your database URL and user name as parameters of the DatabaseExampleSource operator and specify a SQL query statement. The easiest way of setting these parameters is to use the configuration wizard which will be started by pressing on the button at the top of the parameter table.#ylt#/p#ygt#
+
+#ylt#p#ygt#Please note that it is not necessary to specifically define a JDBC driver class for this operator. RapidMiner will automatically detect an appropriate driver for the defined database URL. If the database access does not work (e.g. because of a #yquot#No suitable driver#yquot# error), the main reason for this is that no appropriate JDBC driver for your database was available.  Just copy your driver package into lib/jdbc or make it available in your classpath variable and restart RapidMiner in this case.#ylt#/p#ygt#
+
+#ylt#p#ygt#The default working mode is to load the data from the database into main memory. All following RapidMiner operators works in the same way as the data was loaded from file. You can also specify that RapidMiner should work directly on the database but please note that this working mode is still regarded as experimental (although it will work for most database systems and experiments).#ylt#/p#ygt# #ylt#p#ygt# There are more example set input operators like DBaseExampleSource or BibTexExampleSource. These are for more special file formats which will not be discussed here. #ylt#/p#ygt#"/>
+  <parameter key="logverbosity"	value="minimum"/>
+  <operator name="Input" class="DatabaseExampleSource">
+    <parameter key="database_url"	value="jdbc:mysql://severNameOrIP:port/database"/>
+    <parameter key="id_attribute"	value="column_id"/>
+    <parameter key="label_attribute"	value="column_target"/>
+    <parameter key="query"	value="SELECT * FROM mytable"/>
+    <parameter key="username"	value="testuser"/>
+  </operator>
+</operator>
+</process>
+

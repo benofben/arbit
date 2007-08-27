@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta">
+
+  <operator name="Root" class="Process">
+      <description text="#ylt#p#ygt#This experiment makes use of the previous experiment and loads the written combined model from file after generating a similar, but not equal, data set (caused by different random seeds in the experiment root operators). The combined model is then applied to the data set.#ylt#/p#ygt#"/>
+      <parameter key="random_seed"	value="2000"/>
+      <operator name="ExampleSetGenerator" class="ExampleSetGenerator">
+          <parameter key="target_function"	value="polynomial classification"/>
+      </operator>
+      <operator name="NoiseGenerator" class="NoiseGenerator">
+          <list key="noise">
+          </list>
+          <parameter key="random_attributes"	value="3"/>
+      </operator>
+      <operator name="ModelLoader" class="ModelLoader">
+          <parameter key="model_file"	value="combined_model.mod"/>
+      </operator>
+      <operator name="ModelApplier" class="ModelApplier">
+          <list key="application_parameters">
+          </list>
+      </operator>
+  </operator>
+
+</process>

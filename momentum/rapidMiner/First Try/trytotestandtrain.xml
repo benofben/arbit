@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0">
+
+  <operator name="Root" class="Process">
+      <parameter key="resultfile"	value="C:\momentum\rapidMiner\First Try\rootResults.xml"/>
+      <operator name="ArffExampleSource (Train)" class="ArffExampleSource">
+          <parameter key="data_file"	value="C:\momentum\data\weka\trainBEAS.arff"/>
+          <parameter key="label_attribute"	value="label"/>
+      </operator>
+      <operator name="FeatureSelection" class="FeatureSelection">
+          <operator name="NaiveBayes" class="NaiveBayes">
+              <parameter key="keep_example_set"	value="true"/>
+              <parameter key="use_example_weights"	value="false"/>
+          </operator>
+          <operator name="ModelApplier" class="ModelApplier">
+              <list key="application_parameters">
+              </list>
+          </operator>
+          <operator name="ClassificationPerformance" class="ClassificationPerformance">
+              <parameter key="absolute_error"	value="true"/>
+              <parameter key="accuracy"	value="true"/>
+              <list key="class_weights">
+              </list>
+              <parameter key="classification_error"	value="true"/>
+              <parameter key="correlation"	value="true"/>
+              <parameter key="kappa"	value="true"/>
+              <parameter key="kendall_tau"	value="true"/>
+              <parameter key="logistic_loss"	value="true"/>
+              <parameter key="margin"	value="true"/>
+              <parameter key="normalized_absolute_error"	value="true"/>
+              <parameter key="relative_error"	value="true"/>
+              <parameter key="root_mean_squared_error"	value="true"/>
+              <parameter key="root_relative_squared_error"	value="true"/>
+              <parameter key="soft_margin_loss"	value="true"/>
+              <parameter key="spearman_rho"	value="true"/>
+              <parameter key="squared_correlation"	value="true"/>
+              <parameter key="squared_error"	value="true"/>
+              <parameter key="weighted_mean_precision"	value="true"/>
+              <parameter key="weighted_mean_recall"	value="true"/>
+          </operator>
+      </operator>
+  </operator>
+
+</process>

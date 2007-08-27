@@ -1,0 +1,14 @@
+<operator name="Root" class="Process">
+  <description text="If the data set at hand prodives an id attribute the id is presented as tool tip text at the mouse pointer above a plotter data point. It the experiment contains an ExampleVisualizer operator the user can make a double-click on a data point which creates a data view of the selected data point. Other, more special, visualizers exist which opens a text viewer for text data experiments or an Audio player in case of music data.
+
+Please note that the example set visualization feature is currently only available for the scatter plotter."/>
+  <operator name="ArffExampleSource" class="ArffExampleSource">
+    <parameter key="data_file"	value="../data/iris.arff"/>
+    <parameter key="label_attribute"	value="class"/>
+  </operator>
+  <operator name="IdTagging" class="IdTagging">
+  </operator>
+  <operator name="ExampleVisualizer" class="ExampleVisualizer">
+  </operator>
+</operator>
+

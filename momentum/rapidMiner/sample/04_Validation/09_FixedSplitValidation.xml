@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta2">
+
+  <operator name="Root" class="Process">
+      <description text="#ylt#p#ygt# The FixedSplitValidation uses a fixed number of examples for either the training or the test set. This might be useful if both the training and the test data are given in the same data file and the split point is known beforehand. #ylt#/p#ygt#"/>
+      <operator name="ArffExampleSource" class="ArffExampleSource">
+          <parameter key="data_file"	value="../data/iris.arff"/>
+          <parameter key="label_attribute"	value="class"/>
+      </operator>
+      <operator name="FixedSplitValidation" class="FixedSplitValidation">
+          <operator name="NearestNeighbors" class="NearestNeighbors">
+          </operator>
+          <operator name="ApplierChain" class="OperatorChain">
+              <operator name="Test" class="ModelApplier">
+                  <list key="application_parameters">
+                  </list>
+              </operator>
+              <operator name="Performance" class="Performance">
+              </operator>
+          </operator>
+      </operator>
+  </operator>
+
+</process>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta">
+
+  <operator name="Root" class="Process">
+      <description text="#ylt#p#ygt# In this experiment we load a data set and applied one of the feature weighting schemes available in RapidMiner on this data set. After the experiment has finished, just change into the plot view of the example set and check out the available high-dimensional plotters like parallel plot, survey plot, RadViz or GridViz plot, histogram matrix, quartile matrix and the colorized variants of these plots. You will see that some of the columns are marked by a yellowish color, e.g. by a surrounding rectangle or directly in the plot. These yellow marks indicate the weight of the corresponding attributes and the color is more intensive if the corresponding weight is higher. #ylt#/p#ygt# #ylt#p#ygt# This experiment demonstrates RapidMiner's ability to present several results by combining them. Of course you can still have a look at the weights table or the different plot views of the attribute weights. #ylt#/p#ygt#"/>
+      <operator name="ExampleSource" class="ExampleSource">
+          <parameter key="attributes"	value="../data/sonar.aml"/>
+      </operator>
+      <operator name="ChiSquaredWeighting" class="ChiSquaredWeighting">
+      </operator>
+  </operator>
+
+</process>

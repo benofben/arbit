@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta2">
+
+  <operator name="Root" class="Process">
+      <description text="#ylt#p#ygt#In the previous experiment an optimal attribute set was searched (please make sure that you have performed the previous experiment before this experiment is startet). This optimal attribute set is loaded and applied to another input data. This is necessary to apply a learned model which was learned from data with the same input representation. #ylt#/p#ygt##ylt#p#ygt#Try the following: #ylt#ul#ygt##ylt#li#ygt#Start the experiment. After a few moments the input example set uses the optimal feature representation which was found in the previous experiment.#ylt#/li#ygt##ylt#/ul#ygt##ylt#/p#ygt#"/>
+      <operator name="ExampleSource" class="ExampleSource">
+          <parameter key="attributes"	value="../data/polynomial.aml"/>
+      </operator>
+      <operator name="AttributeConstructionsLoader" class="AttributeConstructionsLoader">
+          <parameter key="attribute_constructions_file"	value="yagga.att"/>
+      </operator>
+  </operator>
+
+</process>

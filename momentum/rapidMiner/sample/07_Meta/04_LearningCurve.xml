@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta2">
+
+  <operator name="Root" class="Process">
+      <description text="This experiment plots the learning curve, i.e. the performance with respect to the number of examples which is used for learning."/>
+      <parameter key="logverbosity"	value="warning"/>
+      <parameter key="random_seed"	value="2004"/>
+      <operator name="ExampleSetGenerator" class="ExampleSetGenerator">
+          <parameter key="attributes_lower_bound"	value="-1.0"/>
+          <parameter key="attributes_upper_bound"	value="1.0"/>
+          <parameter key="number_examples"	value="300"/>
+          <parameter key="target_function"	value="sum classification"/>
+      </operator>
+      <operator name="NoiseGenerator" class="NoiseGenerator">
+          <parameter key="label_noise"	value="0.2"/>
+          <list key="noise">
+          </list>
+          <parameter key="random_attributes"	value="5"/>
+      </operator>
+      <operator name="Normalization" class="Normalization">
+      </operator>
+      <operator name="LearningCurve" class="LearningCurve">
+          <parameter key="training_ratio"	value="0.2"/>
+          <operator name="JMySVMLearner" class="JMySVMLearner">
+          </operator>
+          <operator name="ApplierChain" class="OperatorChain">
+              <operator name="ModelApplier" class="ModelApplier">
+                  <list key="application_parameters">
+                  </list>
+              </operator>
+              <operator name="Performance" class="Performance">
+              </operator>
+          </operator>
+          <operator name="ProcessLog" class="ProcessLog">
+              <list key="log">
+                <parameter key="fraction"	value="operator.LearningCurve.value.fraction"/>
+                <parameter key="performance"	value="operator.LearningCurve.value.performance"/>
+              </list>
+          </operator>
+      </operator>
+  </operator>
+
+</process>

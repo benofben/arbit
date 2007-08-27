@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta">
+
+  <operator name="Root" class="Process">
+      <description text="#ylt#p#ygt#Some operators rely on the existence of an ID attribute. In cases where the data set does not provide an ID, the operator IdTagging can be used to add a numerical or nominal ID to the input example set. #ylt#/p#ygt#"/>
+      <operator name="ArffExampleSource" class="ArffExampleSource">
+          <parameter key="data_file"	value="../data/iris.arff"/>
+          <parameter key="label_attribute"	value="class"/>
+      </operator>
+      <operator name="IdTagging" class="IdTagging">
+      </operator>
+  </operator>
+
+</process>

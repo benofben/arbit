@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta2">
+
+  <operator name="Root" class="Process">
+      <description text="IterativeWeightOptimization is another operator which combines a filter based weight selection with the performance evaluation of a wrapper approach. In this case, the weights created by a linear Support Vector Machine (JMySVMLearner) are initially used. Please note that the corresponding model is not needed and hence deleted by an IOConsumer. The IterativeWeightOptimization tries to optimize the selection threshold of the AttributeWeightSelection and relearns the attribute weights for the next iteration."/>
+      <operator name="ExampleSource" class="ExampleSource">
+          <parameter key="attributes"	value="../data/sonar.aml"/>
+      </operator>
+      <operator name="JMySVMLearner" class="JMySVMLearner">
+          <parameter key="calculate_weights"	value="true"/>
+          <parameter key="keep_example_set"	value="true"/>
+          <parameter key="scale"	value="false"/>
+      </operator>
+      <operator name="IOConsumer" class="IOConsumer">
+          <parameter key="io_object"	value="Model"/>
+      </operator>
+      <operator name="IterativeWeightOptimization" class="IterativeWeightOptimization">
+          <parameter key="iterations_without_improvement"	value="10"/>
+          <parameter key="min_diff"	value="0.01"/>
+          <parameter key="parameter"	value="Selection.weight"/>
+          <operator name="Selection" class="AttributeWeightSelection">
+              <parameter key="weight"	value="0.09132547651973899"/>
+          </operator>
+          <operator name="XValidation" class="XValidation">
+              <parameter key="keep_example_set"	value="true"/>
+              <parameter key="number_of_validations"	value="3"/>
+              <operator name="EvaluationTraining" class="JMySVMLearner">
+                  <parameter key="scale"	value="false"/>
+              </operator>
+              <operator name="EvaluationChain" class="OperatorChain">
+                  <operator name="ModelApplier" class="ModelApplier">
+                      <list key="application_parameters">
+                      </list>
+                  </operator>
+                  <operator name="Performance" class="Performance">
+                  </operator>
+              </operator>
+          </operator>
+          <operator name="InnerWeightCreation" class="JMySVMLearner">
+              <parameter key="calculate_weights"	value="true"/>
+              <parameter key="scale"	value="false"/>
+          </operator>
+      </operator>
+  </operator>
+
+</process>

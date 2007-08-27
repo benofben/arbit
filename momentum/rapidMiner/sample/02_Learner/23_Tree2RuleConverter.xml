@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process version="4.0beta2">
+
+  <operator name="Root" class="Process">
+      <description text="The tree2rule converter is a meta learner which uses its inner decision tree learner in order to produce a set of human readable rules."/>
+      <operator name="ExampleSource" class="ExampleSource">
+          <parameter key="attributes"	value="../data/golf.aml"/>
+      </operator>
+      <operator name="Tree2RuleConverter" class="Tree2RuleConverter">
+          <operator name="DecisionTree" class="DecisionTree">
+          </operator>
+      </operator>
+  </operator>
+
+</process>

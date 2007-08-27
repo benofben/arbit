@@ -1,0 +1,10 @@
+<operator name="Root" class="Process">
+  <description text="The ExcelExampleSource operator can be used to directly load data from Microsoft Excel spreadsheet files."/>
+  <operator name="ExcelExampleSource" class="ExcelExampleSource">
+    <parameter key="excel_file"	value="../data/excel_spreadsheet.xls"/>
+    <parameter key="first_row_as_names"	value="true"/>
+    <parameter key="id_column"	value="1"/>
+    <parameter key="label_column"	value="4"/>
+  </operator>
+</operator>
+

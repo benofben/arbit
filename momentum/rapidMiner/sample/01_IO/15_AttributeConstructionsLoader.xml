@@ -1,0 +1,10 @@
+<operator name="Root" class="Process">
+    <description text="You have to perform the AttributeConstructionsWriter experiment before you can use this one. The feature construction descriptions created by this experiment are loaded with help of the #yquot#AttributeConstructionsLoader#yquot# operator. This is especially useful to reuse a automatically determined feature space from other experiments. Please note that these operators should only be used for feature generation purposes. For feature selection, please use the AttributeWeightsWriter and AttributeWeightsLoader operators."/>
+    <operator name="ExampleSource" class="ExampleSource">
+        <parameter key="attributes"	value="../data/polynomial.aml"/>
+    </operator>
+    <operator name="AttributeConstructionsLoader" class="AttributeConstructionsLoader">
+        <parameter key="attribute_constructions_file"	value="attributes_generated.att"/>
+    </operator>
+</operator>
+
