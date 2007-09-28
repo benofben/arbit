@@ -1,0 +1,29 @@
+clear all
+
+symbols = textread('C:\momentum\data\symbols\successfullyReformattedSymbols.txt', '%s');
+
+rate=1.02;
+
+% need to find out how much data we have...
+symbol='BEAS';
+filename = strcat('C:\momentum\data\train\', symbol, '.csv');
+stock=load(filename);
+openPrice=stock(:,2);
+
+capital=25000;
+
+time=size(openPrice,1);
+p1 = predictor1(symbols, time);
+p2 = predictor2(symbols, time);
+p3 = predictor3(symbols, time);
+    
+% we want to sort the symbols
+for symbolIndex=1:size(p1,2)
+    p(symbolIndex)=(1-p1(symbolIndex))*(1-p2(symbolIndex))*(1-p3(symbolIndex));
+    p(symbolIndex)=1-p(symbolIndex);
+end
+    
+prows(:,1)=p;
+prows(:,2)=p1;
+prows(:,)=p2;
+prows(4,:)=p3;
