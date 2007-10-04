@@ -7,7 +7,7 @@ def getHistoricData(symbol):
 
     """
     Notes on the yahoo parameters:
-    d=end month-1
+    d=end month-1 
     e=end day
     f=end year
     g=d?
@@ -17,11 +17,19 @@ def getHistoricData(symbol):
     """
     
     today = datetime.date.today()
-    year = today.strftime("%Y")
-    month = str(int(today.strftime("%m"))-1)
-    day = today.strftime("%d")
+    endYear = today.strftime("%Y")    
+    endMonth = str(int(today.strftime("%m"))-1)
+    endDay = today.strftime("%d")
 
-    conn.request("GET", "/table.csv?s=" + symbol + "&d=" + month + "&e=" + day + "&f=" + year + "&g=d&a=0&b=2&c=2002&ignore=.csvc")
+    endYear = "2005" # don't want to process recent data right now
+    endMonth = "0"
+    endDay = "1"
+    
+    startYear = "2002"
+    startMonth = "0"
+    startDay = "1"
+
+    conn.request("GET", "/table.csv?s=" + symbol + "&d=" + endMonth + "&e=" + endDay + "&f=" + endYear + "&g=d&a=" + startMonth + "&b=" + startDay + "&c=" + startYear + "&ignore=.csvc")
     response = conn.getresponse()
     print response.status, response.reason
     data = response.read()

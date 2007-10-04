@@ -1,7 +1,0 @@
-<operator name="Root" class="Process">
-  <description text="This experiment is the same as #yquot#01_ExampleSource.xml#yquot#. However, the data is spread over several files. Please have a look at the attribute description file #yquot#golf_multiple_sources.xml#yquot# to see the difference. Reading the data from different  files might be especially useful in cases where attribute data and label data derive from different files."/>
-  <operator name="Input" class="ExampleSource">
-    <parameter key="attributes"	value="../data/golf_multiple_sources.aml"/>
-  </operator>
-</operator>
-

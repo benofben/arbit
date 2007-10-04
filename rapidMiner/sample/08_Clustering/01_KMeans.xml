@@ -1,20 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<process version="4.0beta">
-
-  <operator name="Root" class="Process">
-      <description text="#ylt#p#ygt#In many cases, no target attribute (label) can be defined and the data should be automatically grouped. This procedure is called #yquot#Clustering#yquot#. RapidMiner supports a wide range of clustering schemes which can be used in just the same way like any other learning scheme. This includes the combination with all preprocessing operators.#ylt#p#ygt#
-#ylt#p#ygt#In this experimen, the well-known Iris data set is loaded (the label is loaded, too, but it is only used for visualization and comparison and not for building the clusters itself). One of the most simple clustering schemes, namely KMeans, is then applied to this data set. Afterwards, a dimensionality reduction is performed in order to better support the visualization of the data set in two dimensions.
-#ylt#/p#ygt##ylt#p#ygt#Just perform the experiment and compare the clustering result with the original label (e.g. in the plot view of the example set). You can also visualize the cluster model itself.
-#ylt#/p#ygt#"/>
-      <parameter key="logverbosity"	value="warning"/>
-      <operator name="ExampleSource" class="ExampleSource">
-          <parameter key="attributes"	value="../data/iris.aml"/>
-      </operator>
-      <operator name="KMeans" class="KMeans">
-          <parameter key="k"	value="3"/>
-      </operator>
-      <operator name="SVDReduction" class="SVDReduction">
-      </operator>
-  </operator>
-
-</process>

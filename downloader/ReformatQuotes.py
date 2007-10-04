@@ -41,8 +41,10 @@ def GetSymbols(dirname):
     return symbols
 
 def ReformatQuoteFiles():
-    symbolsFilename = "data/symbols/successfullyReformattedSymbols.txt"
-    symbolsFile = open(symbolsFilename, 'w')
+    successfulReformatSymbolsFilename = "data/symbols/successfulReformatSymbols.txt"
+    failedReformatSymbolsFilename = "data/symbols/failedReformatSymbols.txt"
+    successfulReformatSymbolsFile = open(successfulReformatSymbolsFilename, 'w')
+    failedReformatSymbolsFile = open(failedReformatSymbolsFilename, 'w')
     
     symbols=GetSymbols('data/quotes')
     while symbols:
@@ -50,7 +52,8 @@ def ReformatQuoteFiles():
         print "Reformatting symbol " + symbol + "."
         print str(len(symbols)) + " remaining."
         if ReformatQuoteFile(symbol):
-            symbolsFile.write(symbol + '\n')
-        print " "
-        
-    symbolsFile.close()
+            successfulReformatSymbolsFile.write(symbol + '\n')
+        else:
+            failedReformatSymbolsFile.write(symbol + '\n')
+    successfulReformatSymbolsFile.close()
+    failedReformatSymbolsFile.close()
