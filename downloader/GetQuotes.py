@@ -20,10 +20,6 @@ def getHistoricData(symbol):
     endYear = today.strftime("%Y")    
     endMonth = str(int(today.strftime("%m"))-1)
     endDay = today.strftime("%d")
-
-    endYear = "2005" # don't want to process recent data right now
-    endMonth = "0"
-    endDay = "1"
     
     startYear = "2002"
     startMonth = "0"

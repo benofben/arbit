@@ -1,18 +1,14 @@
-import operator
 def PickWindow():
     accuracy=[]
-    for window in range(1,242*3):
+    for window in range(1,242*2): # two years
         accuracy.append(ComputeL_Window(window))
         PrintAccuracy(accuracy)
-
-    window = operator.indexOf(accuracy, max(accuracy))+1
-    return window
     
 def ComputeL_Window(window):   
     print "Processing window " + str(window) + "."
     
     import GetData
-    symbols = GetData.GetSymbols("data/reformattedQuotes")
+    symbols = GetData.GetSymbols()
 
     win = 0.0
     total = 0
@@ -31,8 +27,8 @@ def ComputeL_WindowSymbol(window, symbol):
     import GetData
     quotes = GetData.GetQuotes(symbol)
 
-    L_win = 0.0
-    L_total=0
+    win = 0.0
+    total=0
         
     index = 0
     while(index+window+1 < len(quotes)):
@@ -45,26 +41,21 @@ def ComputeL_WindowSymbol(window, symbol):
         # 0.7 is termed the margin.
         # It's conceivable that we should validate to pick it.
         if(L>0.7):
-            L_total = L_total + 1
+            total = total + 1
             # if high > open * 1.02
             if(float(quotes[index+window+1][2])>float(quotes[index+window+1][1])*1.02):
-                L_win = L_win + 1
-            else:
-                Open = float(quotes[index+window+1][1])
-                Close = float(quotes[index+window+1][4])
+                win = win + 1
         index = index + 1
 
-    if(L_total == 0):
+    if(total == 0):
         return [0, 0]
-    return [L_win, L_total]
+    return [win, total]
 
 def PrintAccuracy(accuracy):
-    import os
-    if not os.path.exists("data/predictor/"):
-        os.makedirs("data/predictor/")
-
-    outputFilename = "data/predictor/accuracy.csv"
+    outputFilename = "data/ValidateL.csv"
     outputFile = open(outputFilename, 'w')
     for a in accuracy:
         outputFile.write(str(a[0]) + ", " + str(a[1]) + "\n")
     outputFile.close()
+
+PickWindow()

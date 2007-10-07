@@ -1,3 +1,12 @@
+def GetAllQuotes():
+    symbols = GetSymbols()
+    q = {}
+    for symbol in symbols:
+        print "Loading symbol " + symbol + "."
+        q[symbol] = GetQuotes(symbol)
+    return q
+
+
 def GetQuotes(symbol):
     inputFilename = "data/reformattedQuotes/" + symbol + ".csv"
     inputFile=open(inputFilename, 'rb')
@@ -12,7 +21,8 @@ def GetQuotes(symbol):
     inputFile.close()
     return quotes
 
-def GetSymbols(dirname):
+def GetSymbols():
+    dirname = "data/reformattedQuotes"
     symbols=[]
     import os
     files=os.listdir(dirname)
