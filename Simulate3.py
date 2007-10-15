@@ -17,8 +17,14 @@ def Run():
     loss_total = 0
     
     # now let's simulate
-    for day in range(window, len(q["TIBX"])-1):
+    for day in range(len(q["TIBX"])-2, len(q["TIBX"])-1):
 
+        # remove symbols no longer listed
+        for symbol in symbols:
+            if(day>=len(q[symbol])):
+               symbols.remove(symbol);
+        print len(symbols)
+               
         L={}
         for symbol in symbols:
             quotes = q[symbol]
@@ -28,8 +34,14 @@ def Run():
         K={}
         for symbol in maxL:
             quotes = q[symbol]
-            K[symbol] = Predictors.ComputeDayChange(quotes, day)
-        symbol = Predictors.DictionaryMin(K)
+            K[symbol] = Predictors.ComputeK(quotes, day, window, take)
+        maxK = Predictors.DictionaryMaxN(K, 10)
+
+        J={}
+        for symbol in maxK:
+            quotes = q[symbol]
+            J[symbol] = Predictors.ComputeDayChange(quotes, day)
+        symbol = Predictors.DictionaryMin(J)
         quotes = q[symbol]
 
         Open = float(quotes[day][1])
@@ -51,7 +63,7 @@ def Run():
         if(loss_total !=0):
             l = math.pow(loss, 1.0/loss_total)
 
-        print "d: " + str(day) + " s: " + symbol + " c: " + str(capital) + " L: " + str(L[symbol]) + " K: " + str(K[symbol]) + " a: " + str(float(wins)/float(total)) + " loss: " + str(l)
+        print "d: " + str(day) + " s: " + symbol + " c: " + str(capital) + " a: " + str(float(wins)/float(total)) + " loss: " + str(l) + " L: " + str(L[symbol]) + " K: " + str(K[symbol]) + " J: " + str(J[symbol]) 
 
 Run()
 

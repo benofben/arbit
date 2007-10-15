@@ -1,6 +1,6 @@
 def PickWindow():
     accuracy=[]
-    for window in range(1,242*2): # two years
+    for window in range(1,242*2,5): # two years
         accuracy.append(ComputeL_Window(window))
         PrintAccuracy(accuracy)
     
@@ -40,10 +40,10 @@ def ComputeL_WindowSymbol(window, symbol):
         
         # 0.7 is termed the margin.
         # It's conceivable that we should validate to pick it.
-        if(L>0.7):
+        if(L>0.50):
             total = total + 1
             # if high > open * 1.02
-            if(float(quotes[index+window+1][2])>float(quotes[index+window+1][1])*1.02):
+            if(float(quotes[index+window+1][2])>float(quotes[index+window+1][1])*1.03):
                 win = win + 1
         index = index + 1
 

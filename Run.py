@@ -1,5 +1,4 @@
-window = 100
-margin = 0.6
+window = 200
 take = 1.02
 
 def Run():
@@ -15,13 +14,12 @@ def Run():
     L={}
     T={}
     for symbol in symbols:
-        day = len(q[symbol])
-        l = Predictors.ComputeL(q[symbol], day, window, take)
-        if l>margin:
-            L[symbol] = l
-            T[symbol] = time.localtime(float(q[symbol][day-1][0]))
+        lastDay = len(q[symbol])
+        L[symbol] = Predictors.ComputeL(q[symbol], lastDay, window, take)
+        T[symbol] = time.localtime(float(q[symbol][lastDay-1][0]))
 
-    for symbol in L:
+    maxL = Predictors.DictionaryMaxN(L, 10)
+    for symbol in maxL:
         timeStr = time.strftime("%a, %d %b %Y", T[symbol])
         print symbol + "," + str(L[symbol]) + "," + timeStr
 

@@ -6,7 +6,6 @@ def GetAllQuotes():
         q[symbol] = GetQuotes(symbol)
     return q
 
-
 def GetQuotes(symbol):
     inputFilename = "data/reformattedQuotes/" + symbol + ".csv"
     inputFile=open(inputFilename, 'rb')
