@@ -1,26 +1,137 @@
-def ComputeNDayLow(quotes, day):
-    nDayLow = 0;
-    Close = float(quotes[day-1][4])
+###############################################
+# Predictor(day) gives the value of predictor
+# for day, which depends on the previous days
+# and not on day.
+###############################################
+
+def NDayHigh(quotes, day):
+    nDayHigh = 0
+    Close = quotes["Close"][day-1]
 
     for d in range(day-2, -1, -1):
-        Low = float(quotes[d][3])
-        if(Close<=Low):
+        High = quotes["High"][d]
+        if(Close>High):
+            nDayHigh = nDayHigh + 1
+        else:
+            break
+    return nDayHigh
+
+def NDayLow(quotes, day):
+    nDayLow = 0
+    Close = quotes["Close"][day-1]
+
+    for d in range(day-2, -1, -1):
+        Low = quotes["Low"][d]
+        if(Close<Low):
             nDayLow = nDayLow + 1
         else:
             break
     return nDayLow
 
-def ComputeDayChange(quotes, day):
-    TodayClose = float(quotes[day-1][4])
-    YesterDayClose = float(quotes[day-2][4])
+def DailyChange(quotes, day):
+    TodayClose = quotes["Close"][day-1]
+    YesterDayClose = quotes["Close"][day-2]
     return TodayClose / YesterDayClose
 
-def ExpectedReturn(quotes, day, window, take):
-    e = 1;
+# gain function            
+def L(quotes, day, window, take):
+    wins = 0.0
+    total = 0
+
     for d in range(day-window, day):
-        Open = float(quotes[d][1])
-        High = float(quotes[d][2])
-        Close = float(quotes[d][4])
+        Open = quotes["Open"][d]
+        High = quotes["High"][d]
+        if(High >= Open * take):
+            wins = wins + 1
+        total = total + 1
+
+    return wins / total
+
+# loss function
+def K(quotes, day, window, take):
+    loss = 1.0
+    total = 0
+    
+    for d in range(day-window, day):
+        Open = quotes["Open"][d]
+        High = quotes["High"][d]
+        Close = quotes["Close"][d]
+        if(High < Open * take):
+            loss = loss * (Close / Open)
+            total = total + 1
+
+    import math
+    loss = math.pow (loss, 1.0/total)
+    
+    return loss
+
+###############################################
+# Dictionary Min and Max functions
+###############################################
+
+# returns the key of the smallest item in the dictionary
+def DictionaryMax(dictionary):
+    m=""
+    # pick the first key
+    for key in dictionary:
+        m = key
+        break
+    # find the max
+    for key in dictionary:
+        if dictionary[key] > dictionary[m]:
+            m = key
+    return m
+
+# returns the key of the largest item in the dictionary
+def DictionaryMin(dictionary):
+    m=""
+    # pick the first key
+    for key in dictionary:
+        m = key
+        break
+    # find the min
+    for key in dictionary:
+        if dictionary[key] < dictionary[m]:
+            m = key
+    return m
+
+# returns the keys of the n smallest items in the dictionary
+def DictionaryMinN(dictionary, n):
+    d=dictionary.copy()
+    keys = []
+    for i in range(0,n):
+        if(d):
+            key = DictionaryMin(d)
+            keys.append(key)
+            d.pop(key)
+        else:
+            break
+    return keys
+
+# returns the keys of the n largest items in the dictionary
+def DictionaryMaxN(dictionary, n):
+    d=dictionary.copy()
+    keys = []
+    for i in range(0,n):
+        if(d):
+            key = DictionaryMax(d)
+            keys.append(key)
+            d.pop(key)
+        else:
+            break
+    return keys
+
+###############################################
+# These guys haven't been used in a while.
+# They might not work anymore.
+###############################################
+
+def ExpectedReturn(quotes, day, window, take):
+    e = 1.0;
+    for d in range(day-window, day):
+        Open = quotes["Open"][d]
+        High = quotes["High"][d]
+        Close = quotes["Close"][d]
         
         if(High > Open * take):
             e = e * take;
@@ -36,87 +147,3 @@ def PickTake(quotes, day, window):
         E[take] = ExpectedReturn(quotes, day, window, take)
     take = DictionaryMax(E)
     return [take, E[take]]
-
-# gain function            
-def ComputeL(quotes, day, window, take):
-    win = 0.0
-    total = 0
-
-    for d in range(day-window, day):
-        Open = float(quotes[d][1])
-        High = float(quotes[d][2])
-        if(High >= Open * take):
-            win = win + 1
-        total = total + 1
-
-    return win / total
-
-# loss function
-def ComputeK(quotes, day, window, take):
-    loss = 1.0
-    total = 0
-    
-    for d in range(day-window, day):
-        Open = float(quotes[d][1])
-        High = float(quotes[d][2])
-        Close = float(quotes[d][4])
-        if(High < Open * take):
-            loss = loss * (Close / Open)
-            total = total + 1
-
-    import math
-    loss = math.pow (loss, 1.0/total)
-    
-    return loss
-
-# returns the key of the smallest item in the dictionary
-def DictionaryMax(dictionary):
-    # pick the first
-    m = ""
-    for item in dictionary:
-        m = item
-        break
-    # find the max
-    for item in dictionary:
-        if dictionary[item] > dictionary[m]:
-            m = item
-    return m
-
-# returns the key of the largest item in the dictionary
-def DictionaryMin(dictionary):
-    # pick the first
-    m = ""
-    for item in dictionary:
-        m = item
-        break
-    # find the max
-    for item in dictionary:
-        if dictionary[item] < dictionary[m]:
-            m = item
-    return m
-
-# returns the keys of the n smallest items in the dictionary
-def DictionaryMinN(dictionary, n):
-    d=dictionary.copy()
-    keys = []
-    for i in range(0,n):
-        if(dictionary):
-            key = DictionaryMin(d)
-            keys.append(key)
-            d.pop(key)
-        else:
-            break
-    return keys
-
-# returns the keys of the n largest items in the dictionary
-def DictionaryMaxN(dictionary, n):
-    d=dictionary.copy()
-    keys = []
-    for i in range(0,n):
-        if(dictionary):
-            key = DictionaryMax(d)
-            keys.append(key)
-            d.pop(key)
-        else:
-            break
-    return keys

@@ -1,26 +1,33 @@
-window = 200
-take = 1.02
+window = 100
 
-def Run():
-    import downloader.Downloader
-#    downloader.Downloader.download()
+def run():
+    #import symbols
+    #symbols.downloadSymbols()
 
-    import GetData
-    symbols = GetData.GetSymbols()
-    q = GetData.GetAllQuotes()
+    #import quotes
+    #quotes.downloadAllQuotes()
+    
+    import data
+    symbols = data.getSymbols()
+    quotes = data.getAllQuotes()
+    
+    import predictors
 
-    import Predictors
-    import time
     L={}
-    T={}
     for symbol in symbols:
-        lastDay = len(q[symbol])
-        L[symbol] = Predictors.ComputeL(q[symbol], lastDay, window, take)
-        T[symbol] = time.localtime(float(q[symbol][lastDay-1][0]))
+        index = len(quotes[symbol]["Open"])-1
+        nDayHigh = predictors.NDayHigh(quotes[symbol],index)
+        if(nDayHigh>=300):
+            L[symbol] = nDayHigh
 
-    maxL = Predictors.DictionaryMaxN(L, 10)
-    for symbol in maxL:
-        timeStr = time.strftime("%a, %d %b %Y", T[symbol])
-        print symbol + "," + str(L[symbol]) + "," + timeStr
+    K={}
+    for symbol in L:
+        index = len(quotes[symbol]["Open"])-1
+        K[symbol] = predictors.DailyChange(quotes[symbol], index)
+    KMax = predictors.DictionaryMaxN(K, 5)
+    
+    for symbol in KMax:
+        index = len(quotes[symbol]["Open"])-1
+        print str(quotes[symbol]["Date"][index]) + " s: " + symbol + " L: " + str(L[symbol]) + " K: " + str(K[symbol])
 
-Run()
+run()

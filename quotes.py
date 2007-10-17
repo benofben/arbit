@@ -1,8 +1,6 @@
-import httplib
-import datetime
-import time
-def getHistoricData(symbol):
+def downloadQuotes(symbol):
     print "Downloading historical data for " + symbol + "..."
+    import httplib
     conn = httplib.HTTPConnection("ichart.finance.yahoo.com")
 
     """
@@ -15,9 +13,10 @@ def getHistoricData(symbol):
     b=start day (2)
     c=start year (2002)
     """
-    
+
+    import datetime    
     today = datetime.date.today()
-    endYear = today.strftime("%Y")    
+    endYear = today.strftime("%Y")
     endMonth = str(int(today.strftime("%m"))-1)
     endDay = today.strftime("%d")
     
@@ -31,20 +30,41 @@ def getHistoricData(symbol):
     data = response.read()
     conn.close()
     if response.status==200 and response.reason=='OK':
-        filename = "data/quotes/" + symbol + ".csv"
-        file = open (filename, 'w')
-        file.write(data)
-        file.close()
-        print "Saved historical data to " + filename + ".\n"
+        reformatAndSaveQuotes(data, symbol)
+        print "Saved historical data for " + symbol + ".\n"
     else:
         print "Download failed for symbol " + symbol + ".\n"
         return False
     return True
 
-import os
-def processSymbolFile():
-    if not os.path.exists("data/quotes/"):
-        os.makedirs("data/quotes/")
+def reformatAndSaveQuotes(data, symbol):
+    quotes=[]
+    lines = data.split('\n')
+    i=0
+    for line in lines:
+        if(i>0):
+            quotes.append(line)
+        i=i+1
+
+    # we want the list to go from oldest quote to newest
+    quotes.reverse()
+
+    filename = "data/quotes/" + symbol + ".csv"
+    file = open(filename, 'w')
+    i=0
+    for line in quotes:
+        if(i>0):
+            file.write(line + "\n")
+        i=i+1
+    file.close()
+
+def downloadAllQuotes():
+    import os
+    if os.path.exists("data/quotes"):
+        import shutil
+        shutil.rmtree("data/quotes")
+    os.makedirs("data/quotes/")
+    
     symbolFilename = "data/symbols/symbols.txt"
     symbolFile = open(symbolFilename, 'r')
     symbols = symbolFile.readlines()
@@ -52,18 +72,12 @@ def processSymbolFile():
 
     failedSymbolsFilename = "data/symbols/failedSymbols.txt"
     failedSymbolsFile = open(failedSymbolsFilename, 'w')
-    
-    successfulSymbolsFilename = "data/symbols/successfulSymbols.txt"
-    successfulSymbolsFile = open(successfulSymbolsFilename, 'w')
 
     while symbols:
         print str(len(symbols)) + " symbols remaining."
         symbol = symbols.pop()
         symbol = symbol.replace('\n','')
-        if not getHistoricData(symbol):
+        if not downloadQuotes(symbol):
             failedSymbolsFile.write(symbol + '\n')
-        else:
-            successfulSymbolsFile.write(symbol + '\n')
-    successfulSymbolsFile.close()
-    failedSymbolsFile.close()
 
+    failedSymbolsFile.close()
