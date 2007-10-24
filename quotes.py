@@ -20,7 +20,7 @@ def downloadQuotes(symbol):
     endMonth = str(int(today.strftime("%m"))-1)
     endDay = today.strftime("%d")
     
-    startYear = "2002"
+    startYear = "1900"
     startMonth = "0"
     startDay = "1"
 

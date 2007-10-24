@@ -1,10 +1,22 @@
-def NDayLow(quotes, day):
-    nDayLow = 0;
-    Close = float(quotes[day-1][4])
+def NDayHigh(quotes, day):
+    nDayHigh = 0
+    Close = quotes["Close"][day]
 
     for d in range(day-2, -1, -1):
-        Low = float(quotes[d][3])
-        if(Close<=Low):
+        High = quotes["High"][d]
+        if(Close>High):
+            nDayHigh = nDayHigh + 1
+        else:
+            break
+    return nDayHigh
+
+def NDayLow(quotes, day):
+    nDayLow = 0
+    Close = quotes["Close"][day]
+
+    for d in range(day-2, -1, -1):
+        Low = quotes["Low"][d]
+        if(Close<Low):
             nDayLow = nDayLow + 1
         else:
             break
