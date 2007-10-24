@@ -33,7 +33,7 @@ def run():
         for symbol in maxL:
             index = data.getIndex(startDate + datetime.timedelta(days=day), quotes[symbol])
             if(index and index-window>0):
-                K[symbol] = predictors.NDayLow(quotes[symbol], index)
+                K[symbol] = predictors.K(quotes[symbol], index, window, take)
         maxK = predictors.DictionaryMaxN(K, 10)
 
         J={}
@@ -41,7 +41,7 @@ def run():
             index = data.getIndex(startDate + datetime.timedelta(days=day), quotes[symbol])
             if(index and index>0):
                 J[symbol] = predictors.DailyChange(quotes[symbol], index)
-        symbol = predictors.DictionaryMin(J)
+        symbol = predictors.DictionaryMax(J)
 
         if(symbol):
             index = data.getIndex(startDate + datetime.timedelta(days=day), quotes[symbol])

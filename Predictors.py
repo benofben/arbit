@@ -1,28 +1,10 @@
-###############################################
-# Predictor(day) gives the value of predictor
-# for day, which depends on the previous days
-# and not on day.
-###############################################
-
-def NDayHigh(quotes, day):
-    nDayHigh = 0
-    Close = quotes["Close"][day-1]
-
-    for d in range(day-2, -1, -1):
-        High = quotes["High"][d]
-        if(Close>High):
-            nDayHigh = nDayHigh + 1
-        else:
-            break
-    return nDayHigh
-
 def NDayLow(quotes, day):
-    nDayLow = 0
-    Close = quotes["Close"][day-1]
+    nDayLow = 0;
+    Close = float(quotes[day-1][4])
 
     for d in range(day-2, -1, -1):
-        Low = quotes["Low"][d]
-        if(Close<Low):
+        Low = float(quotes[d][3])
+        if(Close<=Low):
             nDayLow = nDayLow + 1
         else:
             break
@@ -32,6 +14,28 @@ def DailyChange(quotes, day):
     TodayClose = quotes["Close"][day-1]
     YesterDayClose = quotes["Close"][day-2]
     return TodayClose / YesterDayClose
+
+def ExpectedReturn(quotes, day, window, take):
+    e = 1.0;
+    for d in range(day-window, day):
+        Open = quotes["Open"][d]
+        High = quotes["High"][d]
+        Close = quotes["Close"][d]
+        
+        if(High > Open * take):
+            e = e * take;
+        else:
+            e = e * (Close / Open)
+    import math
+    return math.pow(e, 1.0/window)
+
+def PickTake(quotes, day, window):
+    E={}
+    for t in range(0,10,1):
+        take = 1.0 + float(t)/200
+        E[take] = ExpectedReturn(quotes, day, window, take)
+    take = DictionaryMax(E)
+    return [take, E[take]]
 
 # gain function            
 def L(quotes, day, window, take):
@@ -64,10 +68,6 @@ def K(quotes, day, window, take):
     loss = math.pow (loss, 1.0/total)
     
     return loss
-
-###############################################
-# Dictionary Min and Max functions
-###############################################
 
 # returns the key of the smallest item in the dictionary
 def DictionaryMax(dictionary):
@@ -120,30 +120,3 @@ def DictionaryMaxN(dictionary, n):
         else:
             break
     return keys
-
-###############################################
-# These guys haven't been used in a while.
-# They might not work anymore.
-###############################################
-
-def ExpectedReturn(quotes, day, window, take):
-    e = 1.0;
-    for d in range(day-window, day):
-        Open = quotes["Open"][d]
-        High = quotes["High"][d]
-        Close = quotes["Close"][d]
-        
-        if(High > Open * take):
-            e = e * take;
-        else:
-            e = e * (Close / Open)
-    import math
-    return math.pow(e, 1.0/window)
-
-def PickTake(quotes, day, window):
-    E={}
-    for t in range(0,10,1):
-        take = 1.0 + float(t)/200
-        E[take] = ExpectedReturn(quotes, day, window, take)
-    take = DictionaryMax(E)
-    return [take, E[take]]

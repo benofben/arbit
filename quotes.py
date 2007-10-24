@@ -81,3 +81,5 @@ def downloadAllQuotes():
             failedSymbolsFile.write(symbol + '\n')
 
     failedSymbolsFile.close()
+
+downloadAllQuotes()
