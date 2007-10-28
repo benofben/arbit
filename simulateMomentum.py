@@ -2,12 +2,19 @@ window = 100
 take = 1.02
 
 def run():
+    #import symbols
+    #symbols.downloadSymbols()
+
+    #import quotes
+    #quotes.downloadAllQuotes()
+    
     # clear the old file
     outputFilename = "data/momentumSimulate.csv"
     outputFile = open(outputFilename, 'w')
     outputFile.close()
     
     capital = 25000.0
+    shares = 0
     
     wins = 0
     total = 0
@@ -26,20 +33,19 @@ def run():
           
     # now let's simulate
     for day in range(0, (endDate-startDate).days):
-
         L={}
         for symbol in symbols:
             index = data.getIndex(startDate + datetime.timedelta(days=day), quotes[symbol])
             if(index and index-window>=0):
-                L[symbol] = predictors.NDayHigh(quotes[symbol],index)
+                L[symbol] = predictors.NDayLow(quotes[symbol],index)
         maxL = predictors.DictionaryMaxN(L,5)
 
         K={}
-        for symbol in maxL:
+        for symbol in symbols:
             index = data.getIndex(startDate + datetime.timedelta(days=day), quotes[symbol])
             if(index and index-window>0):
                 K[symbol] = predictors.DailyChange(quotes[symbol], index)
-        symbol = predictors.DictionaryMax(K)
+        symbol = predictors.DictionaryMin(K)
 
         if(symbol):
             index = data.getIndex(startDate + datetime.timedelta(days=day), quotes[symbol])
@@ -57,6 +63,7 @@ def run():
             
                 loss = loss * Close/Open
                 loss_total = loss_total + 1
+                
             total = total + 1
 
             import math
