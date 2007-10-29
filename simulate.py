@@ -2,11 +2,6 @@ window = 100
 take = 1.02
 
 def run():
-    # clear the old file
-    outputFilename = "data/momentumSimulate.csv"
-    outputFile = open(outputFilename, 'w')
-    outputFile.close()
-    
     capital = 25000.0
     
     wins = 0
@@ -31,15 +26,22 @@ def run():
         for symbol in symbols:
             index = data.getIndex(startDate + datetime.timedelta(days=day), quotes[symbol])
             if(index and index-window>=0):
-                L[symbol] = predictors.NDayHigh(quotes[symbol],index)
-        maxL = predictors.DictionaryMaxN(L,5)
+                L[symbol] = predictors.L(quotes[symbol], index, window, take)
+        maxL = predictors.DictionaryMaxN(L,20)
 
         K={}
         for symbol in maxL:
             index = data.getIndex(startDate + datetime.timedelta(days=day), quotes[symbol])
             if(index and index-window>0):
-                K[symbol] = predictors.DailyChange(quotes[symbol], index)
-        symbol = predictors.DictionaryMax(K)
+                K[symbol] = predictors.NDayLow(quotes[symbol], index)
+        maxK = predictors.DictionaryMaxN(K, 10)
+
+        J={}
+        for symbol in maxK:
+            index = data.getIndex(startDate + datetime.timedelta(days=day), quotes[symbol])
+            if(index and index>0):
+                J[symbol] = predictors.DailyChange(quotes[symbol], index)
+        symbol = predictors.DictionaryMin(J)
 
         if(symbol):
             index = data.getIndex(startDate + datetime.timedelta(days=day), quotes[symbol])
@@ -65,11 +67,7 @@ def run():
                 l = math.pow(loss, 1.0/loss_total)
 
             d = (startDate + datetime.timedelta(days=day)).isoformat()
-            print d + " s: " + symbol + " c: " + str(capital) + " a: " + str(float(wins)/float(total)) + " loss: " + str(l) + " L: " + str(L[symbol]) + " K: " + str(K[symbol])
-
-            outputFilename = "data/momentumSimulate.csv"
-            outputFile = open(outputFilename, 'a')
-            outputFile.write(str(day) + "," + str(capital) + "," + str(float(wins)/float(total)) + "," + str(l) + "," + str(L[symbol]) + "," + str(K[symbol]) + "\n")
-            outputFile.close()
+            print d + " s: " + symbol + " c: " + str(capital) + " a: " + str(float(wins)/float(total)) + " loss: " + str(l) + " L: " + str(L[symbol]) + " K: " + str(K[symbol]) + " J: " + str(J[symbol])
 
 run()
+
