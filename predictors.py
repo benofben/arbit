@@ -47,6 +47,22 @@ def L(quotes, day, window, take):
 
     return wins / total
 
+def AverageL(symbols, quotes, index, take):
+    wins = 0.0
+    total = 0
+
+    for symbol in symbols:
+        Open = quotes[symbol]["Open"][index[symbol]]
+        High = quotes[symbol]["High"][index[symbol]]
+        if(High >= Open * take):
+            wins = wins + 1
+        total = total + 1
+
+    average = 0
+    if(total>0):
+        average = wins / total
+    return average
+
 # loss function
 def K(quotes, day, window, take):
     loss = 1.0
@@ -122,7 +138,7 @@ def DictionaryMaxN(dictionary, n):
     return keys
 
 ###############################################
-# These guys haven't been used in a while.
+# These functions haven't been used in a while.
 # They might not work anymore.
 ###############################################
 

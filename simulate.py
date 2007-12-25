@@ -1,7 +1,6 @@
-window = 100
 take = 1.02
 
-def run():
+def run():  
     capital = 25000.0
     
     wins = 0
@@ -22,33 +21,37 @@ def run():
     # now let's simulate
     for day in range(0, (endDate-startDate).days):
 
-        L={}
+        index={}
         for symbol in symbols:
-            index = data.getIndex(startDate + datetime.timedelta(days=day), quotes[symbol])
-            if(index and index-window>=0):
-                L[symbol] = predictors.L(quotes[symbol], index, window, take)
-        maxL = predictors.DictionaryMaxN(L,20)
+            i = data.getIndex(startDate + datetime.timedelta(days=day), quotes[symbol])
+            if(i and i-100>=0):
+                index[symbol] = i
+
+        L={}
+        for symbol in index:
+            L[symbol] = predictors.L(quotes[symbol], index[symbol], 100, take)
+        maxL = predictors.DictionaryMaxN(L, 10)
 
         K={}
         for symbol in maxL:
-            index = data.getIndex(startDate + datetime.timedelta(days=day), quotes[symbol])
-            if(index and index-window>0):
-                K[symbol] = predictors.NDayLow(quotes[symbol], index)
-        maxK = predictors.DictionaryMaxN(K, 10)
+            K[symbol] = predictors.L(quotes[symbol], index[symbol], 50, take)
+        maxK = predictors.DictionaryMaxN(K, 5)
 
         J={}
         for symbol in maxK:
-            index = data.getIndex(startDate + datetime.timedelta(days=day), quotes[symbol])
-            if(index and index>0):
-                J[symbol] = predictors.DailyChange(quotes[symbol], index)
-        symbol = predictors.DictionaryMin(J)
+            J[symbol] = predictors.DailyChange(quotes[symbol], index[symbol])
+        symbol = predictors.DictionaryMax(J)
 
-        if(symbol):
-            index = data.getIndex(startDate + datetime.timedelta(days=day), quotes[symbol])
-        if(symbol and index):
-            Open = quotes[symbol]["Open"][index]
-            High = quotes[symbol]["High"][index]
-            Close = quotes[symbol]["Close"][index]
+        if(index):
+            average = predictors.AverageL(index, quotes, index, take)
+            averageL = predictors.AverageL(maxL, quotes, index, take)
+            averageLK = predictors.AverageL(maxK, quotes, index, take)
+            print str(average) + " " + str(averageL) + " " + str(averageLK)
+            
+        if(index):
+            Open = quotes[symbol]["Open"][index[symbol]]
+            High = quotes[symbol]["High"][index[symbol]]
+            Close = quotes[symbol]["Close"][index[symbol]]
 
             if(High > Open * take):
                 wins = wins + 1
@@ -67,7 +70,7 @@ def run():
                 l = math.pow(loss, 1.0/loss_total)
 
             d = (startDate + datetime.timedelta(days=day)).isoformat()
-            print d + " s: " + symbol + " c: " + str(capital) + " a: " + str(float(wins)/float(total)) + " loss: " + str(l) + " L: " + str(L[symbol]) + " K: " + str(K[symbol]) + " J: " + str(J[symbol])
+            print d + " s: " + symbol + " c: " + str(capital) + " a: " + str(float(wins)/float(total)) + " loss: " + str(l) + " L: " + str(L[symbol])+ " K: " + str(K[symbol]) + " J: " + str(J[symbol])
 
 run()
 
