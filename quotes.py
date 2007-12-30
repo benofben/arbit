@@ -20,14 +20,14 @@ def downloadQuotes(symbol):
     endMonth = str(int(today.strftime("%m"))-1)
     endDay = today.strftime("%d")
     
-    startYear = "2002"
-    startMonth = "0"
-    startDay = "1"
+    startYear="2002"
+    startMonth="0"
+    startDay="1"
 
     conn.request("GET", "/table.csv?s=" + symbol + "&d=" + endMonth + "&e=" + endDay + "&f=" + endYear + "&g=d&a=" + startMonth + "&b=" + startDay + "&c=" + startYear + "&ignore=.csvc")
-    response = conn.getresponse()
+    response=conn.getresponse()
     print response.status, response.reason
-    data = response.read()
+    data=response.read()
     conn.close()
     if response.status==200 and response.reason=='OK':
         reformatAndSaveQuotes(data, symbol)
@@ -49,8 +49,8 @@ def reformatAndSaveQuotes(data, symbol):
     # we want the list to go from oldest quote to newest
     quotes.reverse()
 
-    filename = "data/quotes/" + symbol + ".csv"
-    file = open(filename, 'w')
+    filename="data/quotes/" + symbol + ".csv"
+    file=open(filename, 'w')
     i=0
     for line in quotes:
         if(i>0):

@@ -1,5 +1,5 @@
 # Q = NASDAQ, 1 = AMEX, N = NYSE
-exchanges = ["Q", "1", "N"]
+exchanges=["Q", "1", "N"]
 
 # Dictionary holds a bunch of Symbol and MarketValue
 symbolDictionary={}
@@ -11,7 +11,7 @@ def downloadSymbolList(exchange):
     conn.request("GET", "/asp/symbols.asp?exchange=" + exchange + "&start=0")
     response = conn.getresponse()
     print response.status, response.reason
-    data=response.read()
+    data = response.read()
     conn.close()
 
     print "Done downloading.  Writing to file.\n"
@@ -26,7 +26,7 @@ def deleteLines(filename):
     lines = inputFile.readlines()
     inputFile.close()
     
-    outputFile = open(filename, "w")
+    outputFile=open(filename, "w")
     for line in lines[2:-1]:
         outputFile.write(line)
     outputFile.close()
@@ -35,8 +35,8 @@ def writeSymbolToDictionary(symbol, marketValue):
     if marketValue != "N/A":
         marketValue=marketValue.replace('$','')
         marketValue=marketValue.replace(',','')
-        symbol = symbol.replace('^','.')
-        symbolDictionary[symbol]=float(marketValue)
+        symbol=symbol.replace('^','.')
+        symbolDictionary[symbol] = float(marketValue)
 
 def reformatSymbolList(exchange):
     deleteLines("data/symbols/" + exchange + ".csv")
