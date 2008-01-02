@@ -1,75 +1,95 @@
-def getNextPickledSubQuotes():
-    return 'hi'
-
-from BaseHTTPServer import BaseHTTPRequestHandler
-class GetAndPostHandler(BaseHTTPRequestHandler):
+import cPickle
+import httplib
+import time
     
-    # a node has asked for some work to do.
-    def do_GET(self):
-        self.send_response(200)
-        self.end_headers()
-        message = getNextPickledSubQuotes()
-        self.wfile.write(message)
-        return
+def send(quotes):
+    pickledQuotes = cPickle.dumps(quotes)
+    conn = httplib.HTTPConnection('localhost', 8161)
+    headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
+    conn.request('POST', '/demo/message/FOO/BAR', 'destination=request&type=queue&body=' + pickledQuotes, headers)
+    response = conn.getresponse()
+    if response.status!=200 or response.reason!='OK':
+        print 'Could not send message to queue.'
+        print response.status, response.reason
+    
+    data = response.read()
+    conn.close()
 
-    # a node is sending back its finished work.
-    def do_POST(self):
-        # Parse the form data posted
-        form = cgi.FieldStorage(
-            fp=self.rfile, 
-            headers=self.headers,
-            environ={'REQUEST_METHOD':'POST',
-                     'CONTENT_TYPE':self.headers['Content-Type'],
-                     })
+def receive():
+    while(True):
+        conn = httplib.HTTPConnection('localhost', 8161)
+        conn.request('GET', '/demo/message/response?timeout=1000&type=queue')
+        response=conn.getresponse()
+        data=response.read()
+        conn.close()
 
-        # Begin the response
-        self.send_response(200)
-        self.end_headers()
+        if response.status==200 and response.reason=='OK':
+            return cPickle.loads(data)
+        else:
+            print 'Could not get message from queue.  Will try again in 5 seconds.'
+            time.sleep(5)
+        
+def run():
+    capital=25000
+    
+    import data
+    symbols=data.getSymbols()
+    quotes=data.getAllQuotes()
 
-        self.wfile.write('Client: %s\n' % str(self.client_address))
-        self.wfile.write('Path: %s\n' % self.path)
-        self.wfile.write('Form data:\n')
+    import datetime
+    startDate=datetime.date(2003,1,1)
+    endDate=datetime.date.today()
 
-        # Echo back information about what was posted in the form
-        for field in form.keys():
-            field_item = form[field]
-            if field_item.filename:
-                # The field contains an uploaded file
-                file_data = field_item.file.read()
-                file_len = len(file_data)
-                del file_data
-                self.wfile.write('\tUploaded %s (%d bytes)\n' % (field, file_len))
+    # now we simulate for each day
+    for day in range(0, (endDate-startDate).days):
+
+        index={}
+        for symbol in symbols:
+            i=data.getIndex(startDate+datetime.timedelta(days=day), quotes[symbol])
+            if i:
+                index[symbol]=i
+
+        # resest the responses before we start sending stuff to the server
+        responses={}
+
+        # publish a computation request JMS message for each symbol
+        for symbol in index:
+            subQuotes=data.getQuotesSubset(index, symbol, quotes)
+            print "Publishing " + symbol + " for " + str(startDate+datetime.timedelta(days=day))
+            send(subQuotes)
+
+        # now wait for the results to come back from the JMS server
+        while(len(responses)<len(index)):
+            response=receive()
+            responses[response['Symbol']]=response
+            print "Received response " + len(responses) + " of " + len(index)
+
+        '''
+        # pick the symbol we are going to buy today
+        bestSymbol=''
+        for symbol in index:            
+            if not bestSymbol:
+                bestSymbol=symbol
+            if A[symbol]['Return']>A[bestSymbol]['Return']:
+                bestSymbol=symbol
+
+        # try the predictor on the current day
+        if bestSymbol:
+            Open=quotes[bestSymbol]['Open'][index[bestSymbol]]
+            High=quotes[bestSymbol]['High'][index[bestSymbol]]
+            Close=quotes[bestSymbol]['Close'][index[bestSymbol]]
+            if High>=Open*A[bestSymbol]['Take']:
+                capital=capital*A[bestSymbol]['Take']
             else:
-                # Regular form value
-                self.wfile.write('\t%s=%s\n' % (field, form[field].value))
-        return
+                capital=capital*Close/Open
 
-# now let's run the master
-capital=25000
-    
-import data
-symbols=data.getSymbols()
-quotes=data.getAllQuotes()
+            print 'Symbol: ' + bestSymbol + \
+            ' Expected Return: ' + str(A[bestSymbol]['Return']) + \
+            ' Window: ' + str(A[bestSymbol]['Window']) + \
+            ' Take: ' + str(A[bestSymbol]['Take'])
 
-import datetime
-startDate=datetime.date(2003,1,1)
-endDate=datetime.date.today()
+            print str(quotes[bestSymbol]['Date'][index[bestSymbol]]) + \
+            ' C: ' + str(capital) + ' Now: ' + str(datetime.datetime.now())
+        '''
 
-# start the HTTP server
-from BaseHTTPServer import HTTPServer
-server = HTTPServer(('localhost', 8000), GetAndPostHandler)
-print 'Starting http server...'
-server.serve_forever()
-
-# now we simulate for each day
-for day in range(0, (endDate-startDate).days):
-    
-    index={}
-    for symbol in symbols:
-        i=data.getIndex(startDate+datetime.timedelta(days=day), quotes[symbol])
-        if i:
-            index[symbol]=i
-
-    for symbol in index:
-        subQuotes=data.getQuotesSubset(index, symbol, quotes)
-        pickledSubQuotes = cPickle.dumps(subQuotes)
+run()
