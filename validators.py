@@ -3,33 +3,33 @@
 ###   (1) Predicts well
 ###   (2) Has a good return
 ###############################################################################
-def FindWindow(quotes, index):
+def FindWindow(quotes):
     bestWindow=1
     bestReturn=1.0
     for window in range(1, 100, 10):
-        r = FindReturnForWindow(quotes, index, window)
+        r = FindReturnForWindow(quotes, window)
         
         if r>bestReturn:
             bestReturn=r
             bestWindow=window
 
     A={}
-    A["return"]=bestReturn
-    A["window"]=bestWindow
-    A["take"]=FindTakeForWindow(quotes, index, bestWindow)
+    A['Return']=bestReturn
+    A['Window']=bestWindow
+    A['Take']=FindTakeForWindow(quotes, len(quotes['Open']), bestWindow)
     return A
 
 ###############################################################################
 ### Check how well a particular window predicts
 ###############################################################################
-def FindReturnForWindow(quotes,index,window):
+def FindReturnForWindow(quotes, window):
     r=1.0
     total=0
-    for d in range(window,index):
-        take=FindTakeForWindow(quotes,d,window)
-        Open=quotes["Open"][d]
-        High=quotes["High"][d]
-        Close=quotes["Close"][d]
+    for d in range(window, len(quotes['Open'])):
+        take=FindTakeForWindow(quotes, d, window)
+        Open=quotes['Open'][d]
+        High=quotes['High'][d]
+        Close=quotes['Close'][d]
         if(High>=Open*take):
             r=r*take
         else:
@@ -54,9 +54,9 @@ def FindTakeForWindow(quotes, index, window):
         r=1.0
         total=0
         for d in range(index-window, index):
-            Open=quotes["Open"][d]
-            High=quotes["High"][d]
-            Close=quotes["Close"][d]
+            Open=quotes['Open'][d]
+            High=quotes['High'][d]
+            Close=quotes['Close'][d]
             if(High>=Open*take):
                 r=r*take
             else:
