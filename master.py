@@ -1,35 +1,21 @@
+import sys
 import cPickle
-import httplib
-import time
+import stomp
+ 
+class MyListener(object):
+    i=0
     
-def send(quotes):
-    pickledQuotes = cPickle.dumps(quotes)
-    conn = httplib.HTTPConnection('localhost', 8161)
-    headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
-    conn.request('POST', '/demo/message/FOO/BAR', 'destination=request&type=queue&body=' + pickledQuotes, headers)
-    response = conn.getresponse()
-    if response.status!=200 or response.reason!='OK':
-        print 'Could not send message to queue.'
-        print response.status, response.reason
-    
-    data = response.read()
-    conn.close()
-
-def receive():
-    while(True):
-        conn = httplib.HTTPConnection('localhost', 8161)
-        conn.request('GET', '/demo/message/response?timeout=1000&type=queue')
-        response=conn.getresponse()
-        data=response.read()
-        conn.close()
-
-        if response.status==200 and response.reason=='OK':
-            return cPickle.loads(data)
-        else:
-            print 'Could not get message from queue.  Will try again in 5 seconds.'
-            time.sleep(5)
+    def on_error(self, headers, message):
+        print 'received an error %s' % message
         
+    def on_message(self, headers, message):
+        print 'got a message' + str(i)
+    
 def run():
+    conn = stomp.Connection()
+    conn.start()
+    conn.connect()
+
     capital=25000
     
     import data
@@ -37,7 +23,7 @@ def run():
     quotes=data.getAllQuotes()
 
     import datetime
-    startDate=datetime.date(2003,1,1)
+    startDate=datetime.date(2003,1,2)
     endDate=datetime.date.today()
 
     # now we simulate for each day
@@ -49,22 +35,21 @@ def run():
             if i:
                 index[symbol]=i
 
-        # resest the responses before we start sending stuff to the server
-        responses={}
-
         # publish a computation request JMS message for each symbol
         for symbol in index:
-            subQuotes=data.getQuotesSubset(index, symbol, quotes)
             print "Publishing " + symbol + " for " + str(startDate+datetime.timedelta(days=day))
-            send(subQuotes)
+            subQuotes=data.getQuotesSubset(index, symbol, quotes)
+            conn.send(cPickle.dumps(subQuotes), destination='/queue/request')
 
+    conn.disconnect()
+    
+    '''
         # now wait for the results to come back from the JMS server
         while(len(responses)<len(index)):
             response=receive()
             responses[response['Symbol']]=response
             print "Received response " + len(responses) + " of " + len(index)
 
-        '''
         # pick the symbol we are going to buy today
         bestSymbol=''
         for symbol in index:            
@@ -90,6 +75,7 @@ def run():
 
             print str(quotes[bestSymbol]['Date'][index[bestSymbol]]) + \
             ' C: ' + str(capital) + ' Now: ' + str(datetime.datetime.now())
-        '''
+    '''
 
 run()
+
