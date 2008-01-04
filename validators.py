@@ -6,7 +6,7 @@
 def FindWindow(quotes):
     bestWindow=1
     bestReturn=1.0
-    for window in range(1, 100, 10):
+    for window in range(1, 100, 1):
         r = FindReturnForWindow(quotes, window)
         
         if r>bestReturn:
@@ -65,7 +65,7 @@ def FindTakeForWindow(quotes, index, window):
 
         import math
         r=math.pow(r, 1.0/total)
-        
+
         if r>bestReturn:
             bestReturn=r
             bestTake=take
