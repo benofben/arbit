@@ -3,10 +3,13 @@ import httplib
 import validators
 import socket
 
+serverIP='10.97.153.33'
+serverPort=8123
+
 def send(response):
     pickledResponse = cPickle.dumps(response)
     try:
-        conn = httplib.HTTPConnection('localhost', 8000)
+        conn = httplib.HTTPConnection(serverIP, serverPort)
         headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
         conn.request('POST', '/', 'body=' + pickledResponse, headers)
         response = conn.getresponse()
@@ -22,7 +25,7 @@ def send(response):
 
 def receive():
     try:
-        conn = httplib.HTTPConnection('localhost', 8000)
+        conn = httplib.HTTPConnection(serverIP, serverPort)
         conn.request('GET', '/')
         response=conn.getresponse()
         pickledData=response.read()

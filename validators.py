@@ -6,7 +6,15 @@
 def FindWindow(quotes):
     bestWindow=1
     bestReturn=1.0
-    for window in range(1, 100, 1):
+
+    for window in range(1, 10, 1):
+        r = FindReturnForWindow(quotes, window)
+        
+        if r>bestReturn:
+            bestReturn=r
+            bestWindow=window
+
+    for window in range(10, 100, 5):
         r = FindReturnForWindow(quotes, window)
         
         if r>bestReturn:

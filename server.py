@@ -1,6 +1,10 @@
 import os
 import cPickle
 import time
+import shutil
+
+serverIP='10.97.153.33'
+serverPort=8123
 
 import data
 symbols=data.getSymbols()
@@ -11,15 +15,17 @@ startDate=datetime.date(2003,1,1)
 endDate=datetime.date.today()
 
 def makeQueueDirectories():
-    import shutil
-    
-    if os.path.exists('data/request'):
-        shutil.rmtree('data/request')
-    os.makedirs('data/request/')
+    if os.path.exists('data/queue/request'):
+        shutil.rmtree('data/queue/request')
+    os.makedirs('data/queue/request/')
 
-    if os.path.exists('data/response'):
-        shutil.rmtree('data/response')
-    os.makedirs('data/response/')
+    if os.path.exists('data/queue/inProgress'):
+        shutil.rmtree('data/queue/inProgress')
+    os.makedirs('data/queue/inProgress/')
+
+    if os.path.exists('data/queue/response'):
+        shutil.rmtree('data/queue/response')
+    os.makedirs('data/queue/response/')
 
 def getNumberOfItems():
     numberOfItems=0
@@ -31,9 +37,9 @@ def getNumberOfItems():
     return numberOfItems
 
 def getNextRequest():
-    for filename in os.listdir('data/request'):
-        fileContents = cPickle.load(open('data/request/' + filename, 'r'))
-        os.remove('data/request/' + filename)
+    for filename in os.listdir('data/queue/request'):
+        fileContents = cPickle.load(open('data/queue/request/' + filename, 'r'))
+        shutil.move('data/queue/request/' + filename, 'data/queue/inProgress/' + filename)
         return cPickle.dumps(fileContents)
     return None
 
@@ -44,7 +50,7 @@ class serverThread(Thread):
         self.status = -1
     def run(self):
         from BaseHTTPServer import HTTPServer
-        server = HTTPServer(('localhost', 8000), GetAndPostHandler)
+        server = HTTPServer((serverIP, serverPort), GetAndPostHandler)
         print 'Starting http server...'
         server.serve_forever()
 
@@ -64,13 +70,13 @@ class picklerThread(Thread):
 
             for symbol in index:
                 subQuotes=data.getQuotesSubset(index, symbol, quotes)
-                f = open('data/request/' + str(startDate+datetime.timedelta(days=day)) + symbol, 'w')
+                f = open('data/queue/request/' + str(startDate+datetime.timedelta(days=day)) + symbol, 'w')
                 subQuotes['TargetDate']=startDate+datetime.timedelta(days=day)
                 cPickle.dump(subQuotes, f)
                 f.close()
 
             #wait until the consumers grab some pickles
-            while len(os.listdir('data/request'))>100:
+            while len(os.listdir('data/queue/request'))>100:
                 time.sleep(60)
     
 from BaseHTTPServer import BaseHTTPRequestHandler
@@ -99,10 +105,12 @@ class GetAndPostHandler(BaseHTTPRequestHandler):
         self.end_headers()
 
         response=cPickle.loads(form['body'].value)
-        f = open('data/response/' + str(response['TargetDate']) + response['Symbol'], 'w')
+        filename=str(response['TargetDate']) + response['Symbol']
+        f = open('data/queue/response/' + filename, 'w')
         cPickle.dump(response, f)
         f.close()
-
+        os.remove('data/queue/inProgress/' + filename)
+        
 def run():
     makeQueueDirectories()
     serverThread().start()
@@ -110,7 +118,7 @@ def run():
 
     # wait until all the workers are done
     numberOfItems=getNumberOfItems()
-    while len(os.listdir('data/response'))<numberOfItems:
+    while len(os.listdir('data/queue/response'))<numberOfItems:
         time.sleep(60)
     exit()
 
