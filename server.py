@@ -3,7 +3,7 @@ import cPickle
 import time
 import shutil
 
-serverIP='10.97.153.33'
+serverIP='localhost'
 serverPort=8123
 
 import data
@@ -11,8 +11,9 @@ symbols=data.getSymbols()
 quotes=data.getAllQuotes()
 
 import datetime
-startDate=datetime.date(2003,1,1)
-endDate=datetime.date.today()
+startDate=datetime.date(2007,1,1)
+endDate=datetime.date(2007,1,3)
+#endDate=datetime.date.today()
 
 def makeQueueDirectories():
     if os.path.exists('data/queue/request'):
@@ -33,7 +34,8 @@ def getNumberOfItems():
         for symbol in symbols:
             i=data.getIndex(startDate+datetime.timedelta(days=day), quotes[symbol])
             if i:
-                numberOfItems=numberOfItems+1
+                if quotes[symbol]['Volume'][i]>500000:
+                    numberOfItems=numberOfItems+1
     return numberOfItems
 
 def getNextRequest():
@@ -66,10 +68,11 @@ class picklerThread(Thread):
             for symbol in symbols:
                 i=data.getIndex(startDate+datetime.timedelta(days=day), quotes[symbol])
                 if i:
-                    index[symbol]=i
+                    if quotes[symbol]['Volume'][i]>500000:
+                        index[symbol]=i
 
             for symbol in index:
-                subQuotes=data.getQuotesSubset(index, symbol, quotes)
+                subQuotes=data.getQuotesSubset(index, symbol, quotes, 242) 
                 f = open('data/queue/request/' + str(startDate+datetime.timedelta(days=day)) + symbol, 'w')
                 subQuotes['TargetDate']=startDate+datetime.timedelta(days=day)
                 cPickle.dump(subQuotes, f)

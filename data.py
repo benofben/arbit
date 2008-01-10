@@ -55,16 +55,18 @@ def getIndex(date, quotes):
         return False
 
 # returns a new quotes object with items from [0, index)
-def getQuotesSubset(index, symbol, quotes):
+def getQuotesSubset(index, symbol, quotes, window):
+    if index[symbol]<window:
+        window=index[symbol]
     subQuotes = {}
     subQuotes['Symbol']=symbol
     
-    subQuotes['Date']=quotes[symbol]['Date'][0:index[symbol]]
-    subQuotes['Open']=quotes[symbol]['Open'][0:index[symbol]]
-    subQuotes['High']=quotes[symbol]['High'][0:index[symbol]]
-    subQuotes['Low']=quotes[symbol]['Low'][0:index[symbol]]
-    subQuotes['Close']=quotes[symbol]['Close'][0:index[symbol]]
-    subQuotes['Volume']=quotes[symbol]['Volume'][0:index[symbol]]
-    subQuotes['AdjClose']=quotes[symbol]['AdjClose'][0:index[symbol]]
+    subQuotes['Date']=quotes[symbol]['Date'][index[symbol]-window:index[symbol]]
+    subQuotes['Open']=quotes[symbol]['Open'][index[symbol]-window:index[symbol]]
+    subQuotes['High']=quotes[symbol]['High'][index[symbol]-window:index[symbol]]
+    subQuotes['Low']=quotes[symbol]['Low'][index[symbol]-window:index[symbol]]
+    subQuotes['Close']=quotes[symbol]['Close'][index[symbol]-window:index[symbol]]
+    subQuotes['Volume']=quotes[symbol]['Volume'][index[symbol]-window:index[symbol]]
+    subQuotes['AdjClose']=quotes[symbol]['AdjClose'][index[symbol]-window:index[symbol]]
 
     return subQuotes

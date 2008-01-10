@@ -32,7 +32,8 @@ def receive():
         conn.close()
     except socket.error:
         return None
-    
+    except httplib.BadStatusLine:
+	return None
     if response.status!=200 or response.reason!='OK':
         return None
 

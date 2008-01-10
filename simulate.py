@@ -3,7 +3,7 @@ symbols=data.getSymbols()
 quotes=data.getAllQuotes()
 
 import datetime
-startDate=datetime.date(2003,1,1)
+startDate=datetime.date(2007,1,1)
 endDate=datetime.date.today()
 
 def simulate():
@@ -28,7 +28,7 @@ def simulate():
         bestSymbol=''
         for symbol in index:
             try:
-                f=open('data/response/' + str(startDate+datetime.timedelta(days=day)) + symbol, 'r')
+                f=open('data/queue/response/' + str(startDate+datetime.timedelta(days=day)) + symbol, 'r')
                 response=cPickle.load(f)
                 A[response['Symbol']]=response
                 f.close()
