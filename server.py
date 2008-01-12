@@ -3,7 +3,7 @@ import cPickle
 import time
 import shutil
 
-serverIP='localhost'
+serverIP='10.97.153.33'
 serverPort=8123
 
 import data
@@ -12,8 +12,7 @@ quotes=data.getAllQuotes()
 
 import datetime
 startDate=datetime.date(2007,1,1)
-endDate=datetime.date(2007,1,3)
-#endDate=datetime.date.today()
+endDate=datetime.date.today()
 
 def makeQueueDirectories():
     if os.path.exists('data/queue/request'):
