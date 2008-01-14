@@ -57,7 +57,8 @@ def getIndex(date, quotes):
 # returns a new quotes object with items from [0, index)
 def getQuotesSubset(index, symbol, quotes, window):
     if index[symbol]<window:
-        window=index[symbol]
+        return None
+    
     subQuotes = {}
     subQuotes['Symbol']=symbol
     

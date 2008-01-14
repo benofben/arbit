@@ -4,7 +4,7 @@ import validators
 import socket
 import time
 
-serverIP='10.97.153.33'
+serverIP='localhost'
 serverPort=8123
 
 def receive():
@@ -44,7 +44,7 @@ def run():
             print 'Processing ' + quotes['Symbol'] + ' for day ' + str(quotes['Date'][-1]) + '.'
             response = validators.EvaluateQuotes(quotes)
             response['Symbol']=quotes['Symbol']
-            response['TargetDate']=quotes['TargetDate']
+            response['Date']=quotes['Date'][-1]
             send(response)
         else:
             time.sleep(5)

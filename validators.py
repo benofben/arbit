@@ -50,7 +50,7 @@ def FindReturnForWindow(quotes, window):
 def FindTakeForWindow(quotes, index, window):
     bestReturn=1.0;
     bestTake=1.0;
-    for t in range(0, 50, 5):
+    for t in range(0, 100, 5):
         take=1+t/1000.0
 
         r=1.0
