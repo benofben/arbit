@@ -1,48 +1,45 @@
-import math
-
 ###############################################################################
-### For the given quotes, find the window that
+### Find the window that:
 ###   (1) Predicts well
 ###   (2) Has a good return
-### Also find the return and take.
 ###############################################################################
-def EvaluateQuotes(quotes):
+def FindWindow(quotes, index):
     bestWindow=1
     bestReturn=1.0
-
-    for window in range(10, 100, 5):
-        r = FindReturnForWindow(quotes, window)
+    for window in range(1, 5, 1):
+        r = FindReturnForWindow(quotes, index, window)
         
         if r>bestReturn:
             bestReturn=r
             bestWindow=window
 
     A={}
-    A['Return']=bestReturn
-    A['Window']=bestWindow
-    A['Take']=FindTakeForWindow(quotes, len(quotes['Open']), bestWindow)
+    A["return"]=bestReturn
+    A["window"]=bestWindow
+    A["take"]=FindTakeForWindow(quotes, index, bestWindow)
     return A
 
 ###############################################################################
-### Test how well a particular window predicts
+### Check how well a particular window predicts
 ###############################################################################
-def FindReturnForWindow(quotes, window):
+def FindReturnForWindow(quotes,index,window):
     r=1.0
     total=0
-    for day in range(window, len(quotes['Open'])):
-        take=FindTakeForWindow(quotes, day, window)
-        Open=quotes['Open'][day]
-        High=quotes['High'][day]
-        Close=quotes['Close'][day]
+    for d in range(index-window-5,index):
+        take=FindTakeForWindow(quotes,d,window)
+        Open=quotes["Open"][d]
+        High=quotes["High"][d]
+        Close=quotes["Close"][d]
         if(High>=Open*take):
             r=r*take
         else:
             r=r*Close/Open
         total=total+1
 
+    import math
     if total:
         r=math.pow(r, 1.0/total)
-    
+
     return r
 
 ###############################################################################
@@ -56,18 +53,19 @@ def FindTakeForWindow(quotes, index, window):
 
         r=1.0
         total=0
-        for day in range(index-window, index):
-            Open=quotes['Open'][day]
-            High=quotes['High'][day]
-            Close=quotes['Close'][day]
+        for d in range(index-window, index):
+            Open=quotes["Open"][d]
+            High=quotes["High"][d]
+            Close=quotes["Close"][d]
             if(High>=Open*take):
                 r=r*take
             else:
                 r=r*Close/Open
             total=total+1
 
+        import math
         r=math.pow(r, 1.0/total)
-
+        
         if r>bestReturn:
             bestReturn=r
             bestTake=take
