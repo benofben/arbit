@@ -94,14 +94,11 @@ def makeQueueDirectories():
     if os.path.exists('data/queue/request'):
         shutil.rmtree('data/queue/request')
     os.makedirs('data/queue/request/')
-
     if os.path.exists('data/queue/inProgress'):
         shutil.rmtree('data/queue/inProgress')
     os.makedirs('data/queue/inProgress/')
-
-    if os.path.exists('data/queue/response'):
-        shutil.rmtree('data/queue/response')
-    os.makedirs('data/queue/response/')
+    if not os.path.exists('data/queue/response'):
+        os.makedirs('data/queue/response/')
 
 def run():
     makeQueueDirectories()

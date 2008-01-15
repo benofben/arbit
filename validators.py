@@ -1,3 +1,5 @@
+import math
+
 ###############################################################################
 ### For the given quotes, find the window that
 ###   (1) Predicts well
@@ -24,7 +26,6 @@ def EvaluateQuotes(quotes):
 ###############################################################################
 ### Test how well a particular window predicts
 ###############################################################################
-import math
 def FindReturnForWindow(quotes, window):
     r=1.0
     total=0

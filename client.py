@@ -38,13 +38,13 @@ def send(data):
         print response.status, response.reason
 
 def run():
-    while(True):
-        quotes=receive()
+    while True:
+        quotes = receive()
         if quotes:
             print 'Processing ' + quotes['Symbol'] + ' for day ' + str(quotes['Date'][-1]) + '.'
             response = validators.EvaluateQuotes(quotes)
-            response['Symbol']=quotes['Symbol']
-            response['Date']=quotes['Date'][-1]
+            response['Symbol'] = quotes['Symbol']
+            response['Date'] = quotes['Date'][-1]
             send(response)
         else:
             time.sleep(5)

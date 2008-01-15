@@ -6,9 +6,8 @@ import datetime
 startDate=datetime.date(2007,1,1)
 endDate=datetime.date.today()
 
-def simulate():
-    import cPickle
-
+import cPickle
+def simulation():
     capital=25000
     
     # now we simulate for each day
@@ -22,46 +21,47 @@ def simulate():
             if i:
                 index[symbol]=i
 
-        # load the responses for today into memory and
-        # pick the symbol we are going to buy today
-        A={}
-        bestSymbol=''
+        responses=[]
         for symbol in index:
             try:
-                f=open('data/queue/response/' + str(startDate+datetime.timedelta(days=day)) + symbol, 'r')
+                f=open('data/queue/response/' + str(quotes[symbol]['Date'][index[symbol]-1]) + symbol, 'r')
                 response=cPickle.load(f)
-                A[response['Symbol']]=response
                 f.close()
 
-                if not bestSymbol:
-                    bestSymbol=symbol
-                if A[symbol]['Return']>A[bestSymbol]['Return']:
-                    bestSymbol=symbol
-                    
+                if(len(responses)<1):
+                    responses.append(response)
+                elif(responses[-1]['Return']<response['Return']):
+                    responses[-1]=response
+                responses=sorted(responses, lambda x, y: cmp(x['Return'], y['Return']),reverse=True)
             except IOError:
                 pass
 
-        # try the predictor on the current day
-        if bestSymbol:
+        if responses:
+            rank=0
+            bestSymbol=responses[rank]['Symbol']
+            
+            # try the predictor on the current day
             actualReturn=0
             Open=quotes[bestSymbol]['Open'][index[bestSymbol]]
             High=quotes[bestSymbol]['High'][index[bestSymbol]]
             Close=quotes[bestSymbol]['Close'][index[bestSymbol]]
-            if High>=Open*A[bestSymbol]['Take']:
-                capital=capital*A[bestSymbol]['Take']
-                actualReturn=A[bestSymbol]['Take']
+            if High>=Open*responses[rank]['Take']:
+                capital=capital*responses[rank]['Take']
+                actualReturn=responses[rank]['Take']
             else:
                 capital=capital*Close/Open
                 actualReturn=Close/Open
+            print str(actualReturn) + '\t' + str(capital)
 
             f=open('data/simulation.csv','a')
             f.write(str(quotes[bestSymbol]['Date'][index[bestSymbol]]) + ',' + \
                     str(capital) + ',' + \
                     bestSymbol + ',' + \
-                    str(A[bestSymbol]['Window']) + ',' + \
+                    str(rank) + ',' + \
+                    str(responses[rank]['Window']) + ',' + \
                     str(actualReturn) + ',' + \
-                    str(A[bestSymbol]['Take']) + ',' + \
-                    str(A[bestSymbol]['Return']) + '\n')
+                    str(responses[rank]['Take']) + ',' + \
+                    str(responses[rank]['Return']) + '\n')
             f.close()
 
-simulate()
+simulation()
