@@ -7,7 +7,7 @@ def PickAlpha(quotes, index):
     A['Return'] = 0.0
 
     for a in range(0,100,3):
-        alpha = a/100.0
+        alpha = 0.9 + a/1000.0
         B=PickTake(alpha, quotes, index)
 
         if B['Return']>A['Return']:

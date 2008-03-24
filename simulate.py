@@ -6,8 +6,8 @@ def run():
     quotes=data.getAllQuotes()
 
     import datetime
-    startDate=datetime.date(2007,10,1)
-    endDate=datetime.date(2008,1,1)
+    startDate=datetime.date(2007,1,1)
+    endDate=datetime.date(2007,3,1)
 
     import os
     if os.path.exists('data/simulate.csv'):
