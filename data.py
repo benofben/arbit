@@ -53,3 +53,16 @@ def getIndex(date, quotes):
         return quotes["Date"].index(date)
     except ValueError:
         return False
+
+# returns False if there is no quote for the currentDate
+# otherwise returns the list [0, currentDate)
+def getSubquote(symbol, currentDate, quotes):
+    index=getIndex(currentDate, quotes[symbol])
+    if not index:
+        return False
+    
+    subquote={}
+    subquote[symbol]={}
+    for item in quotes[symbol]:
+        subquote[symbol][item]=quotes[symbol][item][0:index]
+    return subquote
