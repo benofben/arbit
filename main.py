@@ -25,8 +25,8 @@ def main():
                 my_classifier=classifier.classifier(subquote)
                 p=my_classifier.run()
 
-                if p and p["Very Good"]>best_p_vgood:
-                    best_p_vgood=p["Very Good"]
+                if p and p["Good"]>best_p_vgood:
+                    best_p_vgood=p["Good"]
                     best_symbol=symbol
 
         # see how we did for today
@@ -48,6 +48,5 @@ def main():
             + str(round(c)) +  '\t' \
             + best_symbol +  '\t' \
             + str(best_p_vgood) + '\t' \
-            + str(pwin) + '\t' \
-            + str(p['dataLength'])
+            + str(pwin)
 main()
