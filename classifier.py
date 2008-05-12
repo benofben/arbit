@@ -1,4 +1,6 @@
+# for maxint
 import sys
+
 classes=['Good', 'Bad']
 
 class classifier:
@@ -82,18 +84,18 @@ class classifier:
                             dataSet[-1]['WindowPredictor'].append(binned)
                     '''
                     
-                    # last closing price was x% of the 1 year high, low
+                    # last closing price was x% of the y day high, low
                     High=0
                     Low=sys.maxint
-                    for i in range(day-242, day):
+                    for i in range(day-5, day):
                         if self.subquote[symbol]['High'][i]>High:
                             High=self.subquote[symbol]['High'][i]
                         if self.subquote[symbol]['Low'][i]<Low:
                             Low=self.subquote[symbol]['Low'][i]
-                    dataSet[-1]['52Week']=[]
+                    dataSet[-1]['xDay']=[]
                     Last=self.subquote[symbol]['Close'][day]
-                    dataSet[-1]['52Week'].append(self.bin(Last/High))
-                    dataSet[-1]['52Week'].append(self.bin(Last/Low))
+                    dataSet[-1]['xDay'].append(self.bin(Last/High))
+                    dataSet[-1]['xDay'].append(self.bin(Last/Low))
 
                     # populate the outcome for today
                     if self.subquote[symbol]['High'][day]>self.subquote[symbol]['Open'][day]*1.02:
