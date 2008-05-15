@@ -20,14 +20,12 @@ def main():
         best_symbol=''
         
         for symbol in symbols:
-            subquote=data.getSubquote(symbol, currentDate, quotes)
-            if subquote:
-                my_classifier=classifier.classifier(subquote)
-                p=my_classifier.run()
+            my_classifier=classifier.classifier(symbol, currentDate, quotes)
+            p=my_classifier.run()
 
-                if p and p['Good']>best_p_vgood:
-                    best_p_vgood=p['Good']
-                    best_symbol=symbol
+            if p and p['Good']>best_p_vgood:
+                best_p_vgood=p['Good']
+                best_symbol=symbol
 
         # see how we did for today
         if best_symbol:

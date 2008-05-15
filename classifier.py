@@ -1,11 +1,14 @@
 # for maxint
 import sys
+import data
 
 classes=['Good', 'Bad']
 
 class classifier:
-    def __init__(self, subquote):
-        self.subquote=subquote
+    def __init__(self, symbol, currentDate, quotes):
+        self.symbol=symbol
+        self.currentDate=currentDate
+        self.quotes=quotes
 
     def run(self):
         dataSet=self.createDataSet()
@@ -62,47 +65,59 @@ class classifier:
                 p[C]=p[C]/Z
             return p
         return False
-    
+
+    def createDataPoint(self, day, symbol):
+        # add the symbol
+        dataPoint={}
+        dataPoint['Symbol']=[]
+        dataPoint['Symbol'].append(self.quotes[symbol])
+
+        '''
+        # populate the Window Predictors for today
+        dataPoint['WindowPredictor']=[]
+        window=3
+        for index in range(day-window, day):
+            if self.subquote[symbol]['High'][index]>self.subquote[symbol]['Open'][index]*1.02:
+                dataPoint['WindowPredictor'].append(1.02)
+            else:
+                binned = self.bin(self.subquote[symbol]['Close'][index]/self.subquote[symbol]['Open'][index])
+                dataPoint['WindowPredictor'].append(binned)
+        '''
+
+        # last closing price was x% of the y day high, low
+        High=0
+        Low=sys.maxint
+        for i in range(day-5, day):
+            if self.quotes[symbol]['High'][i]>High:
+                High=self.quotes[symbol]['High'][i]
+            if self.quotes[symbol]['Low'][i]<Low:
+                Low=self.quotes[symbol]['Low'][i]
+        dataPoint['xDay']=[]
+        Last=self.quotes[symbol]['Close'][day]
+        dataPoint['xDay'].append(self.bin(Last/High))
+        dataPoint['xDay'].append(self.bin(Last/Low))
+
+        # populate the outcome for today
+        if self.quotes[symbol]['High'][day]>self.quotes[symbol]['Open'][day]*1.02:
+            dataPoint['Outcome']='Good'
+        else:
+            dataPoint['Outcome']='Bad'
+
+        return dataPoint
+
     def createDataSet(self):
         trainingWindow=100
         dataSet=[]
-        for symbol in self.subquote:
-            days = len(self.subquote[symbol]['Open'])
-            if days-trainingWindow-242>0:
-                for day in range(days-trainingWindow, days):
-                    dataSet.append({})
+        for symbol in self.quotes:
+            currentIndex=data.getIndex(self.currentDate, self.quotes[symbol])
+            if currentIndex and currentIndex-trainingWindow-5>0:
+                for day in range(currentIndex-trainingWindow, currentIndex):
+                    dataSet.append(self.createDataPoint(day, symbol))
 
-                    '''
-                    # populate the Window Predictors for today
-                    dataSet[-1]['WindowPredictor']=[]
-                    window=3
-                    for index in range(day-window, day):
-                        if self.subquote[symbol]['High'][index]>self.subquote[symbol]['Open'][index]*1.02:
-                            dataSet[-1]['WindowPredictor'].append(1.02)
-                        else:
-                            binned = self.bin(self.subquote[symbol]['Close'][index]/self.subquote[symbol]['Open'][index])
-                            dataSet[-1]['WindowPredictor'].append(binned)
-                    '''
-                    
-                    # last closing price was x% of the y day high, low
-                    High=0
-                    Low=sys.maxint
-                    for i in range(day-5, day):
-                        if self.subquote[symbol]['High'][i]>High:
-                            High=self.subquote[symbol]['High'][i]
-                        if self.subquote[symbol]['Low'][i]<Low:
-                            Low=self.subquote[symbol]['Low'][i]
-                    dataSet[-1]['xDay']=[]
-                    Last=self.subquote[symbol]['Close'][day]
-                    dataSet[-1]['xDay'].append(self.bin(Last/High))
-                    dataSet[-1]['xDay'].append(self.bin(Last/Low))
-
-                    # populate the outcome for today
-                    if self.subquote[symbol]['High'][day]>self.subquote[symbol]['Open'][day]*1.02:
-                        dataSet[-1]['Outcome']='Good'
-                    else:
-                        dataSet[-1]['Outcome']='Bad'
-
+        #now append the test point
+        day=data.getIndex(self.currentDate, self.quotes[self.symbol])
+        dataSet.append(self.createDataPoint(day, self.symbol))
+                       
         return dataSet
 
     def bin(self, x):
