@@ -2,8 +2,8 @@ import classifier
 
 def main():
     import datetime
-    startDate=datetime.date(2007,1,1)
-    endDate=datetime.date(2008,1,1)
+    startDate=datetime.date(2007,1,3)
+    endDate=datetime.date(2007,1,4)
 
     import data
     symbols=data.getSymbols()
@@ -24,12 +24,15 @@ def main():
             p=my_classifier.run()
 
             if p and p['Good']>best_p_vgood:
-                best_p_vgood=p['Good']
-                best_symbol=symbol
+                # only pick a symbol that we have test data for
+                if data.getIndex(currentDate, quotes[symbol]):
+                    best_p_vgood=p['Good']
+                    best_symbol=symbol
 
         # see how we did for today
         if best_symbol:
             index=data.getIndex(currentDate, quotes[best_symbol])
+
             Open=quotes[best_symbol]['Open'][index]
             Close=quotes[best_symbol]['Close'][index]
             High=quotes[best_symbol]['High'][index]
