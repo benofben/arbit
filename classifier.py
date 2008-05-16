@@ -19,7 +19,7 @@ class classifier:
 
         classes=['Good', 'Bad']
         
-        # compute P(C|F_1, F_2, ... F_n)
+        # compute p(C|F_1, F_2, ... F_n)
         p={}
         for C in classes:
             # compute p(C)
@@ -30,7 +30,6 @@ class classifier:
             p[C]=p[C]/(len(trainingSet))
 
             # allocate two arrays
-            # there has got to be a better way to do this....
             pF=[]
             Ft=[]
             for i in trainingSet[0]:
@@ -51,7 +50,7 @@ class classifier:
                                 Ft[index]=Ft[index]+1
                                 index=index+1
 
-            # compute p(C|F_1,...F_n) = p(C) * Pi[p(F_i|C)]
+            # compute p(C|F_1, F_2, ... F_n) = p(C) * Pi[p(F_i|C)]
             for i in range(0,len(pF)):
                 if pF[i]!=0:
                     pF[i]=float(pF[i])/Ft[i]

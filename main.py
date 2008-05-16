@@ -2,8 +2,8 @@ import classifier
 
 def main():
     import datetime
-    startDate=datetime.date(2007,1,3)
-    endDate=datetime.date(2007,1,4)
+    startDate=datetime.date(2007,1,1)
+    endDate=datetime.date(2008,1,1)
 
     import data
     symbols=data.getSymbols()
@@ -18,7 +18,7 @@ def main():
 
         best_p_vgood=0
         best_symbol=''
-        
+
         for symbol in symbols:
             my_classifier=classifier.classifier(symbol, currentDate, quotes)
             p=my_classifier.run()
