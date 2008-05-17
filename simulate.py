@@ -1,8 +1,8 @@
-import classifier
+import cPickle
 
 def main():
 	import datetime
-	startDate=datetime.date(2007,1,3)
+	startDate=datetime.date(2007,1,1)
 	endDate=datetime.date(2008,1,1)
 
 	import data
@@ -20,8 +20,10 @@ def main():
 		best_symbol=''
 
 		for symbol in symbols:
-			my_classifier=classifier.classifier(symbol, currentDate, quotes)
-			p=my_classifier.run()
+			filename=str(currentDate) + symbol
+			f = open('data/queue/response/' + filename, 'r')
+			response=cPickle.load(f)
+			p=response['p']
 
 			if p and p['Good']>best_p_vgood:
 				# only pick a symbol that we have test data for
@@ -48,6 +50,6 @@ def main():
 			print str(currentDate) + '\t' \
 			+ str(round(c)) +  '\t' \
 			+ best_symbol +  '\t' \
-			+ str(best_p_vgood) + '\t' \
-			+ str(pwin) + '\t'
+			+ str(round(best_p_vgood,5)) + '\t' \
+			+ str(round(pwin,5)) + '\t'
 main()

@@ -1,6 +1,7 @@
 import cPickle
 import httplib
 import socket
+import classifier
 
 serverIP='127.0.0.1'
 serverPort=10000
@@ -44,13 +45,17 @@ def run():
 		request=receive('queue')
 		if request and request['QuotesVersionNumber'] != quotesVersionNumber:
 			print "Quotes are stale.  I'm getting a new copy."
-			[quotesVersionNumber, pickledQuotes]=receive('quotes')
-			quotes=cPickle.dumps(pickledQuotes)
+			[quotesVersionNumber, quotes]=receive('quotes')
 
 		# if our quotes are still stale, we're just going to drop the request
 		if request and request['QuotesVersionNumber'] == quotesVersionNumber:
 			print "Processing " + request['Symbol'] + ' for day ' + str(request['Date']) +'.'
+
+			my_classifier=classifier.classifier(request['Symbol'], request['Date'], quotes)
+			p=my_classifier.run()
+
 			response = {}
+			response['p']=p
 			response['QuotesVersionNumber']=request['QuotesVersionNumber']
 			response['Symbol']=request['Symbol']
 			response['Date']=request['Date']

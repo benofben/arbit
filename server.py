@@ -13,9 +13,8 @@ endDate=datetime.date(2008,1,1)
 import data
 symbols=data.getSymbols()
 quotes=data.getAllQuotes()
-pickledQuotes=cPickle.dumps(quotes)
 quotesVersionNumber = datetime.datetime.now()
-quotesMessage=cPickle.dumps([quotesVersionNumber,pickledQuotes])
+quotesMessage=cPickle.dumps([quotesVersionNumber,quotes])
 print 'Finished loading quotes.'
 def makeQueueDirectories():
 	if os.path.exists('data/queue/request'):
@@ -66,9 +65,9 @@ class picklerThread(Thread):
 				cPickle.dump(request, f)
 				f.close()
 
-		#wait until the consumers grab some pickles
-		while len(os.listdir('data/queue/request'))>100:
-			time.sleep(60)	
+			#wait until the consumers grab some pickles
+			while len(os.listdir('data/queue/request'))>1000:
+				time.sleep(5)	
 		
 from BaseHTTPServer import BaseHTTPRequestHandler
 class GetAndPostHandler(BaseHTTPRequestHandler):
