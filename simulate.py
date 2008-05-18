@@ -1,4 +1,5 @@
 import cPickle
+import os
 
 def main():
 	import datetime
@@ -20,16 +21,19 @@ def main():
 		best_symbol=''
 
 		for symbol in symbols:
-			filename=str(currentDate) + symbol
-			f = open('data/queue/response/' + filename, 'r')
-			response=cPickle.load(f)
-			p=response['p']
+			# for this symbol, we need the last date the symbol was traded
+			index=data.getIndex(currentDate, quotes[symbol])
+			if index:
+				date=quotes[symbol]['Date'][index-1]
+				filename='data/queue/response/' + str(date) + symbol
+				if os.path.exists(filename):
+					f = open(filename, 'r')
+					response=cPickle.load(f)
+					p=response['p']
 
-			if p and p['Good']>best_p_vgood:
-				# only pick a symbol that we have test data for
-				if data.getIndex(currentDate, quotes[symbol]):
-					best_p_vgood=p['Good']
-					best_symbol=symbol
+					if p['Good']>best_p_vgood:
+						best_p_vgood=p['Good']
+						best_symbol=symbol
 
 		# see how we did for today
 		if best_symbol:
