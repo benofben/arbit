@@ -27,7 +27,7 @@ class classifier:
             for day in range(0, len(trainingSet)):
                 if trainingSet[day]['Outcome']==C:
                     p[C]=p[C]+1.0
-            p[C]=p[C]/(len(trainingSet))
+            p[C]=p[C]/len(trainingSet)
 
             # allocate two arrays
             pF=[]
@@ -39,7 +39,7 @@ class classifier:
                         Ft.append(0)
 
             # compute p(F_i|C)
-            for day in range(0, len(trainingSet)-1):
+            for day in range(0, len(trainingSet)):
                 if trainingSet[day]['Outcome']==C:
                     index=0
                     for i in trainingSet[day]:
