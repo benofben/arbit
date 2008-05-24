@@ -3,7 +3,7 @@ import httplib
 import socket
 import classifier
 
-serverIP='127.0.0.1'
+serverIP='yesler'
 serverPort=10000
 
 def send(response):

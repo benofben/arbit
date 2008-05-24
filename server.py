@@ -3,12 +3,12 @@ import cPickle
 import time
 import shutil
 
-serverIP='127.0.0.1'
+serverIP='yesler'
 serverPort=10000
 
 import datetime
 startDate=datetime.date(2007,1,1)
-endDate=datetime.date(2008,1,1)
+endDate=datetime.date(2007,2,1)
 
 import data
 symbols=data.getSymbols()

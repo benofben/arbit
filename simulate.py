@@ -4,7 +4,7 @@ import os
 def main():
 	import datetime
 	startDate=datetime.date(2007,1,1)
-	endDate=datetime.date(2008,1,1)
+	endDate=datetime.date(2007,2,1)
 
 	import data
 	symbols=data.getSymbols()
