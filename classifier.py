@@ -37,7 +37,7 @@ class classifier:
 			pFC={}
 			FtC={}
 			for predictor in testPoint:
-				if i!='Outcome':
+				if predictor!='Outcome':
 					pFC[predictor]=0
 					FtC[predictor]=0
 
@@ -45,9 +45,10 @@ class classifier:
 			for i in range(0, len(trainingSet)):
 				if trainingSet[i]['Outcome']==C:
 					for predictor in trainingSet[i]:
-						if trainingSet[i][predictor]==testPoint[predictor]:
-							pFC[predictor]=pFC[predictor]+1
-						FtC[predictor]=FtC[predictor]+1
+						if predictor!='Outcome':
+							if trainingSet[i][predictor]==testPoint[predictor]:
+								pFC[predictor]=pFC[predictor]+1
+							FtC[predictor]=FtC[predictor]+1
 
 			# compute p(C) * Pi[p(F_i|C)]
 			for predictor in pFC:
@@ -59,16 +60,17 @@ class classifier:
 		pF={}
 		Ft={}
 		for predictor in testPoint:
-			if i!='Outcome':
+			if predictor!='Outcome':
 				pF[predictor]=0
 				Ft[predictor]=0
 
 		# compute p(F_i)
 		for i in range(0, len(trainingSet)):
 			for predictor in trainingSet[i]:
-				if trainingSet[i][predictor]==testPoint[predictor]:
-					pF[predictor]=pF[predictor]+1
-				Ft[predictor]=Ft[predictor]+1
+				if predictor!='Outcome':
+					if trainingSet[i][predictor]==testPoint[predictor]:
+						pF[predictor]=pF[predictor]+1
+					Ft[predictor]=Ft[predictor]+1
 
 		# compute Pi[p(F_i)]
 		pi=1
@@ -95,15 +97,14 @@ class classifier:
 					trainingSet.append(self.createDataPoint(day, symbol, 'Symbol'))
 
 				# last closing price was x% of the y day high, low
-				#for day in range(currentIndex-100, currentIndex):
-				#	trainingSet.append(self.createDataPoint(day, symbol, 'xDayHigh'))
-				#	trainingSet.append(self.createDataPoint(day, symbol, 'xDayLow'))
+				for day in range(currentIndex-100, currentIndex):
+					trainingSet.append(self.createDataPoint(day, symbol, 'xDayHigh'))
+					trainingSet.append(self.createDataPoint(day, symbol, 'xDayLow'))
 
 		# create a test point
 		testPoint={}
 		day=data.getIndex(self.currentDate, self.quotes[self.symbol])
-		predictors = ['Symbol']
-		#, 'xDayHigh', 'xDayLow'
+		predictors = ['Symbol', 'xDayHigh', 'xDayLow']
 		for predictor in predictors:
 			point=self.createDataPoint(day, self.symbol, predictor)
 			testPoint[predictor]=point[predictor]
