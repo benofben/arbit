@@ -1,5 +1,4 @@
-# for maxint
-import sys
+import sys	# for maxint
 import data
 
 class classifier:
@@ -17,6 +16,11 @@ class classifier:
 		if not trainingSet or not len(trainingSet)>0:
 			return False
 	
+		###########################################
+		# Points in the training set do not correspond to points in time
+		# This may cause strange issues...
+		###########################################
+
 		classes=['Good', 'Bad']
 
 		# compute p(C|F_1, F_2, ... F_n)
@@ -24,63 +28,53 @@ class classifier:
 		for C in classes:
 			# compute p(C)
 			p[C]=0
-			for day in range(0, len(trainingSet)):
-				if trainingSet[day]['Outcome']==C:
+			for i in range(0, len(trainingSet)):
+				if trainingSet[i]['Outcome']==C:
 					p[C]=p[C]+1.0
 			p[C]=p[C]/len(trainingSet)
 
 			# allocate arrays for p(F_i|C) and count(F_i|C)
-			pFC=[]
-			FtC=[]
-			for i in trainingSet[0]:
+			pFC={}
+			FtC={}
+			for predictor in testPoint:
 				if i!='Outcome':
-					for j in range(0,len(trainingSet[0][i])):
-						pFC.append(0)
-						FtC.append(0)
+					pFC[predictor]=0
+					FtC[predictor]=0
 
 			# compute p(F_i|C)
-			for day in range(0, len(trainingSet)):
-				if trainingSet[day]['Outcome']==C:
-					index=0
-					for i in trainingSet[day]:
-						if i!='Outcome':
-							for j in range(0,len(trainingSet[day][i])):
-								if trainingSet[day][i][j]==testPoint[i][j]:
-									pFC[index]=pFC[index]+1
-								FtC[index]=FtC[index]+1
-								index=index+1
+			for i in range(0, len(trainingSet)):
+				if trainingSet[i]['Outcome']==C:
+					for predictor in trainingSet[i]:
+						if trainingSet[i][predictor]==testPoint[predictor]:
+							pFC[predictor]=pFC[predictor]+1
+						FtC[predictor]=FtC[predictor]+1
 
 			# compute p(C) * Pi[p(F_i|C)]
-			for i in range(0,len(pFC)):
-				if pFC[i]!=0:
-					pFC[i]=float(pFC[i])/FtC[i]
-				p[C]=p[C]*pFC[i]
+			for predictor in pFC:
+				if pFC[predictor]!=0:
+					pFC[predictor]=float(pFC[predictor])/FtC[predictor]
+				p[C]=p[C]*pFC[predictor]
 
 		# allocate arrays for p(F_i) and count(F_i)
-		pF=[]
-		Ft=[]
-		for i in trainingSet[0]:
+		pF={}
+		Ft={}
+		for predictor in testPoint:
 			if i!='Outcome':
-				for j in range(0,len(trainingSet[0][i])):
-					pF.append(0)
-					Ft.append(0)
+				pF[predictor]=0
+				Ft[predictor]=0
 
 		# compute p(F_i)
-		for day in range(0, len(trainingSet)):
-			index=0
-			for i in trainingSet[day]:
-				if i!='Outcome':
-					for j in range(0,len(trainingSet[day][i])):
-						if trainingSet[day][i][j]==testPoint[i][j]:
-							pF[index]=pF[index]+1
-						Ft[index]=Ft[index]+1
-						index=index+1
+		for i in range(0, len(trainingSet)):
+			for predictor in trainingSet[i]:
+				if trainingSet[i][predictor]==testPoint[predictor]:
+					pF[predictor]=pF[predictor]+1
+				Ft[predictor]=Ft[predictor]+1
 
 		# compute Pi[p(F_i)]
 		pi=1
-		for i in range(0,len(pF)):
-			if pF[i]!=0:				pF[i]=float(pF[i])/Ft[i]
-			pi=pi*pF[i]
+		for predictor in pF:
+			if pF[predictor]!=0:				pF[predictor]=float(pF[predictor])/Ft[predictor]
+			pi=pi*pF[predictor]
 
 		# compute p(C|F_1, F_2, ... F_n) = p(C) * Pi[p(F_i|C)] / Pi[p(F_i)]
 		for C in classes:
@@ -91,39 +85,56 @@ class classifier:
 
 	def createDataSet(self):
 		# create the training set
-		trainingWindow=100
 		trainingSet=[]
 		for symbol in self.quotes:
 			currentIndex=data.getIndex(self.currentDate, self.quotes[symbol])
-			if currentIndex and currentIndex-trainingWindow>0:
-				for day in range(currentIndex-trainingWindow, currentIndex):
-					trainingSet.append(self.createDataPoint(day, symbol))
+			if currentIndex and currentIndex-105>0:
+
+				# add the symbol
+				for day in range(currentIndex-5, currentIndex):
+					trainingSet.append(self.createDataPoint(day, symbol, 'Symbol'))
+
+				# last closing price was x% of the y day high, low
+				#for day in range(currentIndex-100, currentIndex):
+				#	trainingSet.append(self.createDataPoint(day, symbol, 'xDayHigh'))
+				#	trainingSet.append(self.createDataPoint(day, symbol, 'xDayLow'))
 
 		# create a test point
+		testPoint={}
 		day=data.getIndex(self.currentDate, self.quotes[self.symbol])
-		testPoint=self.createDataPoint(day, self.symbol)
-					   
+		predictors = ['Symbol']
+		#, 'xDayHigh', 'xDayLow'
+		for predictor in predictors:
+			point=self.createDataPoint(day, self.symbol, predictor)
+			testPoint[predictor]=point[predictor]
+		testPoint['Outcome']=point['Outcome']
+
 		return [trainingSet, testPoint]
 
-	def createDataPoint(self, day, symbol):
+	def createDataPoint(self, day, symbol, predictor):
 		dataPoint={}
 
-		# add the symbol
-		dataPoint['Symbol']=[]
-		dataPoint['Symbol'].append(symbol)
-
-		# last closing price was x% of the y day high, low
-		High=0
-		Low=sys.maxint
-		for i in range(day-4, day+1):
-			if self.quotes[symbol]['High'][i]>High:
-				High=self.quotes[symbol]['High'][i]
-			if self.quotes[symbol]['Low'][i]<Low:
-				Low=self.quotes[symbol]['Low'][i]
-		dataPoint['xDay']=[]
-		Last=self.quotes[symbol]['Close'][day]
-		dataPoint['xDay'].append(self.bin(Last/High))
-		dataPoint['xDay'].append(self.bin(Last/Low))
+		if predictor=='Symbol':
+			dataPoint['Symbol']=symbol
+		elif predictor=='xDayHigh':
+			# last closing price was x% of the y day high
+			High=0
+			for i in range(day-4, day+1):
+				if self.quotes[symbol]['High'][i]>High:
+					High=self.quotes[symbol]['High'][i]
+			Last=self.quotes[symbol]['Close'][day]
+			dataPoint['xDayHigh']=self.bin(Last/High)
+		elif predictor=='xDayLow':
+			# last closing price was x% of the y day low
+			Low=sys.maxint
+			for i in range(day-4, day+1):
+				if self.quotes[symbol]['Low'][i]<Low:
+					Low=self.quotes[symbol]['Low'][i]
+			Last=self.quotes[symbol]['Close'][day]
+			dataPoint['xDayLow']=self.bin(Last/Low)
+		else:
+			print 'I found an unrecognized predictor: ' + predictor \
+			+ '. This means there is an error in your code.'
 
 		# populate the outcome for today if we have data
 		if len(self.quotes[symbol]['High'])>day+1 \
