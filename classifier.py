@@ -15,11 +15,6 @@ class classifier:
 	def naiveBayes(self, trainingSet, testPoint):
 		if not trainingSet or not len(trainingSet)>0:
 			return False
-	
-		###########################################
-		# Points in the training set do not correspond to points in time
-		# This may cause strange issues...
-		###########################################
 
 		classes=['Good', 'Bad']
 
@@ -86,29 +81,28 @@ class classifier:
 		return p
 
 	def createDataSet(self):
+		# the key value is the window to use the predictor for
+		predictors = {'Symbol':5, 'xDayHigh':100, 'xDayLow':100}
+
 		# create the training set
 		trainingSet=[]
 		for symbol in self.quotes:
 			currentIndex=data.getIndex(self.currentDate, self.quotes[symbol])
 			if currentIndex and currentIndex-105>0:
 
-				# add the symbol
-				for day in range(currentIndex-5, currentIndex):
-					trainingSet.append(self.createDataPoint(day, symbol, 'Symbol'))
-
-				# last closing price was x% of the y day high, low
-				for day in range(currentIndex-100, currentIndex):
-					trainingSet.append(self.createDataPoint(day, symbol, 'xDayHigh'))
-					trainingSet.append(self.createDataPoint(day, symbol, 'xDayLow'))
+				# add a data point for each predictor and day
+				for predictor in predictors:
+					window=predictors[predictor]
+					for day in range(currentIndex-window, currentIndex):
+						trainingSet.append(self.createDataPoint(day, symbol, predictor))
 
 		# create a test point
 		testPoint={}
 		day=data.getIndex(self.currentDate, self.quotes[self.symbol])
-		predictors = ['Symbol', 'xDayHigh', 'xDayLow']
+
 		for predictor in predictors:
 			point=self.createDataPoint(day, self.symbol, predictor)
 			testPoint[predictor]=point[predictor]
-		testPoint['Outcome']=point['Outcome']
 
 		return [trainingSet, testPoint]
 
