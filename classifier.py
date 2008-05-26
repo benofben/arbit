@@ -77,6 +77,8 @@ class classifier:
 		for C in classes:
 			if pi!=0 and p[C]!=0:
 				p[C]=p[C]/pi
+			else:
+				p[C]=0
 	
 		return p
 

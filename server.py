@@ -7,8 +7,8 @@ serverIP='yesler'
 serverPort=10000
 
 import datetime
-startDate=datetime.date(2007,1,1)
-endDate=datetime.date(2007,2,1)
+startDate=datetime.date(2007,10,1)
+endDate=datetime.date(2007,12,1)
 
 import data
 symbols=data.getSymbols()
@@ -97,7 +97,11 @@ class GetAndPostHandler(BaseHTTPRequestHandler):
 		self.send_response(200)
 		self.end_headers()
 
-		response=cPickle.loads(form['body'].value)
+		try:
+			response=cPickle.loads(form['body'].value)
+		except ValueError:
+			print 'I got a bad response that pickle does not like: xxx' + response + 'xxx'
+
 		filename=str(response['Date']) + response['Symbol']
 		f = open('data/queue/response/' + filename, 'w')
 		cPickle.dump(response, f)
@@ -107,7 +111,6 @@ class GetAndPostHandler(BaseHTTPRequestHandler):
 def run():
 	makeQueueDirectories()
 	picklerThread().start()
-
 	serverThread().start()
 
 	# wait until all the workers are done
