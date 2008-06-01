@@ -3,12 +3,12 @@ import cPickle
 import time
 import shutil
 
-serverIP='yesler'
+serverIP='10.10.10.1'
 serverPort=10000
 
 import datetime
-startDate=datetime.date(2007,10,1)
-endDate=datetime.date(2007,12,1)
+startDate=datetime.date(2008,1,1)
+endDate=datetime.date(2009,1,1)
 
 import data
 symbols=data.getSymbols()
@@ -100,7 +100,8 @@ class GetAndPostHandler(BaseHTTPRequestHandler):
 		try:
 			response=cPickle.loads(form['body'].value)
 		except ValueError:
-			print 'I got a bad response that pickle does not like: xxx' + response + 'xxx'
+			print 'I got a bad response that pickle does not like: xxx' + form['body'].value + 'xxx'
+			return
 
 		filename=str(response['Date']) + response['Symbol']
 		f = open('data/queue/response/' + filename, 'w')

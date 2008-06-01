@@ -3,7 +3,7 @@ import httplib
 import socket
 import classifier
 
-serverIP='yesler'
+serverIP='10.10.10.1'
 serverPort=10000
 
 def send(response):
@@ -15,14 +15,16 @@ def send(response):
 		response = conn.getresponse()
 		conn.close()
 	except socket.error:
-		print 'socket error: Could not send response.'
+		print 'socket.error: Could not send response.'
 		return
-	
+	except httplib.BadStatusLine:
+		print 'httplib.BadStatusLine: Could not send response.'
+		return
+
 	if response.status!=200 or response.reason!='OK':
 		print 'Could not send response.'
 		print response.status, response.reason
-	
-	
+
 def receive(path):
 	try:
 		conn = httplib.HTTPConnection(serverIP, serverPort)

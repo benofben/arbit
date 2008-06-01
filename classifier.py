@@ -18,68 +18,61 @@ class classifier:
 
 		classes=['Good', 'Bad']
 
-		# compute p(C|F_1, F_2, ... F_n)
-		p={}
+		# compute p(C)
+		p_C={}
 		for C in classes:
-			# compute p(C)
-			p[C]=0
+			p_C[C]=0.0
 			for i in range(0, len(trainingSet)):
 				if trainingSet[i]['Outcome']==C:
-					p[C]=p[C]+1.0
-			p[C]=p[C]/len(trainingSet)
+					p_C[C]+=1
+			p_C[C]/=len(trainingSet)
 
-			# allocate arrays for p(F_i|C) and count(F_i|C)
-			pFC={}
-			FtC={}
-			for predictor in testPoint:
-				if predictor!='Outcome':
-					pFC[predictor]=0
-					FtC[predictor]=0
-
-			# compute p(F_i|C)
-			for i in range(0, len(trainingSet)):
-				if trainingSet[i]['Outcome']==C:
-					for predictor in trainingSet[i]:
-						if predictor!='Outcome':
-							if trainingSet[i][predictor]==testPoint[predictor]:
-								pFC[predictor]=pFC[predictor]+1
-							FtC[predictor]=FtC[predictor]+1
-
-			# compute p(C) * Pi[p(F_i|C)]
-			for predictor in pFC:
-				if pFC[predictor]!=0:
-					pFC[predictor]=float(pFC[predictor])/FtC[predictor]
-				p[C]=p[C]*pFC[predictor]
-
-		# allocate arrays for p(F_i) and count(F_i)
-		pF={}
-		Ft={}
+		# compute p(F_i|C)
+		p_F_C={}
+		c_F_C={}
 		for predictor in testPoint:
 			if predictor!='Outcome':
-				pF[predictor]=0
-				Ft[predictor]=0
+				p_F_C[predictor]={}
+				c_F_C[predictor]={}
+				for C in classes:
+					p_F_C[predictor][C]=0.0
+					c_F_C[predictor][C]=0
+		for i in range(0, len(trainingSet)):
+			for predictor in trainingSet[i]:
+				if predictor!='Outcome':
+					C=trainingSet[i]['Outcome']
+					if trainingSet[i][predictor]==testPoint[predictor]:
+						p_F_C[predictor][C]+=1
+					c_F_C[predictor][C]+=1
+		for predictor in p_F_C:
+			for C in p_F_C[predictor]:
+				p_F_C[predictor][C]/=c_F_C[predictor][C]
 
 		# compute p(F_i)
+		p_F={}
+		c_F={}
+		for predictor in testPoint:
+			if predictor!='Outcome':
+				p_F[predictor]=0.0
+				c_F[predictor]=0
+
 		for i in range(0, len(trainingSet)):
 			for predictor in trainingSet[i]:
 				if predictor!='Outcome':
 					if trainingSet[i][predictor]==testPoint[predictor]:
-						pF[predictor]=pF[predictor]+1
-					Ft[predictor]=Ft[predictor]+1
+						p_F[predictor]+=1
+					c_F[predictor]+=1
+		for predictor in p_F:
+			p_F[predictor]/=c_F[predictor]
 
-		# compute Pi[p(F_i)]
-		pi=1
-		for predictor in pF:
-			if pF[predictor]!=0:				pF[predictor]=float(pF[predictor])/Ft[predictor]
-			pi=pi*pF[predictor]
-
-		# compute p(C|F_1, F_2, ... F_n) = p(C) * Pi[p(F_i|C)] / Pi[p(F_i)]
+		#compute p(C) * pi[p(F_i|C)/p(F_i)]
+		p={}
 		for C in classes:
-			if pi!=0 and p[C]!=0:
-				p[C]=p[C]/pi
-			else:
-				p[C]=0
-	
+			p[C]=p_C[C]
+			for predictor in p_F:
+				if p_F[predictor]!=0:
+					p[C]*=p_F_C[predictor][C]/p_F[predictor]
+
 		return p
 
 	def createDataSet(self):
