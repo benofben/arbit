@@ -1,125 +1,103 @@
-import os
-import cPickle
-import time
-import shutil
-
-serverIP='10.10.10.1'
-serverPort=10000
-
 import datetime
 startDate=datetime.date(2008,1,1)
-endDate=datetime.date(2009,1,1)
+endDate=datetime.date(2008,12,1)
 
-import data
-symbols=data.getSymbols()
-quotes=data.getAllQuotes()
-quotesVersionNumber = datetime.datetime.now()
-quotesMessage=cPickle.dumps([quotesVersionNumber,quotes])
-print 'Finished loading quotes.'
-def makeQueueDirectories():
-	if os.path.exists('data/queue/request'):
-		shutil.rmtree('data/queue/request')
-	os.makedirs('data/queue/request/')
+serverUrl='localhost'
 
-	if os.path.exists('data/queue/inProgress'):
-		shutil.rmtree('data/queue/inProgress')
-	os.makedirs('data/queue/inProgress/')
+import sys
+import ctypes
+platform = sys.platform
+if platform == 'linux2':
+        libtibems = ctypes.CDLL('libtibems.so')
+elif platform == 'win32':
+        libtibems = ctypes.CDLL('tibems.dll')
+else:
+        print 'Sorry, I don\'t know which library to reference on ' + platform + '.'
+        exit(1)
 
-	if os.path.exists('data/queue/response'):
-		shutil.rmtree('data/queue/response')
-	os.makedirs('data/queue/response/')
-
-def getNextRequest():
-	for filename in os.listdir('data/queue/request'):
-		fileContents = cPickle.load(open('data/queue/request/' + filename, 'r'))
-		shutil.move('data/queue/request/' + filename, 'data/queue/inProgress/' + filename)
-		return cPickle.dumps(fileContents)
-	return None
-
-from threading import Thread
-class serverThread(Thread):
-	def __init__ (self):
-		Thread.__init__(self)
-		self.status = -1
-	def run(self):
-		from BaseHTTPServer import HTTPServer
-		server = HTTPServer((serverIP, serverPort), GetAndPostHandler)
-		print 'Starting http server...'
-		server.serve_forever()
-
-class picklerThread(Thread):
-	def __init__ (self):
-		Thread.__init__(self)
-		self.status = -1
-	def run(self):
-		for day in range(0, (endDate-startDate).days+1):
-			date=startDate+datetime.timedelta(days=day)
-			print 'Pickling day ' + str(date) + '.'			
-			for symbol in symbols:	
-				request={}
-				request['QuotesVersionNumber']=quotesVersionNumber
-				request['Symbol']=symbol
-				request['Date']=date
-		
-				f = open('data/queue/request/' + str(date) + symbol, 'w')
-				cPickle.dump(request, f)
-				f.close()
-
-			#wait until the consumers grab some pickles
-			while len(os.listdir('data/queue/request'))>1000:
-				time.sleep(5)	
-		
-from BaseHTTPServer import BaseHTTPRequestHandler
-class GetAndPostHandler(BaseHTTPRequestHandler):
-	def do_GET(self):
-		if self.path=='/queue':
-			message = getNextRequest()
-		elif self.path=='/quotes':
-			message = quotesMessage
-
-		if message:
-			self.send_response(200)
-			self.end_headers()
-			self.wfile.write(message)
-		else:
-			self.send_response(500)
-			self.end_headers()
-
-	def do_POST(self):
-		import cgi
-		form=cgi.FieldStorage(
-			fp=self.rfile, 
-			headers=self.headers,
-			environ={'REQUEST_METHOD':'POST',
-					 'CONTENT_TYPE':self.headers['Content-Type'],
-					 })
-
-		self.send_response(200)
-		self.end_headers()
-
-		try:
-			response=cPickle.loads(form['body'].value)
-		except ValueError:
-			print 'I got a bad response that pickle does not like: xxx' + form['body'].value + 'xxx'
-			return
-
-		filename=str(response['Date']) + response['Symbol']
-		f = open('data/queue/response/' + filename, 'w')
-		cPickle.dump(response, f)
-		f.close()
-		os.remove('data/queue/inProgress/' + filename)
-		
 def run():
-	makeQueueDirectories()
-	picklerThread().start()
-	serverThread().start()
+	import data
+	symbols=data.getSymbols()
+	quotes=data.getAllQuotes()
+	print 'Finished loading quotes.'
 
-	# wait until all the workers are done
-	numberOfItems=((endDate-startDate).days+1)*len(symbols)
-	while len(os.listdir('data/queue/response'))<numberOfItems:
-		time.sleep(5)
-	print 'All done processing.  Going to exit now.'
-	exit()
+        factory = libtibems.tibemsConnectionFactory_Create()
+	if not factory:
+		print 'Error creating factory: ' + str(status)
+		return None
+
+	status = libtibems.tibemsConnectionFactory_SetServerURL(factory, serverUrl)
+	if status:
+		print 'Error setting server URL: ' + str(status)
+		return None
+
+	connection = ctypes.c_void_p()
+	status = libtibems.tibemsConnectionFactory_CreateConnection(factory, ctypes.byref(connection), None, None)
+	if status:
+		print 'Error creating connection: ' + str(status)
+		return None
+
+	destination = ctypes.c_void_p()
+	status = libtibems.tibemsQueue_Create(ctypes.byref(destination), 'arbit.work.request')
+	if status:
+		print 'Error creating queue: ' + str(status)
+		return None
+
+        session = ctypes.c_void_p()
+        TIBEMS_EXPLICIT_CLIENT_ACKNOWLEDGE=23
+	status = libtibems.tibemsConnection_CreateSession(connection, ctypes.byref(session), 0, TIBEMS_EXPLICIT_CLIENT_ACKNOWLEDGE)
+	if status:
+		print 'Error creating session: ' + str(status)
+		return None
+
+	messageProducer = ctypes.c_void_p()
+        status = libtibems.tibemsSession_CreateProducer(session, ctypes.byref(messageProducer), destination)
+	if status:
+		print 'Error creating producer: ' + str(status)
+		return False
+
+	########## should purge the queue before dumping new stuff in it!!!!!!!!!!!
+
+	import cPickle
+	for day in range(0, (endDate-startDate).days+1):
+		date=startDate+datetime.timedelta(days=day)
+		for symbol in symbols:	
+			request={}
+			request['Symbol']=symbol
+			request['Date']=date
+			messageText=cPickle.dumps(request)
+
+        		message = ctypes.c_void_p()
+        	        status = libtibems.tibemsTextMsg_Create(ctypes.byref(message))
+        		if status:
+        			print 'Error creating message: ' + str(status)
+        			return False
+
+                	status = libtibems.tibemsTextMsg_SetText(message, messageText)
+        		if status:
+        			print 'Error setting message text: ' + str(status)
+        			return False
+
+         		status = libtibems.tibemsMsgProducer_Send(messageProducer, message)
+        		if status:
+        			print 'Error sending message: ' + str(status)
+        			return False
+
+                	status = libtibems.tibemsMsg_Destroy(message)
+        		if status:
+        			print 'Error destroying message: ' + str(status)
+        			return False
+
+	status = libtibems.tibemsDestination_Destroy(destination)
+	if status:
+		print 'Error destroying destination: ' + str(status)
+		return False
+
+	status = libtibems.tibemsConnection_Close(connection)
+	if status:
+		print 'Error closing connection: ' + str(status)
+		return False
+
+	print 'Finished publishing work requests.'
 
 run()
-

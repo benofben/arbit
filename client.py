@@ -1,69 +1,151 @@
 import cPickle
-import httplib
-import socket
 import classifier
+import time
 
-serverIP='10.10.10.1'
-serverPort=10000
+serverUrl='localhost'
 
-def send(response):
-	pickledResponse = cPickle.dumps(response)
-	try:
-		conn = httplib.HTTPConnection(serverIP, serverPort)
-		headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
-		conn.request('POST', '/', 'body=' + pickledResponse, headers)
-		response = conn.getresponse()
-		conn.close()
-	except socket.error:
-		print 'socket.error: Could not send response.'
-		return
-	except httplib.BadStatusLine:
-		print 'httplib.BadStatusLine: Could not send response.'
-		return
-
-	if response.status!=200 or response.reason!='OK':
-		print 'Could not send response.'
-		print response.status, response.reason
-
-def receive(path):
-	try:
-		conn = httplib.HTTPConnection(serverIP, serverPort)
-		conn.request('GET', '/' + path)
-		response=conn.getresponse()
-		pickledData=response.read()
-		conn.close()
-	except socket.error:
-		return None
-	except httplib.BadStatusLine:
-		return None
-	if response.status!=200 or response.reason!='OK':
-		return None
-
-	return cPickle.loads(pickledData)
+import sys
+import ctypes
+platform = sys.platform
+if platform == 'linux2':
+        libtibems = ctypes.CDLL('libtibems.so')
+elif platform == 'win32':
+        libtibems = ctypes.CDLL('tibems.dll')
+else:
+        print 'Sorry, I don\'t know which library to reference on ' + platform + '.'
+        exit(1)
 
 def run():
-	quotesVersionNumber=''
+	print 'Client started.'
+
+	import data
+	symbols=data.getSymbols()
+	quotes=data.getAllQuotes()
+	print 'Finished loading quotes.'
+
+        factory = libtibems.tibemsConnectionFactory_Create()
+	if not factory:
+		print 'Error creating factory: ' + str(status)
+		return None
+
+	status = libtibems.tibemsConnectionFactory_SetServerURL(factory, serverUrl)
+	if status:
+		print 'Error setting server URL: ' + str(status)
+		return None
+
+	connection = ctypes.c_void_p()
+	status = libtibems.tibemsConnectionFactory_CreateConnection(factory, ctypes.byref(connection), None, None)
+	if status:
+		print 'Error creating connection: ' + str(status)
+		return None
+
+	consumerDestination = ctypes.c_void_p()
+	status = libtibems.tibemsQueue_Create(ctypes.byref(consumerDestination), 'arbit.work.request')
+	if status:
+		print 'Error creating queue: ' + str(status)
+		return None
+
+        consumerSession = ctypes.c_void_p()
+        TIBEMS_EXPLICIT_CLIENT_ACKNOWLEDGE=23
+	status = libtibems.tibemsConnection_CreateSession(connection, ctypes.byref(consumerSession), 0, TIBEMS_EXPLICIT_CLIENT_ACKNOWLEDGE)
+	if status:
+		print 'Error creating session: ' + str(status)
+		return None
+
+	messageConsumer = ctypes.c_void_p()
+	status = libtibems.tibemsSession_CreateConsumer(consumerSession, ctypes.byref(messageConsumer), consumerDestination, None, 0)
+	if status:
+		print 'Error creating consumer: ' + str(status)
+		return False
+
+	producerDestination = ctypes.c_void_p()
+	status = libtibems.tibemsQueue_Create(ctypes.byref(producerDestination), 'arbit.work.response')
+	if status:
+		print 'Error creating queue: ' + str(status)
+		return None
+
+        producerSession = ctypes.c_void_p()
+	status = libtibems.tibemsConnection_CreateSession(connection, ctypes.byref(producerSession), 0, TIBEMS_EXPLICIT_CLIENT_ACKNOWLEDGE)
+	if status:
+		print 'Error creating session: ' + str(status)
+		return None
+
+	messageProducer = ctypes.c_void_p()
+        status = libtibems.tibemsSession_CreateProducer(producerSession, ctypes.byref(messageProducer), producerDestination)
+	if status:
+		print 'Error creating producer: ' + str(status)
+		return False
+
+	status = libtibems.tibemsConnection_Start(connection)
+	if status:
+		print 'Error starting connection: ' + str(status)
+		return False
+
 	while(True):
-		request=receive('queue')
-		if request and request['QuotesVersionNumber'] != quotesVersionNumber:
-			print "Quotes are stale.  I'm getting a new copy."
-			[quotesVersionNumber, quotes]=receive('quotes')
+		requestMessage = ctypes.c_void_p()
+        	status = libtibems.tibemsMsgConsumer_Receive(messageConsumer, ctypes.byref(requestMessage))
+		if status:
+			print 'Error receiving message: ' + str(status)
+			return False
 
-		# if our quotes are still stale, we're just going to drop the request
-		if request and request['QuotesVersionNumber'] == quotesVersionNumber:
-			print "Processing " + request['Symbol'] + ' for day ' + str(request['Date']) +'.'
+		messageType = ctypes.c_int()
+	        status = libtibems.tibemsMsg_GetBodyType(requestMessage, ctypes.byref(messageType))
+		if status:
+			print 'Error getting message type: ' + str(status)
+			return False
 
-			my_classifier=classifier.classifier(request['Symbol'], request['Date'], quotes)
-			p=my_classifier.run()
-
-			response = {}
-			response['p']=p
-			response['QuotesVersionNumber']=request['QuotesVersionNumber']
-			response['Symbol']=request['Symbol']
-			response['Date']=request['Date']
-			send(response)
+		requestMessageText = ctypes.c_char_p()
+		TIBEMS_TEXT_MESSAGE=6
+		if messageType.value == TIBEMS_TEXT_MESSAGE:
+			status = libtibems.tibemsTextMsg_GetText(requestMessage, ctypes.byref(requestMessageText))
+			if status:
+				print 'Error getting message text: ' + str(status)
+				return False
 		else:
-			import time
-			time.sleep(5)
+			print 'Error trying to get text from a nontext message.'
+			return False
+		
+		request=cPickle.loads(requestMessageText.value)
+		print "Processing " + request['Symbol'] + ' for day ' + str(request['Date']) +'.'
+
+		my_classifier=classifier.classifier(request['Symbol'], request['Date'], quotes)
+		p=my_classifier.run()
+
+		response = {}
+		response['p']=p
+		response['Symbol']=request['Symbol']
+		response['Date']=request['Date']
+		responseMessageText=cPickle.dumps(response)
+
+		responseMessage = ctypes.c_void_p()
+                status = libtibems.tibemsTextMsg_Create(ctypes.byref(responseMessage))
+       		if status:
+       			print 'Error creating message: ' + str(status)
+       			return False
+
+               	status = libtibems.tibemsTextMsg_SetText(responseMessage, responseMessageText)
+       		if status:
+       			print 'Error setting message text: ' + str(status)
+       			return False
+
+         	status = libtibems.tibemsMsgProducer_Send(messageProducer, responseMessage)
+       		if status:
+       			print 'Error sending message: ' + str(status)
+       			return False
+
+               	status = libtibems.tibemsMsg_Destroy(responseMessage)
+       		if status:
+       			print 'Error destroying message: ' + str(status)
+       			return False
+
+		status = libtibems.tibemsMsg_Acknowledge(requestMessage);
+		if status:
+			print 'Error acknowledging message: ' + str(status)
+			return False
+
+	        status = libtibems.tibemsMsg_Destroy(requestMessage)
+		if status:
+			print 'Error destroying message: ' + str(status)
+			return False
 
 run()
