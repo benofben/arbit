@@ -1,3 +1,4 @@
+import tibemsadmin
 import cPickle
 
 import datetime
@@ -58,50 +59,47 @@ def receiveMessages():
 		print 'Error starting connection: ' + str(status)
 		return False
 
-        #############################################
+        for i in range(0, tibemsadmin.getPendingMessageCount('arbit.work.response')):
 	
-        message = ctypes.c_void_p()
-        status = libtibems.tibemsMsgConsumer_Receive(messageConsumer, ctypes.byref(message))
-        if status:
-                print 'Error receiving message: ' + str(status)
-                return False
-
-
-        messageType = ctypes.c_int()
-        status = libtibems.tibemsMsg_GetBodyType(message, ctypes.byref(messageType))
-        if status:
-                print 'Error getting message type: ' + str(status)
-                return False
-
-        messageText = ctypes.c_char_p()
-        TIBEMS_TEXT_MESSAGE=6
-        if messageType.value == TIBEMS_TEXT_MESSAGE:
-                status = libtibems.tibemsTextMsg_GetText(message, ctypes.byref(messageText))
+                message = ctypes.c_void_p()
+                status = libtibems.tibemsMsgConsumer_Receive(messageConsumer, ctypes.byref(message))
                 if status:
-                        print 'Error getting message text: ' + str(status)
+                        print 'Error receiving message: ' + str(status)
                         return False
-	else:
-		print 'Error trying to get text from a nontext message.'
-		return False
+
+                messageType = ctypes.c_int()
+                status = libtibems.tibemsMsg_GetBodyType(message, ctypes.byref(messageType))
+                if status:
+                        print 'Error getting message type: ' + str(status)
+                        return False
+
+                messageText = ctypes.c_char_p()
+                TIBEMS_TEXT_MESSAGE=6
+                if messageType.value == TIBEMS_TEXT_MESSAGE:
+                        status = libtibems.tibemsTextMsg_GetText(message, ctypes.byref(messageText))
+                        if status:
+                                print 'Error getting message text: ' + str(status)
+                                return False
+        	else:
+        		print  'Error trying to get text from a nontext message.'
+        		return False
 		
-        request=cPickle.loads(messageText.value)
-        filename='data/response/' + str(request['Date']) + request['Symbol']
-        f=open(filename, 'w')
-        cPickle.dump(request, f)
-        f.close()
+                request=cPickle.loads(messageText.value)
+                filename='data/response/' + str(request['Date']) + request['Symbol']
+                f=open(filename, 'w')
+                cPickle.dump(request, f)
+                f.close()
         
-        status = libtibems.tibemsMsg_Acknowledge(message);
-        if status:
-                print 'Error acknowledging message: ' + str(status)
-                return False
+                status = libtibems.tibemsMsg_Acknowledge(message);
+                if status:
+                        print 'Error acknowledging message: ' + str(status)
+                        return False
 
-        status = libtibems.tibemsMsg_Destroy(message)
-        if status:
-                print 'Error destroying message: ' + str(status)
-                return False
+                status = libtibems.tibemsMsg_Destroy(message)
+                if status:
+                        print 'Error destroying message: ' + str(status)
+                        return False
 
-       #############################################
-        
 	status = libtibems.tibemsDestination_Destroy(destination)
 	if status:
 		print 'Error destroying destination: ' + str(status)

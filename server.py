@@ -1,3 +1,5 @@
+import tibemsadmin
+
 import datetime
 startDate=datetime.date(2008,1,1)
 endDate=datetime.date(2008,12,1)
@@ -56,8 +58,34 @@ def run():
 		print 'Error creating producer: ' + str(status)
 		return False
 
-	########## should purge the queue before dumping new stuff in it!!!!!!!!!!!
+	messageConsumer = ctypes.c_void_p()
+	status = libtibems.tibemsSession_CreateConsumer(session, ctypes.byref(messageConsumer), destination, None, 0)
+	if status:
+		print 'Error creating consumer: ' + str(status)
+		return False
 
+	status = libtibems.tibemsConnection_Start(connection)
+	if status:
+		print 'Error starting connection: ' + str(status)
+		return False
+
+        for i in range(0, tibemsadmin.getPendingMessageCount('arbit.work.request')):
+                message = ctypes.c_void_p()
+        	status = libtibems.tibemsMsgConsumer_Receive(messageConsumer, ctypes.byref(message))
+		if status:
+			print 'Error receiving message: ' + str(status)
+			return False
+
+		status = libtibems.tibemsMsg_Acknowledge(message);
+		if status:
+			print 'Error acknowledging message: ' + str(status)
+			return False
+
+	        status = libtibems.tibemsMsg_Destroy(message)
+		if status:
+			print 'Error destroying message: ' + str(status)
+			return False
+        
 	import cPickle
 	for day in range(0, (endDate-startDate).days+1):
 		date=startDate+datetime.timedelta(days=day)
