@@ -1,21 +1,11 @@
+import constants
 import tibemsadmin
 
-import datetime
-startDate=datetime.date(2008,1,1)
-endDate=datetime.date(2008,12,1)
-
-serverUrl='localhost'
-
-import sys
 import ctypes
-platform = sys.platform
-if platform == 'linux2':
-        libtibems = ctypes.CDLL('libtibems.so')
-elif platform == 'win32':
-        libtibems = ctypes.CDLL('tibems.dll')
-else:
-        print 'Sorry, I don\'t know which library to reference on ' + platform + '.'
-        exit(1)
+import sys
+
+import cPickle
+import datetime
 
 def run():
 	import data
@@ -23,12 +13,18 @@ def run():
 	quotes=data.getAllQuotes()
 	print 'Finished loading quotes.'
 
+	platform = sys.platform
+        if platform == 'linux2':
+                libtibems = ctypes.CDLL('libtibems.so')
+        elif platform == 'win32':
+                libtibems = ctypes.CDLL('tibems.dll')
+
         factory = libtibems.tibemsConnectionFactory_Create()
 	if not factory:
 		print 'Error creating factory: ' + str(status)
 		return None
 
-	status = libtibems.tibemsConnectionFactory_SetServerURL(factory, serverUrl)
+	status = libtibems.tibemsConnectionFactory_SetServerURL(factory, constants.serverUrl)
 	if status:
 		print 'Error setting server URL: ' + str(status)
 		return None
@@ -56,39 +52,38 @@ def run():
         status = libtibems.tibemsSession_CreateProducer(session, ctypes.byref(messageProducer), destination)
 	if status:
 		print 'Error creating producer: ' + str(status)
-		return False
+		return None
 
 	messageConsumer = ctypes.c_void_p()
 	status = libtibems.tibemsSession_CreateConsumer(session, ctypes.byref(messageConsumer), destination, None, 0)
 	if status:
 		print 'Error creating consumer: ' + str(status)
-		return False
+		return None
 
 	status = libtibems.tibemsConnection_Start(connection)
 	if status:
 		print 'Error starting connection: ' + str(status)
-		return False
+		return None
 
         for i in range(0, tibemsadmin.getPendingMessageCount('arbit.work.request')):
                 message = ctypes.c_void_p()
         	status = libtibems.tibemsMsgConsumer_Receive(messageConsumer, ctypes.byref(message))
 		if status:
 			print 'Error receiving message: ' + str(status)
-			return False
+			return None
 
 		status = libtibems.tibemsMsg_Acknowledge(message);
 		if status:
 			print 'Error acknowledging message: ' + str(status)
-			return False
+			return None
 
 	        status = libtibems.tibemsMsg_Destroy(message)
 		if status:
 			print 'Error destroying message: ' + str(status)
-			return False
+			return None
         
-	import cPickle
-	for day in range(0, (endDate-startDate).days+1):
-		date=startDate+datetime.timedelta(days=day)
+	for day in range(0, (constants.endDate-constants.startDate).days+1):
+		date=constants.startDate+datetime.timedelta(days=day)
 		for symbol in symbols:	
 			request={}
 			request['Symbol']=symbol
@@ -99,32 +94,32 @@ def run():
         	        status = libtibems.tibemsTextMsg_Create(ctypes.byref(message))
         		if status:
         			print 'Error creating message: ' + str(status)
-        			return False
+        			return None
 
                 	status = libtibems.tibemsTextMsg_SetText(message, messageText)
         		if status:
         			print 'Error setting message text: ' + str(status)
-        			return False
+        			return None
 
          		status = libtibems.tibemsMsgProducer_Send(messageProducer, message)
         		if status:
         			print 'Error sending message: ' + str(status)
-        			return False
+        			return None
 
                 	status = libtibems.tibemsMsg_Destroy(message)
         		if status:
         			print 'Error destroying message: ' + str(status)
-        			return False
+        			return None
 
 	status = libtibems.tibemsDestination_Destroy(destination)
 	if status:
 		print 'Error destroying destination: ' + str(status)
-		return False
+		return None
 
 	status = libtibems.tibemsConnection_Close(connection)
 	if status:
 		print 'Error closing connection: ' + str(status)
-		return False
+		return None
 
 	print 'Finished publishing work requests.'
 

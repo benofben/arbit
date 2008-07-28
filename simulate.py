@@ -1,12 +1,7 @@
 import tibemsadmin
 import cPickle
-
 import datetime
-startDate=datetime.date(2008,1,1)
-endDate=datetime.date(2008,12,1)
-
-serverUrl='localhost'
-
+import constants
 import sys
 import ctypes
 platform = sys.platform
@@ -24,7 +19,7 @@ def receiveMessages():
 		print 'Error creating factory: ' + str(status)
 		return None
 
-	status = libtibems.tibemsConnectionFactory_SetServerURL(factory, serverUrl)
+	status = libtibems.tibemsConnectionFactory_SetServerURL(factory, constants.serverUrl)
 	if status:
 		print 'Error setting server URL: ' + str(status)
 		return None
@@ -117,10 +112,6 @@ def main():
                 
         receiveMessages()
         print 'Finished receiving messages.'
-        
-	import datetime
-	startDate=datetime.date(2008,1,1)
-	endDate=datetime.date(2009,1,1)
 
 	import data
 	symbols=data.getSymbols()
@@ -131,8 +122,8 @@ def main():
 	wins=0
 	total=0
 	
-	for day in range(0, (endDate-startDate).days):
-		currentDate=startDate+datetime.timedelta(days=day)
+	for day in range(0, (constants.endDate-constants.startDate).days):
+		currentDate=constants.startDate+datetime.timedelta(days=day)
 
 		best_p_vgood=0
 		best_symbol=''
@@ -160,11 +151,13 @@ def main():
 			Close=quotes[best_symbol]['Close'][index]
 			High=quotes[best_symbol]['High'][index]
 		
-			if High>Open*1.02:
-				c=c*1.02
+			if High>Open*1.01:
+                                gain=c*.01
+				c=c+2*gain
 				wins=wins+1
 			else:
-				c=c*(Close/Open)
+                                loss=c-(c*Close/Open)
+				c=c-2*loss
 			total=total+1
 		
 			pwin=float(wins)/total

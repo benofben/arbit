@@ -1,9 +1,7 @@
 import cPickle
 import classifier
 import time
-
-serverUrl='localhost'
-
+import constants
 import sys
 import ctypes
 platform = sys.platform
@@ -28,7 +26,7 @@ def run():
 		print 'Error creating factory: ' + str(status)
 		return None
 
-	status = libtibems.tibemsConnectionFactory_SetServerURL(factory, serverUrl)
+	status = libtibems.tibemsConnectionFactory_SetServerURL(factory, constants.serverUrl)
 	if status:
 		print 'Error setting server URL: ' + str(status)
 		return None
