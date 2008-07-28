@@ -2,54 +2,45 @@ import tibemsadmin
 import cPickle
 import datetime
 import constants
-import sys
 import ctypes
-platform = sys.platform
-if platform == 'linux2':
-        libtibems = ctypes.CDLL('libtibems.so')
-elif platform == 'win32':
-        libtibems = ctypes.CDLL('tibems.dll')
-else:
-        print 'Sorry, I don\'t know which library to reference on ' + platform + '.'
-        exit(1)
 
 def receiveMessages():
-        factory = libtibems.tibemsConnectionFactory_Create()
+        factory = constants.libtibems.tibemsConnectionFactory_Create()
 	if not factory:
 		print 'Error creating factory: ' + str(status)
 		return None
 
-	status = libtibems.tibemsConnectionFactory_SetServerURL(factory, constants.serverUrl)
+	status = constants.libtibems.tibemsConnectionFactory_SetServerURL(factory, constants.serverUrl)
 	if status:
 		print 'Error setting server URL: ' + str(status)
 		return None
 
 	connection = ctypes.c_void_p()
-	status = libtibems.tibemsConnectionFactory_CreateConnection(factory, ctypes.byref(connection), None, None)
+	status = constants.libtibems.tibemsConnectionFactory_CreateConnection(factory, ctypes.byref(connection), None, None)
 	if status:
 		print 'Error creating connection: ' + str(status)
 		return None
 
 	destination = ctypes.c_void_p()
-	status = libtibems.tibemsQueue_Create(ctypes.byref(destination), 'arbit.work.response')
+	status = constants.libtibems.tibemsQueue_Create(ctypes.byref(destination), 'arbit.work.response')
 	if status:
 		print 'Error creating queue: ' + str(status)
 		return None
 
         session = ctypes.c_void_p()
         TIBEMS_EXPLICIT_CLIENT_ACKNOWLEDGE=23
-	status = libtibems.tibemsConnection_CreateSession(connection, ctypes.byref(session), 0, TIBEMS_EXPLICIT_CLIENT_ACKNOWLEDGE)
+	status = constants.libtibems.tibemsConnection_CreateSession(connection, ctypes.byref(session), 0, TIBEMS_EXPLICIT_CLIENT_ACKNOWLEDGE)
 	if status:
 		print 'Error creating session: ' + str(status)
 		return None
 
 	messageConsumer = ctypes.c_void_p()
-	status = libtibems.tibemsSession_CreateConsumer(session, ctypes.byref(messageConsumer), destination, None, 0)
+	status = constants.libtibems.tibemsSession_CreateConsumer(session, ctypes.byref(messageConsumer), destination, None, 0)
 	if status:
 		print 'Error creating consumer: ' + str(status)
 		return False
 
-        status = libtibems.tibemsConnection_Start(connection)
+        status = constants.libtibems.tibemsConnection_Start(connection)
 	if status:
 		print 'Error starting connection: ' + str(status)
 		return False
@@ -57,13 +48,13 @@ def receiveMessages():
         for i in range(0, tibemsadmin.getPendingMessageCount('arbit.work.response')):
 	
                 message = ctypes.c_void_p()
-                status = libtibems.tibemsMsgConsumer_Receive(messageConsumer, ctypes.byref(message))
+                status = constants.libtibems.tibemsMsgConsumer_Receive(messageConsumer, ctypes.byref(message))
                 if status:
                         print 'Error receiving message: ' + str(status)
                         return False
 
                 messageType = ctypes.c_int()
-                status = libtibems.tibemsMsg_GetBodyType(message, ctypes.byref(messageType))
+                status = constants.libtibems.tibemsMsg_GetBodyType(message, ctypes.byref(messageType))
                 if status:
                         print 'Error getting message type: ' + str(status)
                         return False
@@ -71,7 +62,7 @@ def receiveMessages():
                 messageText = ctypes.c_char_p()
                 TIBEMS_TEXT_MESSAGE=6
                 if messageType.value == TIBEMS_TEXT_MESSAGE:
-                        status = libtibems.tibemsTextMsg_GetText(message, ctypes.byref(messageText))
+                        status = constants.libtibems.tibemsTextMsg_GetText(message, ctypes.byref(messageText))
                         if status:
                                 print 'Error getting message text: ' + str(status)
                                 return False
@@ -85,22 +76,22 @@ def receiveMessages():
                 cPickle.dump(request, f)
                 f.close()
         
-                status = libtibems.tibemsMsg_Acknowledge(message);
+                status = constants.libtibems.tibemsMsg_Acknowledge(message);
                 if status:
                         print 'Error acknowledging message: ' + str(status)
                         return False
 
-                status = libtibems.tibemsMsg_Destroy(message)
+                status = constants.libtibems.tibemsMsg_Destroy(message)
                 if status:
                         print 'Error destroying message: ' + str(status)
                         return False
 
-	status = libtibems.tibemsDestination_Destroy(destination)
+	status = constants.libtibems.tibemsDestination_Destroy(destination)
 	if status:
 		print 'Error destroying destination: ' + str(status)
 		return False
 
-	status = libtibems.tibemsConnection_Close(connection)
+	status = constants.libtibems.tibemsConnection_Close(connection)
 	if status:
 		print 'Error closing connection: ' + str(status)
 		return False
@@ -110,8 +101,8 @@ def main():
         if not os.path.exists('data/response'):
                 os.makedirs('data/response')
                 
+        print 'Receiving messages...'
         receiveMessages()
-        print 'Finished receiving messages.'
 
 	import data
 	symbols=data.getSymbols()
@@ -146,12 +137,13 @@ def main():
 		# see how we did for today
 		if best_symbol:
 			index=data.getIndex(currentDate, quotes[best_symbol])
-
+                        
 			Open=quotes[best_symbol]['Open'][index]
 			Close=quotes[best_symbol]['Close'][index]
 			High=quotes[best_symbol]['High'][index]
+			Low=quotes[best_symbol]['Low'][index]
 		
-			if High>Open*1.01:
+			if Low<Open*0.99:
                                 gain=c*.01
 				c=c+2*gain
 				wins=wins+1
@@ -166,5 +158,26 @@ def main():
 			+ best_symbol +  '\t' \
 			+ str(round(best_p_vgood,5)) + '\t' \
 			+ str(round(pwin,5)) + '\t'
+
+        # make our final prediction
+        ########## this is really dangerous since it could get out of sync with the test logic
+	best_p_vgood=0
+	best_symbol=''
+        for symbol in symbols:
+                date=quotes[symbol]['Date'][-1]
+                filename='data/response/' + str(date) + symbol
+		if os.path.exists(filename):
+                        f = open(filename, 'r')
+			response=cPickle.load(f)
+			p=response['p']
+
+			if p['Good']>best_p_vgood:
+				best_p_vgood=p['Good']
+				best_symbol=symbol
+
+	print str(constants.endDate) + '\t' \
+        + '\t' \
+	+ best_symbol +  '\t' \
+	+ str(round(best_p_vgood,5)) + '\t' \
 
 main()
