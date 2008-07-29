@@ -127,8 +127,8 @@ class classifier:
 			+ '. This means there is an error in your code.'
 
 		# populate the outcome for today if we have data
-		if len(self.quotes[symbol]['High'])>day+1 \
-			and self.quotes[symbol]['Low'][day+1]<self.quotes[symbol]['Open'][day+1]*0.99:
+		if len(self.quotes[symbol]['High'])>day+2 \
+			and self.quotes[symbol]['Low'][day+2]<self.quotes[symbol]['Close'][day+1]*0.98:
 			dataPoint['Outcome']='Good'
 		else:
 			dataPoint['Outcome']='Bad'
