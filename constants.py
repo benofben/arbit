@@ -1,3 +1,5 @@
+take=0.02
+
 import datetime
 startDate=datetime.date(2008,6,1)
 endDate=datetime.date.today()
@@ -10,7 +12,7 @@ if platform == 'linux2':
     libtibems = ctypes.CDLL('libtibems.so')
     libtibemsadmin = ctypes.CDLL('libtibemsadmin.so')
 elif platform == 'win32':
-    serverUrl='localhost'
+    serverUrl='127.0.0.1'
     libtibems = ctypes.CDLL('tibems.dll')
     libtibemsadmin = ctypes.CDLL('tibemsadmin.dll')
 else:

@@ -138,27 +138,26 @@ def main():
 		if best_symbol:
 			index=data.getIndex(currentDate, quotes[best_symbol])
 
-                        if index+1<len(quotes[best_symbol]['Close']):        
-        			Open=quotes[best_symbol]['Close'][index]
-        			Close=quotes[best_symbol]['Close'][index+1]
-        			High=quotes[best_symbol]['High'][index+1]
-        			Low=quotes[best_symbol]['Low'][index+1]
+        		Open=quotes[best_symbol]['Open'][index]
+        		Close=quotes[best_symbol]['Close'][index]
+        		High=quotes[best_symbol]['High'][index]
+        		Low=quotes[best_symbol]['Low'][index]
 		
-        			if Low<Open*0.98:
-                                        gain=c*.02
-        				c=c+2*gain
-        				wins=wins+1
-        			else:
-                                        loss=c-(c*Close/Open)
-        				c=c-2*loss
-        			total=total+1
+       			if Low<Open*(1-constants.take):
+                                gain=c*constants.take
+                                c=c+2*gain
+                                wins=wins+1
+       			else:
+                                loss=c-(c*Close/Open)
+                                c=c+2*loss
+       			total=total+1
 		
-        			pwin=float(wins)/total
-        			print str(currentDate) + '\t' \
-        			+ str(round(c)) +  '\t' \
-        			+ best_symbol +  '\t' \
-        			+ str(round(best_p_vgood,5)) + '\t' \
-        			+ str(round(pwin,5)) + '\t'
+       			pwin=float(wins)/total
+       			print str(currentDate) + '\t' \
+       			+ str(round(c)) +  '\t' \
+       			+ best_symbol +  '\t' \
+       			+ str(round(best_p_vgood,5)) + '\t' \
+       			+ str(round(pwin,5)) + '\t'
 
         # make our final prediction
         ########## this is really dangerous since it could get out of sync with the test logic
@@ -176,7 +175,7 @@ def main():
 				best_p_vgood=p['Good']
 				best_symbol=symbol
 
-	print str(constants.endDate) + '\t' \
+	print str(quotes[best_symbol]['Date'][-1]) + '\t' \
         + '\t' \
 	+ best_symbol +  '\t' \
 	+ str(round(best_p_vgood,5)) + '\t' \

@@ -1,5 +1,6 @@
 import sys	# for maxint
 import data
+import constants
 
 class classifier:
 	def __init__(self, symbol, currentDate, quotes):
@@ -127,11 +128,11 @@ class classifier:
 			+ '. This means there is an error in your code.'
 
 		# populate the outcome for today if we have data
-		if len(self.quotes[symbol]['High'])>day+2 \
-			and self.quotes[symbol]['Low'][day+2]<self.quotes[symbol]['Close'][day+1]*0.98:
-			dataPoint['Outcome']='Good'
-		else:
-			dataPoint['Outcome']='Bad'
+		if len(self.quotes[symbol]['Open'])>day+1:
+                        if self.quotes[symbol]['Low'][day+1]<self.quotes[symbol]['Open'][day+1]*(1-constants.take):
+        			dataPoint['Outcome']='Good'
+        		else:
+        			dataPoint['Outcome']='Bad'
 
 		return dataPoint
 
