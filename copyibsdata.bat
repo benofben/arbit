@@ -1,9 +1,0 @@
-copy C:\arbit\data\quotes\C.csv C:\arbit\ibsdata\quotes\C.csv
-copy C:\arbit\data\quotes\CS.csv C:\arbit\ibsdata\quotes\CS.csv
-copy C:\arbit\data\quotes\DB.csv C:\arbit\ibsdata\quotes\DB.csv
-copy C:\arbit\data\quotes\GS.csv C:\arbit\ibsdata\quotes\GS.csv
-copy C:\arbit\data\quotes\LEH.csv C:\arbit\ibsdata\quotes\LEH.csv
-copy C:\arbit\data\quotes\MER.csv C:\arbit\ibsdata\quotes\MER.csv
-copy C:\arbit\data\quotes\RY.csv C:\arbit\ibsdata\quotes\RY.csv
-copy C:\arbit\data\quotes\UBS.csv C:\arbit\ibsdata\quotes\UBS.csv
-copy C:\arbit\data\quotes\WB.csv C:\arbit\ibsdata\quotes\WB.csv

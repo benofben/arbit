@@ -175,9 +175,10 @@ def main():
 				best_p_vgood=p['Good']
 				best_symbol=symbol
 
-	print str(quotes[best_symbol]['Date'][-1]) + '\t' \
-        + '\t' \
-	+ best_symbol +  '\t' \
-	+ str(round(best_p_vgood,5)) + '\t' \
+	if best_symbol:
+		print str(quotes[best_symbol]['Date'][-1]) + '\t' \
+	        + '\t' \
+		+ best_symbol +  '\t' \
+		+ str(round(best_p_vgood,5))
 
 main()

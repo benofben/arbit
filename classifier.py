@@ -38,6 +38,7 @@ class classifier:
 				for C in classes:
 					p_F_C[predictor][C]=0.0
 					c_F_C[predictor][C]=0
+
 		for i in range(0, len(trainingSet)):
 			for predictor in trainingSet[i]:
 				if predictor!='Outcome':
@@ -45,9 +46,13 @@ class classifier:
 					if trainingSet[i][predictor]==testPoint[predictor]:
 						p_F_C[predictor][C]+=1
 					c_F_C[predictor][C]+=1
+
 		for predictor in p_F_C:
 			for C in p_F_C[predictor]:
-				p_F_C[predictor][C]/=c_F_C[predictor][C]
+				if c_F_C[predictor][C]==0:
+					p_F_C[predictor][C]=0
+				else:
+					p_F_C[predictor][C]/=c_F_C[predictor][C]
 
 		# compute p(F_i)
 		p_F={}
