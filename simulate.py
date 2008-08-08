@@ -139,7 +139,7 @@ def main():
 			index=data.getIndex(currentDate, quotes[best_symbol])
 
         		Open=quotes[best_symbol]['Open'][index]
-        		Close=quotes[best_symbol]['Close'][index]
+        		Close=quotes[best_symbol]['Open'][index+1]
         		High=quotes[best_symbol]['High'][index]
         		Low=quotes[best_symbol]['Low'][index]
 		
