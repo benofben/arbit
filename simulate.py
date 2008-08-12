@@ -113,7 +113,7 @@ def main():
 	wins=0
 	total=0
 	
-	for day in range(0, (constants.endDate-constants.startDate).days+1):
+	for day in range(0, (constants.endDate-constants.startDate).days):
 		currentDate=constants.startDate+datetime.timedelta(days=day)
 
 		best_p_vgood=0
@@ -138,11 +138,11 @@ def main():
 		if best_symbol:
 			index=data.getIndex(currentDate, quotes[best_symbol])
 
-        		Open=quotes[best_symbol]['Open'][index+1]
-        		Close=quotes[best_symbol]['Close'][index+1]
-        		High=quotes[best_symbol]['High'][index+1]
-        		Low=quotes[best_symbol]['Low'][index+1]
-
+        		Open=quotes[best_symbol]['Open'][index]
+        		Close=quotes[best_symbol]['Close'][index]
+        		High=quotes[best_symbol]['High'][index]
+        		Low=quotes[best_symbol]['Low'][index]
+		
        			if Low<Open*(1-constants.take):
                                 gain=c*constants.take
                                 c=c+2*gain

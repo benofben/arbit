@@ -1,7 +1,7 @@
-take=0.02
+take=0.015
 
 import datetime
-startDate=datetime.date(2008,7,1)
+startDate=datetime.date(2008,1,1)
 endDate=datetime.date.today()
 
 import sys
