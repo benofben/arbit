@@ -143,7 +143,7 @@ def main():
         		High=quotes[best_symbol]['High'][index]
         		Low=quotes[best_symbol]['Low'][index]
 		
-       			if Low<Open*(1-constants.take):
+                        if Low<Open*(1-constants.take):
                                 gain=c*constants.take
                                 c=c+2*gain
                                 wins=wins+1
@@ -170,6 +170,13 @@ def main():
                         f = open(filename, 'r')
 			response=cPickle.load(f)
 			p=response['p']
+
+        		print str(quotes[symbol]['Date'][-1]) + '\t' \
+                        + '\t' \
+        		+ symbol +  '\t' \
+        		+ str(round(p['Good'],5))
+
+
 
 			if p['Good']>best_p_vgood:
 				best_p_vgood=p['Good']
