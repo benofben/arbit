@@ -10,8 +10,8 @@ class classifier:
 
 	def run(self):
 		[trainingSet, testPoint]=self.createDataSet()
-		p=self.naiveBayes(trainingSet, testPoint)
-		return p
+                p=self.naiveBayes(trainingSet, testPoint)
+                return p
 
 	def naiveBayes(self, trainingSet, testPoint):
 		if not trainingSet or not len(trainingSet)>0:
@@ -95,7 +95,12 @@ class classifier:
 				for predictor in predictors:
 					window=predictors[predictor]
 					for day in range(currentIndex-window, currentIndex):
-						trainingSet.append(self.createDataPoint(day, symbol, predictor))
+                                                trainingPoint=self.createDataPoint(day, symbol, predictor)
+                                                try:
+                                                        trainingPoint['Outcome']
+        						trainingSet.append(trainingPoint)
+        					except KeyError:
+                                                        pass
 
 		# create a test point
 		testPoint={}
@@ -133,12 +138,11 @@ class classifier:
 			+ '. This means there is an error in your code.'
 
 		# populate the outcome for today if we have data
-		if len(self.quotes[symbol]['Open'])>day+1:
-                        if self.quotes[symbol]['Low'][day+1]<self.quotes[symbol]['Open'][day+1]*(1-constants.take):
-        			dataPoint['Outcome']='Good'
-        		else:
-        			dataPoint['Outcome']='Bad'
-
+		if len(self.quotes[symbol]['Open'])>day+2:
+                        if self.quotes[symbol]['Open'][day+2]<self.quotes[symbol]['Close'][day+1]:
+                		dataPoint['Outcome']='Good'
+                	else:
+                		dataPoint['Outcome']='Bad'
 		return dataPoint
 
 	def bin(self, x):
