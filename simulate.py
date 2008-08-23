@@ -166,11 +166,11 @@ def main():
                         f = open(filename, 'r')
 			response=cPickle.load(f)
 			p=response['p']
-
+			
         		print str(quotes[symbol]['Date'][-1]) + '\t' \
-                        + '\t' \
-        		+ symbol +  '\t' \
-        		+ str(round(p['Good'],5))
+	                + '\t' \
+	        	+ symbol +  '\t' \
+	        	+ str(round(p['Good'],5))
 
 			if p['Good']>best_p_vgood:
 				best_p_vgood=p['Good']

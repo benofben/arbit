@@ -139,7 +139,7 @@ class classifier:
 
 		# populate the outcome for today if we have data
 		if len(self.quotes[symbol]['Open'])>day+2:
-                        if self.quotes[symbol]['Open'][day+2]<self.quotes[symbol]['Close'][day+1]:
+                        if self.quotes[symbol]['Open'][day+2]<self.quotes[symbol]['Close'][day+1]*(1-constants.take):
                 		dataPoint['Outcome']='Good'
                 	else:
                 		dataPoint['Outcome']='Bad'
