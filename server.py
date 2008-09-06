@@ -1,4 +1,4 @@
-def publishWorkRequests(symbols):
+def publishWorkRequests(symbols, quotes):
         import constants
         import ctypes
         import cPickle
@@ -106,10 +106,11 @@ def run():
         
         import data
 	symbols=data.getSymbols()
-	print 'Finished loading symbols.'
+	quotes=data.getAllQuotes()
+	print 'Finished loading quotes.'
 
 	print 'Sending work requests...'
-	publishWorkRequests(symbols)
+	publishWorkRequests(symbols, quotes)
 
 	print 'All done.'
 
