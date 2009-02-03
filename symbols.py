@@ -4,18 +4,18 @@ exchanges=['Q', '1', 'N']
 # Dictionary holds a bunch of Symbol and MarketValue
 symbolDictionary={}
 
-def downloadSymbolList(exchange):
-	print('Trying to get exchange ' + exchange + '...')
-	import http.client
-	conn = http.client.HTTPConnection('www.nasdaq.com')
+def downloadSymbolList(exchange):		
+	print 'Trying to get exchange ' + exchange + '...'
+	import httplib
+	conn = httplib.HTTPConnection('www.nasdaq.com')
 	conn.request('GET', '/asp/symbols.asp?exchange=' + exchange + '&start=0')
 	response = conn.getresponse()
-	print(response.status, response.reason)
+	print response.status, response.reason
 	data = response.read()
 	conn.close()
 
-	print('Done downloading.  Writing to file.\n')
-	file = open('data/symbols/' + exchange + '.csv', 'wb')
+	print 'Done downloading.  Writing to file.\n'
+	file = open('data/symbols/' + exchange + '.csv', 'w')
 	file.write(data)
 	file.close()
 
@@ -40,9 +40,9 @@ def writeSymbolToDictionary(symbol, marketValue):
 
 def reformatSymbolList(exchange):
 	deleteLines('data/symbols/' + exchange + '.csv')
-
+		
 	filename = 'data/symbols/' + exchange + '.csv'
-	inputFile = open(filename, 'r')
+	inputFile = open(filename, 'rb')
 	import csv
 	reader = csv.reader(inputFile)
 

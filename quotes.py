@@ -1,11 +1,11 @@
 def downloadQuotes(symbol):
-	print('Downloading historical data for ' + symbol + '...')
-	import http.client
-	conn = http.client.HTTPConnection('ichart.finance.yahoo.com')
+	print 'Downloading historical data for ' + symbol + '...'
+	import httplib
+	conn = httplib.HTTPConnection('ichart.finance.yahoo.com')
 
 	'''
 	Notes on the yahoo parameters:
-	d=end month-1
+	d=end month-1 
 	e=end day
 	f=end year
 	g=d?
@@ -14,26 +14,26 @@ def downloadQuotes(symbol):
 	c=start year (2002)
 	'''
 
-	import datetime
+	import datetime	
 	today = datetime.date.today()
 	endYear = today.strftime('%Y')
 	endMonth = str(int(today.strftime('%m'))-1)
 	endDay = today.strftime('%d')
-
+	
 	startYear='2002'
 	startMonth='0'
 	startDay='1'
 
 	conn.request('GET', '/table.csv?s=' + symbol + '&d=' + endMonth + '&e=' + endDay + '&f=' + endYear + '&g=d&a=' + startMonth + '&b=' + startDay + '&c=' + startYear + '&ignore=.csvc')
 	response=conn.getresponse()
-	print(response.status, response.reason)
-	data=response.read().decode()
+	print response.status, response.reason
+	data=response.read()
 	conn.close()
 	if response.status==200 and response.reason=='OK':
 		reformatAndSaveQuotes(data, symbol)
-		print('Saved historical data for ' + symbol + '.\n')
+		print 'Saved historical data for ' + symbol + '.\n'
 	else:
-		print('Download failed for symbol ' + symbol + '.\n')
+		print 'Download failed for symbol ' + symbol + '.\n'
 		return False
 	return True
 
@@ -64,17 +64,17 @@ def downloadAllQuotes():
 		import shutil
 		shutil.rmtree('data/quotes')
 	os.makedirs('data/quotes/')
-
+	
 	symbolFilename = 'data/symbols/symbols.txt'
 	symbolFile = open(symbolFilename, 'r')
 	symbols = symbolFile.readlines()
 	symbolFile.close()
 
-	failedSymbolsFilename = 'data/symbols/failedSymbols.txt'
+	failedSymbolsFilename = 'data/symbols/failedQuotesSymbols.txt'
 	failedSymbolsFile = open(failedSymbolsFilename, 'w')
 
 	while symbols:
-		print(str(len(symbols)) + ' symbols remaining.')
+		print str(len(symbols)) + ' symbols remaining.'
 		symbol = symbols.pop()
 		symbol = symbol.replace('\n','')
 		if not downloadQuotes(symbol):

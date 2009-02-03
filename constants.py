@@ -16,5 +16,5 @@ elif platform == 'win32':
 	libtibems = ctypes.CDLL('tibems.dll')
 	libtibemsadmin = ctypes.CDLL('tibemsadmin.dll')
 else:
-	print('Sorry, I do not know which libraries to reference on ' + platform + '.')
+	print 'Sorry, I do not know which libraries to reference on ' + platform + '.'
 	exit(1)

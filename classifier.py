@@ -11,7 +11,7 @@ class classifier:
 	def run(self):
 		[trainingSet, testPoint]=self.createDataSet()
 		p=self.naiveBayes(trainingSet, testPoint)
-		
+
 		if p:
 			p['Good']=self.risk()
 
@@ -21,15 +21,15 @@ class classifier:
 		# this is E(Symbol)/E(market)
 
 		window=100
-		
+
 		r=1.0
 		currentIndex=data.getIndex(self.currentDate, self.quotes[self.symbol])
 		if currentIndex and currentIndex-window>0:
 			for day in range(currentIndex-window, currentIndex):
 
-				Open=self.quotes[self.symbol]['Open'][day]
-				Low=self.quotes[self.symbol]['Low'][day]
-				Close=self.quotes[self.symbol]['Close'][day]
+                                Open=self.quotes[self.symbol]['Open'][day]
+                                Low=self.quotes[self.symbol]['Low'][day]
+                                Close=self.quotes[self.symbol]['Close'][day]
 
 				if(Low<Open*(1.0-constants.take)):
 					r*=1.0+(2.0*constants.take)
@@ -162,8 +162,8 @@ class classifier:
 			Last=self.quotes[symbol]['Close'][day]
 			dataPoint['xDayLow']=self.bin(Last/Low)
 		else:
-			print('I found an unrecognized predictor: ' + predictor \
-			+ '. This means there is an error in your code.')
+			print 'I found an unrecognized predictor: ' + predictor \
+			+ '. This means there is an error in your code.'
 
 		# populate the outcome for today if we have data
 		if len(self.quotes[symbol]['Open'])>day+1:

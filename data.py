@@ -2,7 +2,7 @@ def getAllQuotes():
 	symbols=getSymbols()
 	quotes={}
 	for symbol in symbols:
-		print('Loading symbol ' + symbol + '.')
+		print 'Loading symbol ' + symbol + '.'
 		quotes[symbol]=getQuotes(symbol)
 	return quotes
 
