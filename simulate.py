@@ -143,12 +143,12 @@ def main():
         		High=quotes[best_symbol]['High'][index]
         		Low=quotes[best_symbol]['Low'][index]
 
-			if Low<Open*(1-constants.take):
+			if High>Open*(1+constants.take):
 				gain=c*constants.take
 				c=c+2*gain
 				wins=wins+1
 			else:
-				loss=c-(c*Close/Open)
+				loss=c-(c*Open/Close)
 				c=c+2*loss
 			total=total+1
 		

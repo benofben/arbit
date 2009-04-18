@@ -1,14 +1,14 @@
 take=0.02
 
 import datetime
-startDate=datetime.date(2008,8,1)
+startDate=datetime.date(2009,2,1)
 endDate=datetime.date.today()
 
 import sys
 import ctypes
 platform = sys.platform
 if platform == 'linux2':
-	serverUrl='10.0.0.1'
+	serverUrl='yesler'
 	libtibems = ctypes.CDLL('libtibems.so')
 	libtibemsadmin = ctypes.CDLL('libtibemsadmin.so')
 elif platform == 'win32':
@@ -18,3 +18,9 @@ elif platform == 'win32':
 else:
 	print 'Sorry, I do not know which libraries to reference on ' + platform + '.'
 	exit(1)
+
+# Ameritrade Login Information	
+sourceID='LCK'
+userid='benofdeth'
+password='80trek80'
+

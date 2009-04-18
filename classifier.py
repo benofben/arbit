@@ -26,15 +26,14 @@ class classifier:
 		currentIndex=data.getIndex(self.currentDate, self.quotes[self.symbol])
 		if currentIndex and currentIndex-window>0:
 			for day in range(currentIndex-window, currentIndex):
+				Open=self.quotes[self.symbol]['Open'][day]
+				High=self.quotes[self.symbol]['High'][day]
+				Close=self.quotes[self.symbol]['Close'][day]
 
-                                Open=self.quotes[self.symbol]['Open'][day]
-                                Low=self.quotes[self.symbol]['Low'][day]
-                                Close=self.quotes[self.symbol]['Close'][day]
-
-				if(Low<Open*(1.0-constants.take)):
+				if(High>Open*(1.0+constants.take)):
 					r*=1.0+(2.0*constants.take)
 				else:
-					r*=1.0+2.0*((Open-Close)/Open)
+					r*=1.0+2.0*((Close-Open)/Open)
 		return r
 
 	def naiveBayes(self, trainingSet, testPoint):
@@ -167,7 +166,7 @@ class classifier:
 
 		# populate the outcome for today if we have data
 		if len(self.quotes[symbol]['Open'])>day+1:
-			if self.quotes[symbol]['Low'][day+1]<self.quotes[symbol]['Open'][day+1]*(1-constants.take):
+			if self.quotes[symbol]['High'][day+1]>self.quotes[symbol]['Open'][day+1]*(1+constants.take):
 				dataPoint['Outcome']='Good'
 			else:
 				dataPoint['Outcome']='Bad'
