@@ -4,6 +4,7 @@ import datetime
 startDate=datetime.date(2009,2,1)
 endDate=datetime.date.today()
 
+# TIBCO EMS Library
 import sys
 import ctypes
 platform = sys.platform
@@ -19,7 +20,7 @@ else:
 	print 'Sorry, I do not know which libraries to reference on ' + platform + '.'
 	exit(1)
 
-# Ameritrade Login Information	
+# Ameritrade Login	
 sourceID='LCK'
 userid='benofdeth'
 password='80trek80'

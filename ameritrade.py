@@ -32,14 +32,6 @@ class ameritrade(object):
 		response = f.read()
 		return response
 
-	def BalancesAndPositions(self):
-		url = baseurl + 'BalancesAndPositions;jsessionid=' + self.jsessionid + '?source=' + constants.sourceID
-		params=urllib.urlencode({'source': constants.sourceID})
-		f = urllib.urlopen(url)
-		xmlstring = f.read()
-		d=xmltodict.xmltodict(xmlstring)
-		return d
-
 	def SnapshotQuotes(self, symbol):
 		url = baseurl + 'Quote;jsessionid=' + self.jsessionid + '?source=' + constants.sourceID + '&symbol=' + symbol
 		params=urllib.urlencode({'source': constants.sourceID})
@@ -48,6 +40,22 @@ class ameritrade(object):
 		d=xmltodict.xmltodict(xmlstring)
 		return d
 
+	def BalancesAndPositions(self):
+		url = baseurl + 'BalancesAndPositions;jsessionid=' + self.jsessionid + '?source=' + constants.sourceID
+		params=urllib.urlencode({'source': constants.sourceID})
+		f = urllib.urlopen(url)
+		xmlstring = f.read()
+		d=xmltodict.xmltodict(xmlstring)
+		return d
+
+	def OrderStatus(self, orderid):
+		url = baseurl + 'OrderStatus;jsessionid=' + self.jsessionid + '?source=' + constants.sourceID + '&orderid=' + orderid
+		params=urllib.urlencode({'source': constants.sourceID})
+		f = urllib.urlopen(url)
+		xmlstring = f.read()
+		d=xmltodict.xmltodict(xmlstring)
+		return d
+	
 	def EquityTrade(self, orderstring):
 		url = baseurl + 'EquityTrade;jsessionid=' + self.jsessionid + '?source=' + constants.sourceID + '&orderstring=' + orderstring
 		params=urllib.urlencode({'source': constants.sourceID})
@@ -56,8 +64,16 @@ class ameritrade(object):
 		d=xmltodict.xmltodict(xmlstring)
 		return d
 	
-	def OrderStatus(self, orderid):
-		url = baseurl + 'OrderStatus;jsessionid=' + self.jsessionid + '?source=' + constants.sourceID + '&orderid=' + orderid
+	def EditOrder(self, orderstring):		
+		url = baseurl + 'EditOrder;jsessionid=' + self.jsessionid + '?source=' + constants.sourceID + '&orderstring=' + orderstring
+		params=urllib.urlencode({'source': constants.sourceID})
+		f = urllib.urlopen(url)
+		xmlstring = f.read()
+		d=xmltodict.xmltodict(xmlstring)
+		return d
+	
+	def OrderCancel(self, orderid):
+		url = baseurl + 'OrderCancel;jsessionid=' + self.jsessionid + '?source=' + constants.sourceID + '&orderid=' + orderid
 		params=urllib.urlencode({'source': constants.sourceID})
 		f = urllib.urlopen(url)
 		xmlstring = f.read()
