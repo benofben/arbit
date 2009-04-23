@@ -35,22 +35,14 @@ class arbit:
 		pretradeDateTime = datetime.datetime.combine(tomorrow, pretradeTime)
 		pretradeTime = time.mktime(pretradeDateTime.timetuple())
 		
-		############################################EVIL!!!!!!!!!!!
-		openPositionsTime = time.time() + 5
-		closePositionsTime = time.time() + 10
-		
 		# Is it a weekday?  We're assuming all weekdays are trading days.
-		#if today.weekday<5:
-		###############and more evil just below!!!!!!!!!!
-		if True:
+		if today.weekday()<5:
 			self.download()
 			self.best_symbol=self.findBestSymbol()
 			print 'The best symbol is ' + self.best_symbol + '.'
 			
 			# Is it before 9:28am? If not we should skip today
-			#if time.time()<openPositionsTime:
-			########################################....and more evil
-			if True:
+			if time.time()<openPositionsTime:
 				print 'Scheduling trades for today.'		
 				self.schedule.enterabs(openPositionsTime, 0, self.openPositions, ())
 				self.schedule.enterabs(closePositionsTime, 0, self.closePositions, ())
@@ -70,6 +62,7 @@ class arbit:
 		# using the most recent update... not good.
 		import updateibsbucket
 		updateibsbucket.update()
+		print 'Download done at ' + datetime.datetime.today().isoformat()
 	
 	def findBestSymbol(self):	
 		import data
@@ -85,7 +78,8 @@ class arbit:
 			p[symbol]=r['Good']
 		
 		b = dict(map(lambda item: (item[1],item[0]),p.items()))
-		symbol = b[max(b.keys())]		
+		symbol = b[max(b.keys())]
+		print 'Classification done at ' + datetime.datetime.today().isoformat()
 		return symbol
 	
 	def openPositions(self):
@@ -158,8 +152,8 @@ class arbit:
 				try:
 					fills=orderStatus['orderstatus-list'][0]['orderstatus'][0]['fills']
 					for fill in fills:
-						fillQuantity=fill['fill-quantity'][0]
-						fillPrice=fill['fill-price'][0]					
+						fillQuantity=float(fill['fill-quantity'][0])
+						fillPrice=float(fill['fill-price'][0])
 						totalFillQuantity+=fillQuantity
 						averageFillPrice+=fillQuantity*fillPrice
 					averageFillPrice/=totalFillQuantity
