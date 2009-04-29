@@ -1,7 +1,7 @@
 take=0.02
 
 import datetime
-startDate=datetime.date(2009,2,1)
+startDate=datetime.date(2008,1,1)
 endDate=datetime.date.today()
 
 # TIBCO EMS Library
@@ -10,8 +10,8 @@ import ctypes
 platform = sys.platform
 if platform == 'linux2':
 	serverUrl='yesler'
-	libtibems = ctypes.CDLL('libtibems.so')
-	libtibemsadmin = ctypes.CDLL('libtibemsadmin.so')
+	libtibems = ctypes.CDLL('libtibems64.so')
+	libtibemsadmin = ctypes.CDLL('libtibemsadmin64.so')
 elif platform == 'win32':
 	serverUrl='127.0.0.1'
 	libtibems = ctypes.CDLL('tibems.dll')

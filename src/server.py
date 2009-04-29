@@ -100,7 +100,7 @@ def cleanUp():
                 shutil.rmtree('data/response')
         os.makedirs('data/response')
 
-def run():
+def run():	
 	print 'Cleaning up...'
 	cleanUp()
 

@@ -21,7 +21,7 @@ class arbit:
 		tomorrow = today + datetime.timedelta(days=1)
 		
 		# 9:28am today
-		openPositionsTime=datetime.time(9,28,0)
+		openPositionsTime=datetime.time(9,29,30)
 		openPositionsDatetime = datetime.datetime.combine(today, openPositionsTime)
 		openPositionsTime = time.mktime(openPositionsDatetime.timetuple())
 		
@@ -51,17 +51,17 @@ class arbit:
 		self.schedule.enterabs(pretradeTime, 0, self.pretrade, ())
 	
 	def download(self):
-		# import symbols
+		#import symbols
 		#symbols.downloadSymbols()
 		
-		# import quotes
+		#import quotes
 		#quotes.downloadAllQuotes()
 		
-		# we're only going to grab the IBS bucket for now
+		# instead of the market, we're only going to grab the bucket
 		# note that if one of these symbols is delisted, we're going to keep
 		# using the most recent update... not good.
-		import updateibsbucket
-		updateibsbucket.update()
+		import bucket
+		bucket.update()
 		print 'Download done at ' + datetime.datetime.today().isoformat()
 	
 	def findBestSymbol(self):	
@@ -96,10 +96,11 @@ class arbit:
 			stockbuyingpower=float(balancesAndPositions['balance'][0]['stock-buying-power'][0])
 			
 			# check if we can day trade
-			if accountvalue>25000 or roundtrips<4:
+			# we can have a maximum of 3 roundtrips in 5 days and not be a day trader
+			if accountvalue>25000 or roundtrips<3:
 				print 'I am going to trade today.'
 				
-				# get the bid price (if we're patient, we can probably buy at bid)
+				# get the ask price
 				snapshotQuotes=atd.SnapshotQuotes(self.best_symbol)
 				bid=float(snapshotQuotes['quote-list'][0]['quote'][0]['bid'][0])
 				
@@ -110,7 +111,7 @@ class arbit:
 					atd.LogOut()
 					return
 				
-				# place a limit order to buy at the bid price
+				# place a limit order to buy at the ask price
 				orderString='action=buy~quantity=' + str(quantity) + '~symbol=' + self.best_symbol + '~ordtype=Limit~price=' + str(bid) + '~expire=day~accountid=' + accountid
 				print orderString
 				equityTrade=atd.EquityTrade(orderString)
@@ -164,7 +165,9 @@ class arbit:
 				# place sell order
 				if totalFillQuantity>0:
 					price=averageFillPrice*(1+constants.take)
-					orderString='action=sell~quantity=' + str(totalFillQuantity) + '~symbol=' + self.best_symbol + '~ordtype=Limit~price=' + price + '~expire=day~accountid=' + accountid
+					price=round(price*100)/100
+					
+					orderString='action=sell~quantity=' + str(totalFillQuantity) + '~symbol=' + self.best_symbol + '~ordtype=Limit~price=' + str(price) + '~expire=day~accountid=' + accountid
 					print orderString
 					equityTrade=atd.EquityTrade(orderString)
 						

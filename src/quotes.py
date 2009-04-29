@@ -58,12 +58,15 @@ def reformatAndSaveQuotes(data, symbol):
 		i=i+1
 	file.close()
 
-def downloadAllQuotes():
+def cleanUp():
 	import os
 	if os.path.exists('data/quotes'):
 		import shutil
 		shutil.rmtree('data/quotes')
 	os.makedirs('data/quotes/')
+
+def downloadAllQuotes():
+	cleanUp()
 	
 	symbolFilename = 'data/symbols/symbols.txt'
 	symbolFile = open(symbolFilename, 'r')

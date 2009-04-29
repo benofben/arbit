@@ -55,12 +55,15 @@ def reformatSymbolList(exchange):
 
 	inputFile.close()
 
-def downloadSymbols():
+def cleanUp():
 	import os
 	if os.path.exists('data/symbols'):
 		import shutil
 		shutil.rmtree('data/symbols')
 	os.makedirs('data/symbols/')
+
+def downloadSymbols():
+	cleanUp()
 
 	for exchange in exchanges:
 		downloadSymbolList(exchange)
