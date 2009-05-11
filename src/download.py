@@ -1,8 +1,8 @@
-#import bucket
-#bucket.update()
+import bucket
+bucket.update()
 	
-import symbols
-symbols.downloadSymbols()
+#import symbols
+#symbols.downloadSymbols()
 	
-import quotes
-quotes.downloadAllQuotes()
+#import quotes
+#quotes.downloadAllQuotes()

@@ -9,8 +9,10 @@ class classifier:
 		self.quotes=quotes
 	
 	def run(self):
-		#[trainingSet, testPoint]=self.createDataSet()
-		#p=self.naiveBayes(trainingSet, testPoint)
+		'''
+		[trainingSet, testPoint]=self.createDataSet()
+		p=self.naiveBayes(trainingSet, testPoint)
+		'''
 		
 		p={}
 		p['Good']=self.e()
@@ -28,13 +30,16 @@ class classifier:
 		if currentIndex and currentIndex-window>0:
 			for day in range(currentIndex-window, currentIndex):
 				Open=self.quotes[self.symbol]['Open'][day]
+				Low=self.quotes[self.symbol]['Low'][day]
 				High=self.quotes[self.symbol]['High'][day]
 				Close=self.quotes[self.symbol]['Close'][day]
 				
+				# go long
 				if(High>Open*(1.0+constants.take)):
 					e*=1.0+constants.take
 				else:
 					e*=1.0+((Close-Open)/Open)
+		
 		return e
 
 	def naiveBayes(self, trainingSet, testPoint):
@@ -116,7 +121,7 @@ class classifier:
 	def createDataSet(self):
 		# the key value is the window to use the predictor for
 		# this is an odd mix of time series and priors
-		predictors = {'Symbol':5, 'xDayHigh':100, 'xDayLow':100}
+		predictors = {'Symbol':5, 'xDayHigh':100, 'xDayLow':100, 'shortWin':50, 'longWin':50, 'win':50}
 		
 		# create the training set
 		trainingSet=[]
@@ -161,6 +166,61 @@ class classifier:
 					Low=self.quotes[symbol]['Low'][i]
 			Last=self.quotes[symbol]['Close'][day]
 			dataPoint['xDayLow']=self.bin(Last/Low)
+		elif predictor=='longWin':
+			e=1.0
+			window=100
+			for day in range(day-window, day):
+				Open=self.quotes[self.symbol]['Open'][day]
+				Low=self.quotes[self.symbol]['Low'][day]
+				High=self.quotes[self.symbol]['High'][day]
+				Close=self.quotes[self.symbol]['Close'][day]
+				
+				if(High>Open*(1.0+constants.take)):
+					e*=1.0+constants.take
+				else:
+					e*=1.0+((Close-Open)/Open)
+					
+			dataPoint['longWin']=self.bin(e)
+		
+		elif predictor=='shortWin':
+			e=1.0
+			window=100
+			for day in range(day-window, day):
+				Open=self.quotes[self.symbol]['Open'][day]
+				Low=self.quotes[self.symbol]['Low'][day]
+				High=self.quotes[self.symbol]['High'][day]
+				Close=self.quotes[self.symbol]['Close'][day]
+				
+				if(Low<Open*(1.0-constants.take)):
+					e*=1.0+constants.take
+				else:
+					e*=1.0+((Open-Close)/Open)
+					
+			dataPoint['shortWin']=self.bin(e)
+		
+		elif predictor=='win':
+			e=1.0
+			window=100
+			for day in range(day-window, day):
+				print self.symbol
+				print day
+				Open=self.quotes[self.symbol]['Open'][day]
+				Low=self.quotes[self.symbol]['Low'][day]
+				High=self.quotes[self.symbol]['High'][day]
+				Close=self.quotes[self.symbol]['Close'][day]
+				
+				if(High>Open*(1.0+constants.take)):
+					e*=1.0+constants.take
+				else:
+					e*=1.0+((Close-Open)/Open)
+					
+				if(Low<Open*(1.0-constants.take)):
+					e*=1.0+constants.take
+				else:
+					e*=1.0+((Open-Close)/Open)
+			
+			dataPoint['win']=self.bin(e)
+
 		else:
 			print 'I found an unrecognized predictor: ' + predictor \
 			+ '. This means there is an error in your code.'

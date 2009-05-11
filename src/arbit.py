@@ -85,6 +85,8 @@ class arbit:
 	def openPositions(self):
 		print 'Opening positions at ' + datetime.datetime.today().isoformat()
 		
+		self.sellOrderid=None
+		
 		atd = ameritrade.ameritrade()
 		logIn = atd.LogIn()	
 		if logIn['result'][0]=='OK':
@@ -158,7 +160,7 @@ class arbit:
 						totalFillQuantity+=fillQuantity
 						averageFillPrice+=fillQuantity*fillPrice
 					averageFillPrice/=totalFillQuantity
-					print str(fillQuantity) + 'shares filled at ' + str (averageFillPrice)
+					print str(totalFillQuantity) + ' shares filled at ' + str (averageFillPrice)
 				except KeyError:
 					print 'Buy order not filled.'
 				
@@ -206,8 +208,8 @@ class arbit:
 				snapshotQuotes=atd.SnapshotQuotes(self.best_symbol)
 				bid=float(snapshotQuotes['quote-list'][0]['quote'][0]['bid'][0])
 				
-				# Modify the order to market price limit with goot till closed extended hours (gtc_ext)
-				remainingQuantity=orderStatus['orderstatus-list'][0]['orderstatus'][0]['remaining-quantity'][0]
+				# Modify the order to market price limit with good till closed extended hours (gtc_ext)
+				remainingQuantity=str(int(orderStatus['orderstatus-list'][0]['orderstatus'][0]['remaining-quantity'][0]))
 				orderString='orderid=' + self.sellOrderid + '~accountid=' + accountid + '~expire=day_ext~ordtype=limit~price=' + str(bid) + '~quantity=' + remainingQuantity
 				editOrder=atd.EditOrder(orderString)
 				
