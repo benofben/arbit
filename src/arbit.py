@@ -209,7 +209,7 @@ class arbit:
 				bid=float(snapshotQuotes['quote-list'][0]['quote'][0]['bid'][0])
 				
 				# Modify the order to market price limit with good till closed extended hours (gtc_ext)
-				remainingQuantity=str(int(orderStatus['orderstatus-list'][0]['orderstatus'][0]['remaining-quantity'][0]))
+				remainingQuantity=str(int(round(float(orderStatus['orderstatus-list'][0]['orderstatus'][0]['remaining-quantity'][0]))))
 				orderString='orderid=' + self.sellOrderid + '~accountid=' + accountid + '~expire=day_ext~ordtype=limit~price=' + str(bid) + '~quantity=' + remainingQuantity
 				editOrder=atd.EditOrder(orderString)
 				

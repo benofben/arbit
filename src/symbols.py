@@ -36,7 +36,7 @@ def writeSymbolToDictionary(symbol, marketValue):
 		marketValue=marketValue.replace('$','')
 		marketValue=marketValue.replace(',','')
 		symbol=symbol.replace('^','.')
-		symbolDictionary[symbol] = float(marketValue)
+		symbolDictionary[symbol] = long(float(marketValue))*1000000
 
 def reformatSymbolList(exchange):
 	deleteLines('data/symbols/' + exchange + '.csv')
@@ -52,7 +52,7 @@ def reformatSymbolList(exchange):
 	elif exchange == '1' or exchange == 'N':
 		for name,symbol,marketValue,description in reader:
 			writeSymbolToDictionary(symbol, marketValue)
-
+	
 	inputFile.close()
 
 def cleanUp():
@@ -64,16 +64,27 @@ def cleanUp():
 
 def downloadSymbols():
 	cleanUp()
-
+	
 	for exchange in exchanges:
 		downloadSymbolList(exchange)
 		reformatSymbolList(exchange)
 	
 	filename='data/symbols/symbols.txt'
 	file = open(filename, 'w')
-
+	
 	for symbol in symbolDictionary.keys():
 		# if MarketValue>$1 billion
-		if float(symbolDictionary[symbol])>1000:
+		if symbolDictionary[symbol]>1000000000:
 			file.write(symbol + '\n')
 	file.close()
+
+def getSymbols():
+	symbolFilename = 'data/symbols/symbols.txt'
+	symbolFile = open(symbolFilename, 'r')
+	symbols = symbolFile.readlines()
+	symbolFile.close()
+	
+	for i in range(0, len(symbols)):
+		symbols[i] = symbols[i].replace('\n','')
+	
+	return symbols
