@@ -30,8 +30,8 @@ class arbit:
 		closePositionsDatetime = datetime.datetime.combine(today, closePositionsTime)
 		closePositionsTime = time.mktime(closePositionsDatetime.timetuple())
 		
-		# 12:00am tomorrow
-		pretradeTime=datetime.time(0,0,0)
+		# 3:00am tomorrow
+		pretradeTime=datetime.time(3,0,0)
 		pretradeDateTime = datetime.datetime.combine(tomorrow, pretradeTime)
 		pretradeTime = time.mktime(pretradeDateTime.timetuple())
 		

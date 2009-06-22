@@ -2,19 +2,16 @@ import os
 import ameritrade
 import symbols
 import datetime
+import csv
 
 def cleanUp():
 	if os.path.exists('data/quotes'):
 		import shutil
 		shutil.rmtree('data/quotes')
 
-def downloadQuotes(symbol, currentDate):
-	atd = ameritrade.ameritrade()
-	logIn = atd.LogIn()	
-
-	if logIn['result'][0]!='OK':
-		print 'Could not log in.'
-		return
+def __downloadQuotes(symbol, currentDate, atd):
+	if currentDate.weekday()==5 or currentDate.weekday()==6:
+		return 'weekend'
 	
 	year=str(currentDate.year)
 	month=str(currentDate.month)
@@ -24,14 +21,24 @@ def downloadQuotes(symbol, currentDate):
 	if len(day)==1:
 		day = '0' + day
 	dateString = year + month + day
-		
+
+	# This is hideous, but I've been having filesystem issues.
+	sanitizedSymbol=symbol.replace('^','c')
+	sanitizedSymbol=sanitizedSymbol.replace('/','s')
+	filename = 'data/quotes/' + sanitizedSymbol + '/' + dateString + '.csv'
+	if os.path.exists(filename):
+		return 'exists'
+
 	priceHistory = atd.PriceHistory(symbol, dateString)
-		
+	
+	if not priceHistory:
+		return 'failed'
+	
 	if priceHistory:
-		if not os.path.exists('data/quotes/' + symbol):
-			os.makedirs('data/quotes/' + symbol)
-			
-		f=open('data/quotes/' + symbol + '/' + dateString + '.csv', 'w')
+		if not os.path.exists('data/quotes/' + sanitizedSymbol):
+			os.makedirs('data/quotes/' + sanitizedSymbol)
+		
+		f=open(filename, 'w')
 		for i in range(0,len(priceHistory['Open'])):
 			f.write(str(priceHistory['TimeStamp'][i]) + ',' 
 				   + str(priceHistory['Open'][i]) + ','
@@ -40,37 +47,74 @@ def downloadQuotes(symbol, currentDate):
 				   + str(priceHistory['Close'][i]) + ','
 				   + str(priceHistory['Volume'][i]) + '\n')
 		f.close()
-	atd.LogOut()
+	
 	return priceHistory
 	
-def downloadAllQuotes():
-	cleanUp()
-	
+# Downloads symbols from endDate to startDate inclusive.
+def downloadAllQuotes(startDate, endDate):
 	symbols.downloadSymbols()
 	s=symbols.getSymbols()
 	
-	while s:
-		symbol = s.pop()
-		print 'Downloading ' + symbol + '. ' + str(len(s)) + ' symbols remaining.'
-		
-		# Ameritrade stores 2 years of back data
-		currentDate = datetime.date.today() - datetime.timedelta(days=365*2)
-		endDate=datetime.date.today()
-		
-		while currentDate<=endDate:
-			downloadQuotes(symbol, currentDate)
-			currentDate = currentDate + datetime.timedelta(days=1)
+	atd = ameritrade.ameritrade()
+	logIn = atd.LogIn()	
 
-def downloadQuotesForYesterday():	
-	yesterday = datetime.date.today() - datetime.timedelta(days=1)
+	if not logIn or logIn['result'][0]!='OK':
+		print 'Could not log in.'
+		return 'failed'
+
+	currentDate = endDate
+	while currentDate >= startDate:
+		for symbol in s:
+			priceHistory = __downloadQuotes(symbol, currentDate, atd)
+			
+			if priceHistory == 'weekend' \
+				or priceHistory == 'exists' \
+				or priceHistory == 'failed': 
+				status=priceHistory
+			else:
+				status='succeeded'
+				print 'Download for ' + symbol + ' on ' + currentDate.isoformat() + ' ' + status + '.'
+			
+		currentDate = currentDate - datetime.timedelta(days=1)
+		
+	atd.LogOut()
+
+def downloadEverything():
+	# Ameritrade stores 2 years of back data, but starts at the 1st of the month
+	startDate = datetime.date.today() - datetime.timedelta(days=365*2)
+	startDate = startDate.replace(day=1)
+	endDate=datetime.date.today()
+	downloadAllQuotes(startDate, endDate)
 	
-	symbols.downloadSymbols()
-	s=symbols.getSymbols()
+def getAllQuotes():
+	quotes = {}
+	for symbol in os.listdir('data/pruned'):
+		quotes[symbol]=__getQuotes(symbol)
+	return quotes
 
-	while s:
-		symbol = s.pop()
-		priceHistory = downloadQuotes(symbol, yesterday)
-		status='failed'
-		if priceHistory:
-			status='succeeded'
-		print 'Downloaded for ' + symbol + ' ' + status + '. ' + str(len(s)) + ' symbols remaining.'
+def __getQuotes(symbol):
+	a=[]
+	for day in os.listdir('data/pruned/' + symbol):
+		filename = 'data/pruned/' + symbol + '/' + day
+		
+		file = open(filename, 'r')
+		reader = csv.reader(file)
+		b={}
+		b['TimeStamp']=[]
+		b['Open']=[]
+		b['High']=[]
+		b['Low']=[]
+		b['Close']=[]
+		b['Volume']=[]
+		
+		for TimeStamp, Open, High, Low, Close, Volume in reader:
+			b['TimeStamp'].append(long(TimeStamp))
+			b['Open'].append(float(Open))
+			b['High'].append(float(High))
+			b['Low'].append(float(Low))
+			b['Close'].append(float(Close))
+			b['Volume'].append(long(Volume))
+		file.close()
+		a.append(b)
+		
+	return a

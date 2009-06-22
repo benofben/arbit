@@ -4,7 +4,7 @@ exchanges=['Q', '1', 'N']
 # Dictionary holds a bunch of Symbol and MarketValue
 symbolDictionary={}
 
-def downloadSymbolList(exchange):		
+def __downloadSymbolList(exchange):		
 	print 'Trying to get exchange ' + exchange + '...'
 	import httplib
 	conn = httplib.HTTPConnection('www.nasdaq.com')
@@ -21,7 +21,7 @@ def downloadSymbolList(exchange):
 
 # delete the first, second and last lines from a symbols file
 # the first is a header line, the last is a copyright notice
-def deleteLines(filename):
+def __deleteLines(filename):
 	inputFile = open(filename, 'r')
 	lines = inputFile.readlines()
 	inputFile.close()
@@ -31,27 +31,27 @@ def deleteLines(filename):
 		outputFile.write(line)
 	outputFile.close()
 
-def writeSymbolToDictionary(symbol, marketValue):
+def __writeSymbolToDictionary(symbol, marketValue):
 	if marketValue != 'N/A':
 		marketValue=marketValue.replace('$','')
 		marketValue=marketValue.replace(',','')
-		symbol=symbol.replace('^','.')
 		symbolDictionary[symbol] = long(float(marketValue))*1000000
 
-def reformatSymbolList(exchange):
-	deleteLines('data/symbols/' + exchange + '.csv')
+def __reformatSymbolList(exchange):
+	__deleteLines('data/symbols/' + exchange + '.csv')
 		
 	filename = 'data/symbols/' + exchange + '.csv'
 	inputFile = open(filename, 'rb')
+	
 	import csv
 	reader = csv.reader(inputFile)
 
 	if exchange == 'Q':
 		for name,symbol,securityType,sharesOutstanding,marketValue,description in reader:
-			writeSymbolToDictionary(symbol, marketValue)
+			__writeSymbolToDictionary(symbol, marketValue)
 	elif exchange == '1' or exchange == 'N':
 		for name,symbol,marketValue,description in reader:
-			writeSymbolToDictionary(symbol, marketValue)
+			__writeSymbolToDictionary(symbol, marketValue)
 	
 	inputFile.close()
 
@@ -66,8 +66,8 @@ def downloadSymbols():
 	cleanUp()
 	
 	for exchange in exchanges:
-		downloadSymbolList(exchange)
-		reformatSymbolList(exchange)
+		__downloadSymbolList(exchange)
+		__reformatSymbolList(exchange)
 	
 	filename='data/symbols/symbols.txt'
 	file = open(filename, 'w')

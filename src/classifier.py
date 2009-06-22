@@ -107,14 +107,6 @@ class classifier:
 			for predictor in p_F:
 				if p_F[predictor]!=0:
 					p[C]*=p_F_C[predictor][C]/p_F[predictor]
-		'''
-		# because the independence assumption is almost surely violated, we need to scale here.
-		t=0
-		for C in classes:
-			t+=p[C]
-		for C in classes:
-			p[C]/=t
-		'''
 		
 		return p
 	

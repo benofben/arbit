@@ -32,7 +32,12 @@ class ameritrade(object):
 	def LogIn(self):
 		url = baseurl + 'LogIn?source=' + constants.sourceID + '&version=' + versionnumber
 		params=urllib.urlencode({'userid': constants.userid, 'password': constants.password, 'source': constants.sourceID, 'version': versionnumber})
-		f = urllib.urlopen(url, params)
+		
+		try:
+			f = urllib.urlopen(url, params)
+		except IOError:
+			return None
+		
 		xmlstring = f.read()
 		d=xmltodict.xmltodict(xmlstring)
 		
@@ -42,21 +47,36 @@ class ameritrade(object):
 
 	def LogOut(self):
 		url = baseurl + 'LogOut;jsessionid=' + self.jsessionid + '?source=' + constants.sourceID
-		f = urllib.urlopen(url)
+
+		try:
+			f = urllib.urlopen(url)
+		except IOError:
+			return None
+
 		xmlstring = f.read()
 		d=xmltodict.xmltodict(xmlstring)
 		return d
 
 	def KeepAlive(self):
 		url = 'https://apis.tdameritrade.com/apps/KeepAlive;jsessionid=' + self.jsessionid + '?source=' + constants.sourceID
-		f = urllib.urlopen(url)
+		
+		try:
+			f = urllib.urlopen(url)
+		except IOError:
+			return None
+
 		response = f.read()
 		return response
 
 	def SnapshotQuotes(self, symbol):
 		url = baseurl + 'Quote;jsessionid=' + self.jsessionid + '?source=' + constants.sourceID + '&symbol=' + symbol
 		params=urllib.urlencode({'source': constants.sourceID})
-		f = urllib.urlopen(url)
+
+		try:
+			f = urllib.urlopen(url)
+		except IOError:
+			return None
+
 		xmlstring = f.read()
 		d=xmltodict.xmltodict(xmlstring)
 		return d
@@ -64,7 +84,12 @@ class ameritrade(object):
 	def PriceHistory(self, symbol, date):
 		url = baseurl + 'PriceHistory;jsessionid=' + self.jsessionid + '?source=' + constants.sourceID + '&requestidentifiertype=SYMBOL&requestvalue=' + symbol + '&intervaltype=MINUTE&intervalduration=1&extended=true&startdate=' + date + '&enddate=' + date
 		params=urllib.urlencode({'source': constants.sourceID})
-		f = urllib.urlopen(url)
+
+		try:
+			f = urllib.urlopen(url)
+		except IOError:
+			return None
+
 		d = f.read()
 		
 		i=0
@@ -131,11 +156,16 @@ class ameritrade(object):
 			i+=8
 		
 		return data
-		
+
 	def BalancesAndPositions(self):
 		url = baseurl + 'BalancesAndPositions;jsessionid=' + self.jsessionid + '?source=' + constants.sourceID
 		params=urllib.urlencode({'source': constants.sourceID})
-		f = urllib.urlopen(url)
+		
+		try:
+			f = urllib.urlopen(url)
+		except IOError:
+			return None
+
 		xmlstring = f.read()
 		d=xmltodict.xmltodict(xmlstring)
 		return d
@@ -143,7 +173,12 @@ class ameritrade(object):
 	def OrderStatus(self, orderid):
 		url = baseurl + 'OrderStatus;jsessionid=' + self.jsessionid + '?source=' + constants.sourceID + '&orderid=' + orderid
 		params=urllib.urlencode({'source': constants.sourceID})
-		f = urllib.urlopen(url)
+		
+		try:
+			f = urllib.urlopen(url)
+		except IOError:
+			return None
+
 		xmlstring = f.read()
 		d=xmltodict.xmltodict(xmlstring)
 		return d
@@ -151,7 +186,11 @@ class ameritrade(object):
 	def EquityTrade(self, orderstring):
 		url = baseurl + 'EquityTrade;jsessionid=' + self.jsessionid + '?source=' + constants.sourceID + '&orderstring=' + orderstring
 		params=urllib.urlencode({'source': constants.sourceID})
-		f = urllib.urlopen(url)
+		try:
+			f = urllib.urlopen(url)
+		except IOError:
+			return None
+
 		xmlstring = f.read()
 		d=xmltodict.xmltodict(xmlstring)
 		return d
@@ -159,7 +198,12 @@ class ameritrade(object):
 	def EditOrder(self, orderstring):		
 		url = baseurl + 'EditOrder;jsessionid=' + self.jsessionid + '?source=' + constants.sourceID + '&orderstring=' + orderstring
 		params=urllib.urlencode({'source': constants.sourceID})
-		f = urllib.urlopen(url)
+		
+		try:
+			f = urllib.urlopen(url)
+		except IOError:
+			return None
+
 		xmlstring = f.read()
 		d=xmltodict.xmltodict(xmlstring)
 		return d
@@ -167,7 +211,12 @@ class ameritrade(object):
 	def OrderCancel(self, orderid):
 		url = baseurl + 'OrderCancel;jsessionid=' + self.jsessionid + '?source=' + constants.sourceID + '&orderid=' + orderid
 		params=urllib.urlencode({'source': constants.sourceID})
-		f = urllib.urlopen(url)
+		
+		try:
+			f = urllib.urlopen(url)
+		except IOError:
+			return None
+
 		xmlstring = f.read()
 		d=xmltodict.xmltodict(xmlstring)
 		return d
