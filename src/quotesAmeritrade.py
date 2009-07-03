@@ -86,35 +86,51 @@ def downloadEverything():
 	endDate=datetime.date.today()
 	downloadAllQuotes(startDate, endDate)
 	
-def getAllQuotes():
+def getAllQuotes(startDate, endDate):
 	quotes = {}
 	for symbol in os.listdir('data/pruned'):
-		quotes[symbol]=__getQuotes(symbol)
+		quotes[symbol]=__getQuotes(symbol, startDate, endDate)
+		print 'Loaded ' + symbol
 	return quotes
 
-def __getQuotes(symbol):
+def __getQuotes(symbol, startDate, endDate):
 	a=[]
-	for day in os.listdir('data/pruned/' + symbol):
-		filename = 'data/pruned/' + symbol + '/' + day
+	currentDate = endDate
+	while currentDate >= startDate:
+		year=str(currentDate.year)
+		month=str(currentDate.month)
+		if len(month)==1:
+			month = '0' + month
+		day=str(currentDate.day)
+		if len(day)==1:
+			day = '0' + day
+		dateString = year + month + day
 		
-		file = open(filename, 'r')
-		reader = csv.reader(file)
-		b={}
-		b['TimeStamp']=[]
-		b['Open']=[]
-		b['High']=[]
-		b['Low']=[]
-		b['Close']=[]
-		b['Volume']=[]
+		filename = 'data/pruned/' + symbol + '/' + dateString + '.csv'
 		
-		for TimeStamp, Open, High, Low, Close, Volume in reader:
-			b['TimeStamp'].append(long(TimeStamp))
-			b['Open'].append(float(Open))
-			b['High'].append(float(High))
-			b['Low'].append(float(Low))
-			b['Close'].append(float(Close))
-			b['Volume'].append(long(Volume))
-		file.close()
-		a.append(b)
+		try:
+			file = open(filename, 'r')
+			reader = csv.reader(file)
+			b={}
+			b['TimeStamp']=[]
+			b['Open']=[]
+			b['High']=[]
+			b['Low']=[]
+			b['Close']=[]
+			b['Volume']=[]
+			
+			for TimeStamp, Open, High, Low, Close, Volume in reader:
+				b['TimeStamp'].append(long(TimeStamp))
+				b['Open'].append(float(Open))
+				b['High'].append(float(High))
+				b['Low'].append(float(Low))
+				b['Close'].append(float(Close))
+				b['Volume'].append(long(Volume))
+			file.close()
+			a.append(b)
+		except IOError:
+			pass
+		
+		currentDate = currentDate - datetime.timedelta(days=1)
 		
 	return a
