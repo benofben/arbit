@@ -59,7 +59,7 @@ def downloadAllQuotes(startDate, endDate):
 	logIn = atd.LogIn()	
 
 	if not logIn or logIn['result'][0]!='OK':
-		print 'Could not log in.'
+		print ('Could not log in.')
 		return 'failed'
 
 	currentDate = endDate
@@ -67,13 +67,17 @@ def downloadAllQuotes(startDate, endDate):
 		for symbol in s:
 			priceHistory = __downloadQuotes(symbol, currentDate, atd)
 			
-			if priceHistory == 'weekend' \
-				or priceHistory == 'exists' \
-				or priceHistory == 'failed': 
+			if priceHistory == 'weekend':
 				status=priceHistory
+			elif priceHistory == 'exists':
+				status=priceHistory
+				print ('Download for ' + symbol + ' on ' + currentDate.isoformat() + ' ' + status + '.')
+			elif priceHistory == 'failed':
+				status=priceHistory
+				print ('Download for ' + symbol + ' on ' + currentDate.isoformat() + ' ' + status + '.')
 			else:
 				status='succeeded'
-				print 'Download for ' + symbol + ' on ' + currentDate.isoformat() + ' ' + status + '.'
+				print ('Download for ' + symbol + ' on ' + currentDate.isoformat() + ' ' + status + '.')
 			
 		currentDate = currentDate - datetime.timedelta(days=1)
 		
@@ -90,7 +94,7 @@ def getAllQuotes(startDate, endDate):
 	quotes = {}
 	for symbol in os.listdir('data/pruned'):
 		quotes[symbol]=__getQuotes(symbol, startDate, endDate)
-		print 'Loaded ' + symbol
+		print ('Loaded ' + symbol)
 	return quotes
 
 def __getQuotes(symbol, startDate, endDate):
@@ -120,12 +124,12 @@ def __getQuotes(symbol, startDate, endDate):
 			b['Volume']=[]
 			
 			for TimeStamp, Open, High, Low, Close, Volume in reader:
-				b['TimeStamp'].append(long(TimeStamp))
+				b['TimeStamp'].append(datetime.datetime.fromtimestamp(int(TimeStamp) / 1000))
 				b['Open'].append(float(Open))
 				b['High'].append(float(High))
 				b['Low'].append(float(Low))
 				b['Close'].append(float(Close))
-				b['Volume'].append(long(Volume))
+				b['Volume'].append(int(Volume))
 			file.close()
 			a.append(b)
 		except IOError:

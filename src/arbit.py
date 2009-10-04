@@ -14,7 +14,7 @@ class arbit:
 		self.schedule.run()
 	
 	def pretrade(self):
-		print 'Running pretrade at ' + datetime.datetime.today().isoformat()
+		print ('Running pretrade at ' + datetime.datetime.today().isoformat())
 		
 		# Assume the local time is NY time.
 		today = datetime.date.today()
@@ -39,11 +39,11 @@ class arbit:
 		if today.weekday()<5:
 			self.download()
 			self.best_symbol=self.findBestSymbol()
-			print 'The best symbol is ' + self.best_symbol + '.'
+			print ('The best symbol is ' + self.best_symbol + '.')
 			
 			# Is it before 9:28am? If not we should skip today
 			if time.time()<openPositionsTime:
-				print 'Scheduling trades for today.'		
+				print ('Scheduling trades for today.')
 				self.schedule.enterabs(openPositionsTime, 0, self.openPositions, ())
 				self.schedule.enterabs(closePositionsTime, 0, self.closePositions, ())
 		
@@ -62,7 +62,7 @@ class arbit:
 		# using the most recent update... not good.
 		import bucket
 		bucket.update()
-		print 'Download done at ' + datetime.datetime.today().isoformat()
+		print ('Download done at ' + datetime.datetime.today().isoformat())
 	
 	def findBestSymbol(self):	
 		import data
@@ -79,11 +79,11 @@ class arbit:
 		
 		b = dict(map(lambda item: (item[1],item[0]),p.items()))
 		symbol = b[max(b.keys())]
-		print 'Classification done at ' + datetime.datetime.today().isoformat()
+		print ('Classification done at ' + datetime.datetime.today().isoformat())
 		return symbol
 	
 	def openPositions(self):
-		print 'Opening positions at ' + datetime.datetime.today().isoformat()
+		print ('Opening positions at ' + datetime.datetime.today().isoformat())
 		
 		self.sellOrderid=None
 		
@@ -100,7 +100,7 @@ class arbit:
 			# check if we can day trade
 			# we can have a maximum of 3 roundtrips in 5 days and not be a day trader
 			if accountvalue>25000 or roundtrips<3:
-				print 'I am going to trade today.'
+				print ('I am going to trade today.')
 				
 				# get the ask price
 				snapshotQuotes=atd.SnapshotQuotes(self.best_symbol)
@@ -109,23 +109,23 @@ class arbit:
 				# figure out how many shares we can safely afford
 				quantity=int((stockbuyingpower*0.95-10)/bid)
 				if quantity==0:
-					print 'We do not have enough cash to trade.'
+					print ('We do not have enough cash to trade.')
 					atd.LogOut()
 					return
 				
 				# place a limit order to buy at the ask price
 				orderString='action=buy~quantity=' + str(quantity) + '~symbol=' + self.best_symbol + '~ordtype=Limit~price=' + str(bid) + '~expire=day~accountid=' + accountid
-				print orderString
+				print (orderString)
 				equityTrade=atd.EquityTrade(orderString)
 				
 				if equityTrade['order-wrapper'][0]['error'][0]!=None:
-					print 'Could not place buy order.'
-					print equityTrade
+					print ('Could not place buy order.')
+					print (equityTrade)
 					atd.LogOut()
 					return
 				
 				# now let's wait until our order is processsed
-				print 'Waiting for order to fill...'
+				print ('Waiting for order to fill...')
 				buyOrderid=equityTrade['order-wrapper'][0]['order'][0]['order-id'][0]
 				status=''
 				startTime=time.time()
@@ -135,12 +135,12 @@ class arbit:
 					
 					# we've waited 5 minutes, let's just cancel the buy order
 					if time.time()>startTime+5*60:
-						print 'Waited 5 minutes, going to cancel the buy order.'
+						print ('Waited 5 minutes, going to cancel the buy order.')
 						orderCancel=atd.OrderCancel(buyOrderid)
 						
 						if orderCancel['result'][0]!='OK':
-							print 'Could not cancel order.'
-							print orderCancel
+							print ('Could not cancel order.')
+							print (orderCancel)
 							atd.LogOut()
 							return
 						
@@ -160,9 +160,9 @@ class arbit:
 						totalFillQuantity+=fillQuantity
 						averageFillPrice+=fillQuantity*fillPrice
 					averageFillPrice/=totalFillQuantity
-					print str(totalFillQuantity) + ' shares filled at ' + str (averageFillPrice)
+					print (str(totalFillQuantity) + ' shares filled at ' + str (averageFillPrice))
 				except KeyError:
-					print 'Buy order not filled.'
+					print ('Buy order not filled.')
 				
 				# place sell order
 				if totalFillQuantity>0:
@@ -170,12 +170,12 @@ class arbit:
 					price=round(price*100)/100
 					
 					orderString='action=sell~quantity=' + str(totalFillQuantity) + '~symbol=' + self.best_symbol + '~ordtype=Limit~price=' + str(price) + '~expire=day~accountid=' + accountid
-					print orderString
+					print (orderString)
 					equityTrade=atd.EquityTrade(orderString)
 						
 					if equityTrade['order-wrapper'][0]['error'][0]!=None:
-						print 'Could not place sell order.'
-						print equityTrade
+						print ('Could not place sell order.')
+						print (equityTrade)
 						atd.LogOut()
 						return
 					
@@ -184,10 +184,10 @@ class arbit:
 		atd.LogOut()
 	
 	def closePositions(self):
-		print 'Closing positions at ' + datetime.datetime.today().isoformat()
+		print ('Closing positions at ' + datetime.datetime.today().isoformat())
 		
 		if not self.sellOrderid:
-			print 'No sell order.  Nothing to do.'
+			print ('No sell order.  Nothing to do.')
 			return
 		
 		atd = ameritrade.ameritrade()
@@ -200,9 +200,9 @@ class arbit:
 			status=orderStatus['orderstatus-list'][0]['orderstatus'][0]['display-status'][0]
 			
 			if status == 'Filled':
-				print 'We won today!  All closed out.'
+				print ('We won today!  All closed out.')
 			else:
-				print 'We lost today.'
+				print ('We lost today.')
 				
 				# Get the current price
 				snapshotQuotes=atd.SnapshotQuotes(self.best_symbol)
@@ -214,8 +214,8 @@ class arbit:
 				editOrder=atd.EditOrder(orderString)
 				
 				if editOrder['order-wrapper'][0]['error'][0]!=None:
-					print 'Could not edit order.'
-					print editOrder
+					print ('Could not edit order.')
+					print (editOrder)
 					atd.LogOut()
 					return
 		

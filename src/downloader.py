@@ -15,11 +15,11 @@ class downloader:
 	
 	def __prune(self):
 		# first, nuke the prune directory
-		print 'Cleaning up the prune directory.'
+		print ('Cleaning up the prune directory.')
 		if os.path.exists('data/pruned'):
 			shutil.rmtree('data/pruned')
 		
-		print 'Copying the pruned quotes.'
+		print ('Copying the pruned quotes.')
 		symbols = os.listdir('data/quotes')
 		for symbol in symbols:	
 			# Load the price history from the most recent trading day.
@@ -43,7 +43,7 @@ class downloader:
 					shutil.copytree('data/quotes/' + symbol, 'data/pruned/' + symbol)
 	
 	def download(self):
-		print 'Running download at ' + datetime.datetime.today().isoformat()
+		print ('Running download at ' + datetime.datetime.today().isoformat())
 		
 		# Assume the local time is NY time.
 		today = datetime.date.today()
@@ -54,7 +54,7 @@ class downloader:
 		downloadDateTime = datetime.datetime.combine(tomorrow, downloadTime)
 		downloadTime = time.mktime(downloadDateTime.timetuple())
 
-		print 'Downloading...'
+		print ('Downloading...')
 		
 		# Download all the symbols from the last two days
 		# We overwrite the last day in case it failed previously
@@ -68,6 +68,6 @@ class downloader:
 		# Reschedule the download to run again tomorrow.
 		self.schedule.enterabs(downloadTime, 0, self.download, ())
 		
-		print 'Done with download at ' + datetime.datetime.today().isoformat()
+		print ('Done with download at ' + datetime.datetime.today().isoformat())
 	
 downloader()

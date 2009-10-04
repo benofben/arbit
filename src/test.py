@@ -11,6 +11,7 @@ def run():
 	
 	for i in range (0,50):
 		[symbol, averagePeaks] = predictorAveragePeaks(i)
+
 		Open = q[symbol][i]['Open'][0]
 		
 		High = 0
@@ -26,7 +27,7 @@ def run():
 		else:
 			capital*=1 - ((1 - Close/Open)*leverage)
 			
-		print symbol + '\t' + str(q[symbol][i]['TimeStamp'][0]) + '\t' + str(int(capital)) + '\t' + str(averagePeaks) 
+		print (symbol + '\t' + str(q[symbol][i]['TimeStamp'][0]) + '\t' + str(int(capital)) + '\t' + str(averagePeaks))
 		
 
 def predictorAveragePeaks(index):
@@ -34,7 +35,7 @@ def predictorAveragePeaks(index):
 	averagePeaks={}
 	for symbol in q:
 		peaks[symbol]=[]
-		for day in range(index-10,index):
+		for day in range(index-5,index):
 			p=0
 			try:
 				t0=q[symbol][day]['Open'][0]
