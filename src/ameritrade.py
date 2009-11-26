@@ -41,7 +41,7 @@ class ameritrade(object):
 		
 		xmlstring = f.read()
 		d=xmltodict.xmltodict(xmlstring)
-		
+	
 		self.jsessionid = d['xml-log-in'][0]['session-id'][0]
 		
 		return d

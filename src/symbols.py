@@ -13,9 +13,11 @@ def downloadSymbolList(exchange):
 	print(response.status, response.reason)
 	data = response.read()
 	conn.close()
-
+	
 	print('Done downloading.  Writing to file.\n')
-	file = open('data/symbols/' + exchange + '.csv', 'wb')
+	file = open('data/symbols/' + exchange + '.csv', 'w')
+	data = data.decode('windows-1252')
+	data = data.replace('\n','')
 	file.write(data)
 	file.close()
 
@@ -42,15 +44,15 @@ def reformatSymbolList(exchange):
 	deleteLines('data/symbols/' + exchange + '.csv')
 
 	filename = 'data/symbols/' + exchange + '.csv'
-	inputFile = open(filename, 'r')
+	inputFile = open(filename, 'r', newline='')
 	import csv
 	reader = csv.reader(inputFile)
 
 	if exchange == 'Q':
-		for name,symbol,securityType,sharesOutstanding,marketValue,description in reader:
+		for name, symbol, securityType, sharesOutstanding, marketValue, description in reader:
 			writeSymbolToDictionary(symbol, marketValue)
 	elif exchange == '1' or exchange == 'N':
-		for name,symbol,marketValue,description in reader:
+		for name, symbol, marketValue, description in reader:
 			writeSymbolToDictionary(symbol, marketValue)
 
 	inputFile.close()

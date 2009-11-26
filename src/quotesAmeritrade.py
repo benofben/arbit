@@ -4,11 +4,6 @@ import symbols
 import datetime
 import csv
 
-def cleanUp():
-	if os.path.exists('data/quotes'):
-		import shutil
-		shutil.rmtree('data/quotes')
-
 def __downloadQuotes(symbol, currentDate, atd):
 	if currentDate.weekday()==5 or currentDate.weekday()==6:
 		return 'weekend'
@@ -25,7 +20,7 @@ def __downloadQuotes(symbol, currentDate, atd):
 	# This is hideous, but I've been having filesystem issues.
 	sanitizedSymbol=symbol.replace('^','c')
 	sanitizedSymbol=sanitizedSymbol.replace('/','s')
-	filename = 'data/quotes/' + sanitizedSymbol + '/' + dateString + '.csv'
+	filename = 'data/ameritrade/quotes/' + sanitizedSymbol + '/' + dateString + '.csv'
 	if os.path.exists(filename):
 		return 'exists'
 
@@ -35,8 +30,8 @@ def __downloadQuotes(symbol, currentDate, atd):
 		return 'failed'
 	
 	if priceHistory:
-		if not os.path.exists('data/quotes/' + sanitizedSymbol):
-			os.makedirs('data/quotes/' + sanitizedSymbol)
+		if not os.path.exists('data/ameritrade/quotes/' + sanitizedSymbol):
+			os.makedirs('data/ameritrade/quotes/' + sanitizedSymbol)
 		
 		f=open(filename, 'w')
 		for i in range(0,len(priceHistory['Open'])):
@@ -87,12 +82,12 @@ def downloadEverything():
 	# Ameritrade stores 2 years of back data, but starts at the 1st of the month
 	startDate = datetime.date.today() - datetime.timedelta(days=365*2)
 	startDate = startDate.replace(day=1)
-	endDate=datetime.date.today()
+	endDate=datetime.date.today() - datetime.timedelta(days=1)
 	downloadAllQuotes(startDate, endDate)
 	
 def getAllQuotes(startDate, endDate):
 	quotes = {}
-	for symbol in os.listdir('data/pruned'):
+	for symbol in os.listdir('data/ameritrade/pruned'):
 		quotes[symbol]=__getQuotes(symbol, startDate, endDate)
 		print ('Loaded ' + symbol)
 	return quotes
@@ -110,7 +105,7 @@ def __getQuotes(symbol, startDate, endDate):
 			day = '0' + day
 		dateString = year + month + day
 		
-		filename = 'data/pruned/' + symbol + '/' + dateString + '.csv'
+		filename = 'data/ameritrade/pruned/' + symbol + '/' + dateString + '.csv'
 		
 		try:
 			file = open(filename, 'r')
