@@ -17,7 +17,12 @@ def downloadSymbolList(exchange):
 	print('Done downloading.  Writing to file.\n')
 	file = open('data/symbols/' + exchange + '.csv', 'w')
 	data = data.decode('windows-1252')
+	
+	# mixed \n and \r\n seem to be causing problems.  This replace deletes the
+	# endlines in the company descriptions, which allows the csv reader to work
+	# on both Linux and Windows
 	data = data.replace('\n','')
+	
 	file.write(data)
 	file.close()
 
@@ -42,19 +47,19 @@ def writeSymbolToDictionary(symbol, marketValue):
 
 def reformatSymbolList(exchange):
 	deleteLines('data/symbols/' + exchange + '.csv')
-
+	
 	filename = 'data/symbols/' + exchange + '.csv'
 	inputFile = open(filename, 'r', newline='')
 	import csv
 	reader = csv.reader(inputFile)
-
+	
 	if exchange == 'Q':
 		for name, symbol, securityType, sharesOutstanding, marketValue, description in reader:
 			writeSymbolToDictionary(symbol, marketValue)
 	elif exchange == '1' or exchange == 'N':
 		for name, symbol, marketValue, description in reader:
 			writeSymbolToDictionary(symbol, marketValue)
-
+	
 	inputFile.close()
 
 def downloadSymbols():
@@ -70,7 +75,7 @@ def downloadSymbols():
 	
 	filename='data/symbols/symbols.txt'
 	file = open(filename, 'w')
-
+	
 	for symbol in symbolDictionary.keys():
 		# if MarketValue>$1 billion
 		if float(symbolDictionary[symbol])>1000:

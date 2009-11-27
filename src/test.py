@@ -2,7 +2,7 @@ import quotesAmeritrade
 import datetime
 
 startDate = datetime.date.today() - datetime.timedelta(days=500)
-endDate = datetime.date.today()	
+endDate = datetime.date.today()
 q = quotesAmeritrade.getAllQuotes(startDate, endDate)
 # q[symbol][day][TimeStamp, Open, High Low Close][bar]
 
@@ -60,7 +60,7 @@ def predictorAveragePeaks(index):
 						target='low'
 					
 					if target=='low' and q[symbol][day]['Low'][t]<=t0:
-						target='high'	
+						target='high'
 					t=t+1
 			except IndexError:
 				pass

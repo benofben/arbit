@@ -64,7 +64,7 @@ class arbit:
 		bucket.update()
 		print ('Download done at ' + datetime.datetime.today().isoformat())
 	
-	def findBestSymbol(self):	
+	def findBestSymbol(self):
 		import data
 		symbols=data.getSymbols()
 		quotes=data.getAllQuotes()

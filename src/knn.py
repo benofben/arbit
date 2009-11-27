@@ -2,9 +2,8 @@ import quotesYahoo
 import datetime
 
 class knn:
-
 	quotes=quotesYahoo.getAllQuotes()
-
+	
 	def __init__(self):
 		capital=10000
 		leverage=2
@@ -25,7 +24,7 @@ class knn:
 			bestR=0
 			bestSymbol=None
 			
-			for testingPoint in testingPoints:				
+			for testingPoint in testingPoints:
 				r=self.evaluate(trainingPoints, testingPoint)
 				if(r>bestR):
 					bestR=r
@@ -69,7 +68,7 @@ class knn:
 		q=quotesYahoo.getSubquote(currentDate, self.quotes)
 		if not q:
 			return False
-
+	
 		trainingPoints=[]
 		testingPoints=[]
 		
@@ -79,19 +78,19 @@ class knn:
 				p.append(q[symbol]['Close'][i]/q[symbol]['Open'][i])
 				p.append(q[symbol]['Close'][i-1]/q[symbol]['Open'][i-1])
 				p.append(q[symbol]['Close'][i-2]/q[symbol]['Open'][i-2])
-
+				
 				try:
 					p.append((q[symbol]['Volume'][i-2]-q[symbol]['Volume'][i-1])/(q[symbol]['Volume'][i-2]+q[symbol]['Volume'][i-1]))
 				except ZeroDivisionError:
 					p.append(0)
-
+				
 				p.append(symbol)
 				
-				if i<len(q[symbol]['Open'])-1:				
+				if i<len(q[symbol]['Open'])-1:
 					trainingPoints.append(p)
 				else:
 					testingPoints.append(p)
 				
 		return[trainingPoints, testingPoints]
-	
+
 knn()

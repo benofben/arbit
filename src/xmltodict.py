@@ -11,7 +11,7 @@ def elementtodict(parent):
 		return None
 	elif (child.nodeType == xml.dom.minidom.Node.TEXT_NODE):
 		return child.nodeValue
-
+	
 	d={}
 	while child is not None:
 		if (child.nodeType == xml.dom.minidom.Node.ELEMENT_NODE):

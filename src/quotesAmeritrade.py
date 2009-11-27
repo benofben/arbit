@@ -16,14 +16,14 @@ def __downloadQuotes(symbol, currentDate, atd):
 	if len(day)==1:
 		day = '0' + day
 	dateString = year + month + day
-
+	
 	# This is hideous, but I've been having filesystem issues.
 	sanitizedSymbol=symbol.replace('^','c')
 	sanitizedSymbol=sanitizedSymbol.replace('/','s')
 	filename = 'data/ameritrade/quotes/' + sanitizedSymbol + '/' + dateString + '.csv'
 	if os.path.exists(filename):
 		return 'exists'
-
+	
 	priceHistory = atd.PriceHistory(symbol, dateString)
 	
 	if not priceHistory:
@@ -44,7 +44,7 @@ def __downloadQuotes(symbol, currentDate, atd):
 		f.close()
 	
 	return priceHistory
-	
+
 # Downloads symbols from endDate to startDate inclusive.
 def downloadAllQuotes(startDate, endDate):
 	symbols.downloadSymbols()
@@ -52,11 +52,11 @@ def downloadAllQuotes(startDate, endDate):
 	
 	atd = ameritrade.ameritrade()
 	logIn = atd.LogIn()	
-
+	
 	if not logIn or logIn['result'][0]!='OK':
 		print ('Could not log in.')
 		return 'failed'
-
+	
 	currentDate = endDate
 	while currentDate >= startDate:
 		for symbol in s:
@@ -84,7 +84,7 @@ def downloadEverything():
 	startDate = startDate.replace(day=1)
 	endDate=datetime.date.today() - datetime.timedelta(days=1)
 	downloadAllQuotes(startDate, endDate)
-	
+
 def getAllQuotes(startDate, endDate):
 	quotes = {}
 	for symbol in os.listdir('data/ameritrade/pruned'):
@@ -131,5 +131,5 @@ def __getQuotes(symbol, startDate, endDate):
 			pass
 		
 		currentDate = currentDate - datetime.timedelta(days=1)
-		
+	
 	return a

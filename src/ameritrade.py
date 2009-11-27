@@ -14,11 +14,11 @@ def bytesToBool(b):
 def bytesToInt(b):
 	i = struct.unpack('!i', b)[0]
 	return i
-	
+
 def bytesToShort(b):
 	i = struct.unpack('!h', b)[0]
 	return i
-	
+
 def bytesToLong(b):
 	i = struct.unpack('!q', b)[0]
 	return i
@@ -41,19 +41,19 @@ class ameritrade(object):
 		
 		xmlstring = f.read()
 		d=xmltodict.xmltodict(xmlstring)
-	
+		
 		self.jsessionid = d['xml-log-in'][0]['session-id'][0]
 		
 		return d
 
 	def LogOut(self):
 		url = baseurl + 'LogOut;jsessionid=' + self.jsessionid + '?source=' + constants.sourceID
-
+		
 		try:
 			f = urllib.request.urlopen(url)
 		except IOError:
 			return None
-
+		
 		xmlstring = f.read()
 		d=xmltodict.xmltodict(xmlstring)
 		return d
@@ -65,32 +65,32 @@ class ameritrade(object):
 			f = urllib.request.urlopen(url)
 		except IOError:
 			return None
-
+		
 		response = f.read()
 		return response
 
 	def SnapshotQuotes(self, symbol):
 		url = baseurl + 'Quote;jsessionid=' + self.jsessionid + '?source=' + constants.sourceID + '&symbol=' + symbol
 		params=urllib.parse.urlencode({'source': constants.sourceID})
-
+		
 		try:
 			f = urllib.request.urlopen(url)
 		except IOError:
 			return None
-
+		
 		xmlstring = f.read()
 		d=xmltodict.xmltodict(xmlstring)
 		return d
-	
+
 	def PriceHistory(self, symbol, date):
 		url = baseurl + 'PriceHistory;jsessionid=' + self.jsessionid + '?source=' + constants.sourceID + '&requestidentifiertype=SYMBOL&requestvalue=' + symbol + '&intervaltype=MINUTE&intervalduration=1&extended=true&startdate=' + date + '&enddate=' + date
 		params=urllib.parse.urlencode({'source': constants.sourceID})
-
+		
 		try:
 			f = urllib.request.urlopen(url)
 		except IOError:
 			return None
-
+		
 		d = f.read()
 		
 		i=0
@@ -166,7 +166,7 @@ class ameritrade(object):
 			f = urllib.request.urlopen(url)
 		except IOError:
 			return None
-
+		
 		xmlstring = f.read()
 		d=xmltodict.xmltodict(xmlstring)
 		return d
@@ -179,11 +179,11 @@ class ameritrade(object):
 			f = urllib.request.urlopen(url)
 		except IOError:
 			return None
-
+		
 		xmlstring = f.read()
 		d=xmltodict.xmltodict(xmlstring)
 		return d
-	
+
 	def EquityTrade(self, orderstring):
 		url = baseurl + 'EquityTrade;jsessionid=' + self.jsessionid + '?source=' + constants.sourceID + '&orderstring=' + orderstring
 		params=urllib.parse.urlencode({'source': constants.sourceID})
@@ -191,12 +191,12 @@ class ameritrade(object):
 			f = urllib.request.urlopen(url)
 		except IOError:
 			return None
-
+		
 		xmlstring = f.read()
 		d=xmltodict.xmltodict(xmlstring)
 		return d
-	
-	def EditOrder(self, orderstring):		
+
+	def EditOrder(self, orderstring):
 		url = baseurl + 'EditOrder;jsessionid=' + self.jsessionid + '?source=' + constants.sourceID + '&orderstring=' + orderstring
 		params=urllib.parse.urlencode({'source': constants.sourceID})
 		
@@ -204,11 +204,11 @@ class ameritrade(object):
 			f = urllib.request.urlopen(url)
 		except IOError:
 			return None
-
+		
 		xmlstring = f.read()
 		d=xmltodict.xmltodict(xmlstring)
 		return d
-	
+
 	def OrderCancel(self, orderid):
 		url = baseurl + 'OrderCancel;jsessionid=' + self.jsessionid + '?source=' + constants.sourceID + '&orderid=' + orderid
 		params=urllib.parse.urlencode({'source': constants.sourceID})
@@ -217,8 +217,7 @@ class ameritrade(object):
 			f = urllib.request.urlopen(url)
 		except IOError:
 			return None
-
+		
 		xmlstring = f.read()
 		d=xmltodict.xmltodict(xmlstring)
 		return d
-	

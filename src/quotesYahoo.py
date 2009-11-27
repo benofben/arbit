@@ -2,7 +2,7 @@ def downloadQuotes(symbol):
 	print('Downloading historical data for ' + symbol + '...')
 	import http.client
 	conn = http.client.HTTPConnection('ichart.finance.yahoo.com')
-
+	
 	'''
 	Notes on the yahoo parameters:
 	d=end month-1 
@@ -13,8 +13,8 @@ def downloadQuotes(symbol):
 	b=start day (2)
 	c=start year (2002)
 	'''
-
-	import datetime	
+	
+	import datetime
 	today = datetime.date.today()
 	endYear = today.strftime('%Y')
 	endMonth = str(int(today.strftime('%m'))-1)
@@ -23,7 +23,7 @@ def downloadQuotes(symbol):
 	startYear='2002'
 	startMonth='0'
 	startDay='1'
-
+	
 	conn.request('GET', '/table.csv?s=' + symbol + '&d=' + endMonth + '&e=' + endDay + '&f=' + endYear + '&g=d&a=' + startMonth + '&b=' + startDay + '&c=' + startYear + '&ignore=.csvc')
 	response=conn.getresponse()
 	print(response.status, response.reason)
@@ -46,7 +46,7 @@ def reformatAndSaveQuotes(data, symbol):
 		if(i>0):
 			quotes.append(line)
 		i=i+1
-
+	
 	# we want the list to go from oldest quote to newest
 	quotes.reverse()
 
@@ -73,17 +73,17 @@ def downloadAllQuotes():
 	symbolFile = open(symbolFilename, 'r')
 	symbols = symbolFile.readlines()
 	symbolFile.close()
-
+	
 	failedSymbolsFilename = 'data/yahoo/failedQuotesSymbols.txt'
 	failedSymbolsFile = open(failedSymbolsFilename, 'w')
-
+	
 	while symbols:
 		print(str(len(symbols)) + ' symbols remaining.')
 		symbol = symbols.pop()
 		symbol = symbol.replace('\n','')
 		if not downloadQuotes(symbol):
 			failedSymbolsFile.write(symbol + '\n')
-
+	
 	failedSymbolsFile.close()
 
 #########################################################################
@@ -114,7 +114,7 @@ def getQuotes(symbol):
 	import datetime
 	import csv
 	reader=csv.reader(inputFile)
-
+	
 	for Date, Open, High, Low, Close, Volume, AdjClose in reader:
 		dt=Date.split('-')
 		Date=datetime.date(int(dt[0]), int(dt[1]), int(dt[2]))
@@ -126,7 +126,7 @@ def getQuotes(symbol):
 		quotes['Close'].append(float(Close))
 		quotes['Volume'].append(int(Volume))
 		quotes['AdjClose'].append(float(AdjClose))
-		
+	
 	inputFile.close()
 	return quotes
 
@@ -160,9 +160,9 @@ def getSubquote(currentDate, quotes):
 			subquote[symbol]={}		
 			for item in quotes[symbol]:
 				subquote[symbol][item]=quotes[symbol][item][0:index]
-		
+	
 	if len(subquote)>0:
-	   return subquote
+		return subquote
 	
 	return False
 
@@ -174,4 +174,3 @@ def getSymbolsFromQuoteFiles():
 	for file in files:
 		symbols.append(file.replace('.csv', ''))
 	return symbols
-

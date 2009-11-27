@@ -19,7 +19,7 @@ class classifier:
 		p['Bad']=1.0
 		
 		return p
-
+	
 	def e(self):
 		# this is E(Symbol)
 		
@@ -41,7 +41,7 @@ class classifier:
 					e*=1.0+((Close-Open)/Open)
 		
 		return e
-
+	
 	def naiveBayes(self, trainingSet, testPoint):
 		if not trainingSet or not len(trainingSet)>0:
 			return False
@@ -136,7 +136,7 @@ class classifier:
 			testPoint[predictor]=point[predictor]
 		
 		return [trainingSet, testPoint]
-
+	
 	def createDataPoint(self, day, symbol, predictor):
 		dataPoint={}
 		
@@ -194,8 +194,8 @@ class classifier:
 			e=1.0
 			window=100
 			for day in range(day-window, day):
-				print self.symbol
-				print day
+				print(self.symbol)
+				print(day)
 				Open=self.quotes[self.symbol]['Open'][day]
 				Low=self.quotes[self.symbol]['Low'][day]
 				High=self.quotes[self.symbol]['High'][day]
@@ -212,10 +212,8 @@ class classifier:
 					e*=1.0+((Open-Close)/Open)
 			
 			dataPoint['win']=self.bin(e)
-
 		else:
-			print 'I found an unrecognized predictor: ' + predictor \
-			+ '. This means there is an error in your code.'
+			print('I found an unrecognized predictor: ' + predictor + '. This means there is an error in your code.')
 		
 		# populate the outcome for today if we have data
 		if len(self.quotes[symbol]['Open'])>day+1:
