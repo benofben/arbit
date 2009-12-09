@@ -8,9 +8,8 @@ void Application::onCreate( const FIX::SessionID& sessionID )
 void Application::onLogon( const FIX::SessionID& sessionID )
 {
 	std::cout << "Logon: " << sessionID << std::endl;
-	subscribeOil( sessionID );
-	//subscribeFDAX( sessionID );
-	getSecurities( sessionID );
+	subscribe(sessionID);
+	//getSecurities(sessionID);
 }
 
 void Application::onLogout( const FIX::SessionID& sessionID )
@@ -43,38 +42,62 @@ void Application::fromAdmin( const FIX::Message& message, const FIX::SessionID& 
 void Application::fromApp( const FIX::Message& message, const FIX::SessionID& sessionID ) throw( FIX::FieldNotFound, FIX::IncorrectDataFormat, FIX::IncorrectTagValue, FIX::UnsupportedMessageType )
 {
 	crack( message, sessionID );
-	std::cout << "fromApp: " << message << std::endl;
+	//std::cout << "fromApp: " << message << std::endl;
 }
 
 void Application::onMessage( const FIX42::MarketDataSnapshotFullRefresh& message, const FIX::SessionID& )
 {
-	cout << "onMessage: " << message.toString() << endl;
+	//cout << "onMessage: " << message.toString() << endl;
 	
 	FIX::Symbol symbol;
-	message.get(symbol);
+	message.getField(symbol);
+	
+	for(int i=1;i<message.groupCount(FIX::FIELD::NoMDEntries);i++)
+	{
+		FIX42::MarketDataSnapshotFullRefresh::NoMDEntries noMDEntries;
+		message.getGroup(i, noMDEntries);
 
-	FIX42::MarketDataSnapshotFullRefresh::NoMDEntries noMDEntries;
-	message.getGroup(1, noMDEntries);
+		FIX::MDEntryType mDEntryType;
+		noMDEntries.getField(mDEntryType);
 
-	FIX::MDEntryType mDEntryType;
-	noMDEntries.getField(mDEntryType);
+		FIX::MDEntryPx mDEntryPx;
+		noMDEntries.getField(mDEntryPx);
 
-	//cout << mDEntryType << endl;
+		FIX::MDEntrySize mDEntrySize;
+		noMDEntries.getField(mDEntrySize);
+
+		cout << symbol << " " << mDEntryType << " " << mDEntryPx << " " << mDEntrySize << endl;
+	}
+	cout << endl;
 }
 
 void Application::onMessage( const FIX42::SecurityDefinition& message, const FIX::SessionID& )
 {
 	//cout << "Got a symbol " << message.getField(FIX::FIELD::SecurityID) << endl;
 	//cout << message.toString() << endl;
-
+	
 	ofstream ofile( "symbols.txt", ios::app );
-	ofile 
-		<< message.getField(FIX::FIELD::SecurityExchange) << "," 
-		<< message.getField(FIX::FIELD::SecurityType) << ","
-		<< message.getField(FIX::FIELD::Symbol) << "," 
-		<< message.getField(FIX::FIELD::MaturityMonthYear) << "," 
-		<< message.getField(FIX::FIELD::SecurityID)		
-		<< endl;
+	
+	if(message.isSetField(FIX::FIELD::SecurityExchange))
+		ofile << message.getField(FIX::FIELD::SecurityExchange);
+	ofile << ",";
+
+	if(message.isSetField(FIX::FIELD::SecurityType))
+		ofile << message.getField(FIX::FIELD::SecurityType);
+	ofile << ",";
+
+	if(message.isSetField(FIX::FIELD::Symbol))
+		ofile << message.getField(FIX::FIELD::Symbol);
+	ofile << ",";
+
+	if(message.isSetField(FIX::FIELD::MaturityMonthYear))
+		ofile << message.getField(FIX::FIELD::MaturityMonthYear);
+	ofile << ",";
+
+	if(message.isSetField(FIX::FIELD::SecurityID))
+		ofile << message.getField(FIX::FIELD::SecurityID);
+	ofile << endl;
+	
 	ofile.close();
 }
 
@@ -88,6 +111,7 @@ void Application::getSecurities( const FIX::SessionID& sessionID )
 			FIX::SecurityReqID(itoa(time(NULL), buffer, 10)),
 			FIX::SecurityRequestType(0));
 
+		message.setField(FIX::SecurityType("FUT"));
 		FIX::Session::sendToTarget(message, sessionID);
 	}
 	catch(FIX::SessionNotFound e)
@@ -96,7 +120,7 @@ void Application::getSecurities( const FIX::SessionID& sessionID )
 	}
 }
 
-void Application::subscribeFDAX( const FIX::SessionID& sessionID )
+void Application::subscribe( const FIX::SessionID& sessionID )
 {
 	char buffer[33];
 
@@ -108,22 +132,22 @@ void Application::subscribeFDAX( const FIX::SessionID& sessionID )
 			FIX42::MarketDataRequest message( 
 				FIX::MDReqID( itoa(time(NULL), buffer, 10) ),
 				FIX::SubscriptionRequestType( FIX::SubscriptionRequestType_SNAPSHOT_PLUS_UPDATES ),
-				FIX::MarketDepth( 0 ));
+				FIX::MarketDepth( 0 )); //Full Book
 
-			message.setField(FIX::MDUpdateType( 0 ));
+			message.setField(FIX::MDUpdateType( 0 )); //Full Refresh
 			message.setField(FIX::AggregatedBook(true));
 
-			FIX42::MarketDataRequest::NoMDEntryTypes marketDataEntryGroup;
-			marketDataEntryGroup.set(FIX::MDEntryType(FIX::MDEntryType_BID));
-			marketDataEntryGroup.set(FIX::MDEntryType(FIX::MDEntryType_OFFER));
-			message.addGroup( marketDataEntryGroup );
+			FIX42::MarketDataRequest::NoMDEntryTypes marketDataEntryGroupBid;
+			marketDataEntryGroupBid.set(FIX::MDEntryType(FIX::MDEntryType_BID));
+			message.addGroup( marketDataEntryGroupBid );
 
-			FIX42::MarketDataRequest::NoRelatedSym symbolGroup;
-			symbolGroup.set(FIX::Symbol("DAX"));
-			symbolGroup.set(FIX::SecurityID("XETRDE0008469008"));
-			symbolGroup.set(FIX::SecurityExchange("Eurex"));
+			FIX42::MarketDataRequest::NoMDEntryTypes marketDataEntryGroupOffer;
+			marketDataEntryGroupOffer.set(FIX::MDEntryType(FIX::MDEntryType_OFFER));
+			message.addGroup( marketDataEntryGroupOffer );
 
-			message.addGroup( symbolGroup );						
+			//message.addGroup(addFDAX());
+			message.addGroup(addOil());
+			//message.addGroup(addZN());
 
 			FIX::Session::sendToTarget(message, sessionID);
 		}
@@ -134,41 +158,36 @@ void Application::subscribeFDAX( const FIX::SessionID& sessionID )
 	}
 }
 
-void Application::subscribeOil( const FIX::SessionID& sessionID )
+FIX42::MarketDataRequest::NoRelatedSym Application::addFDAX()
 {
-	char buffer[33];
+	FIX42::MarketDataRequest::NoRelatedSym symbolGroup;
+	symbolGroup.set(FIX::Symbol("DAX"));
+	symbolGroup.set(FIX::SecurityID("XETRDE0008469008"));
+	symbolGroup.set(FIX::SecurityExchange("Eurex"));
 
-	// let's create some subscriptions...
-	if(sessionID.getTargetCompID()=="TTDEV9P")
-	{
-		try
-		{
-			FIX42::MarketDataRequest message( 
-				FIX::MDReqID( itoa(time(NULL), buffer, 10) ),
-				FIX::SubscriptionRequestType( FIX::SubscriptionRequestType_SNAPSHOT_PLUS_UPDATES ),
-				FIX::MarketDepth( 0 ));
+	return symbolGroup;
+}
 
-			message.setField(FIX::MDUpdateType( 0 ));
-			message.setField(FIX::AggregatedBook(true));
+FIX42::MarketDataRequest::NoRelatedSym Application::addOil()
+{
+	// CME-A,FUT,CL,201001,00A0AK00CLZ
+	FIX42::MarketDataRequest::NoRelatedSym symbolGroup;
+	symbolGroup.set(FIX::SecurityExchange("CME-A"));
+	symbolGroup.set(FIX::SecurityType("FUT"));
+	symbolGroup.set(FIX::Symbol("CL"));
+	symbolGroup.set(FIX::MaturityMonthYear("201001"));
+	symbolGroup.set(FIX::SecurityID("00A0AK00CLZ"));	
 
-			FIX42::MarketDataRequest::NoMDEntryTypes marketDataEntryGroup;
-			marketDataEntryGroup.set(FIX::MDEntryType(FIX::MDEntryType_BID));
-			marketDataEntryGroup.set(FIX::MDEntryType(FIX::MDEntryType_OFFER));
-			message.addGroup( marketDataEntryGroup );
+	return symbolGroup;
+}
 
-			FIX42::MarketDataRequest::NoRelatedSym symbolGroup;
-			symbolGroup.set(FIX::Symbol("CL"));
-			symbolGroup.set(FIX::MaturityMonthYear("201001"));
-			symbolGroup.set(FIX::SecurityExchange("CME-A"));
-			//symbolGroup.set(FIX::SecurityID("00A0CK006BZ"));	
+FIX42::MarketDataRequest::NoRelatedSym Application::addZN()
+{
+	FIX42::MarketDataRequest::NoRelatedSym symbolGroup;
+	symbolGroup.set(FIX::SecurityID("00A0CK00ZNZ"));
+	symbolGroup.set(FIX::Symbol("ZN"));
+	symbolGroup.set(FIX::MaturityMonthYear("201003"));
+	symbolGroup.set(FIX::SecurityExchange("CBOT"));
 
-			message.addGroup( symbolGroup );						
-
-			FIX::Session::sendToTarget(message, sessionID);
-		}
-		catch(FIX::SessionNotFound e)
-		{
-			std::cout << e.what() << std::endl;
-		}
-	}
+	return symbolGroup;
 }

@@ -25,6 +25,8 @@ private:
 	void onMessage( const FIX42::SecurityDefinition& message, const FIX::SessionID& );
 
 	void getSecurities( const FIX::SessionID& sessionID );
-	void subscribeFDAX( const FIX::SessionID& sessionID );
-	void subscribeOil( const FIX::SessionID& sessionID );
+	void subscribe( const FIX::SessionID& sessionID );
+	FIX42::MarketDataRequest::NoRelatedSym addFDAX();
+	FIX42::MarketDataRequest::NoRelatedSym addOil();
+	FIX42::MarketDataRequest::NoRelatedSym addZN();
 };
