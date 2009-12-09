@@ -20,12 +20,8 @@ int main( int argc, char** argv )
 		FIX::SocketInitiator initiator(application, storeFactory, settings, logFactory);
 
 		initiator.start();
-
-		for(int i=0;i<10;i++)
-		{ 
-			Sleep(200);
-		}
-
+		std::cout << "Press enter to stop the feed." << std::endl;
+		getchar();		
 		initiator.stop();
 	}
 	catch(FIX::ConfigError& e)
@@ -34,7 +30,7 @@ int main( int argc, char** argv )
 		return 1;
 	}
 
-	std::cout << "Press enter to exit.";
+	std::cout << "Press enter to exit." << std::endl;
 	getchar();
 
 	return 0;
