@@ -6,7 +6,7 @@ import os
 import csv
 import shutil
 
-class downloader:
+class downloaderAmeritrade:
 	schedule = sched.scheduler(time.time, time.sleep)
 	
 	def __init__(self):
@@ -34,7 +34,7 @@ class downloader:
 					# Figure out what the total volume was that day.
 					v=0
 					for TimeStamp, Open, High, Low, Close, Volume in reader:
-						v+=float(Vlume)
+						v+=float(Volume)
 					
 					file.close()
 					
@@ -71,4 +71,4 @@ class downloader:
 		
 		print ('Done with download at ' + datetime.datetime.today().isoformat())
 
-downloader()
+downloaderAmeritrade()
