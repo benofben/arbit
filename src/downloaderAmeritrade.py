@@ -5,6 +5,7 @@ import quotesAmeritrade
 import os
 import csv
 import shutil
+import constants
 
 class downloaderAmeritrade:
 	schedule = sched.scheduler(time.time, time.sleep)
@@ -16,16 +17,16 @@ class downloaderAmeritrade:
 	def __prune(self):
 		# first, nuke the prune directory
 		print ('Cleaning up the prune directory.')
-		if os.path.exists('data/ameritrade/pruned'):
-			shutil.rmtree('data/ameritrade/pruned')
+		if os.path.exists(constants.dataDirectory + 'ameritrade/pruned'):
+			shutil.rmtree(constants.dataDirectory + 'ameritrade/pruned')
 		
 		print ('Copying the pruned quotes.')
-		symbols = os.listdir('data/ameritrade/quotes')
+		symbols = os.listdir(constants.dataDirectory + 'ameritrade/quotes')
 		for symbol in symbols:
 			# Load the price history from the most recent trading day.
-			files = os.listdir('data/ameritrade/quotes/' + symbol)
+			files = os.listdir(constants.dataDirectory + 'ameritrade/quotes/' + symbol)
 			if(len(files)-1>0):
-				filename = 'data/ameritrade/quotes/' + symbol + '/' + files[len(files)-1]
+				filename = constants.dataDirectory + 'ameritrade/quotes/' + symbol + '/' + files[len(files)-1]
 				
 				if not os.path.isdir(filename):
 					file = open(filename,'r')
@@ -41,7 +42,7 @@ class downloaderAmeritrade:
 					# If it was greater than 1,000,000, then copy the data into pruned.
 					# These were screened back in symbols to have a market cap > $1 billion
 					if v>1000000:
-						shutil.copytree('data/ameritrade/quotes/' + symbol, 'data/ameritrade/pruned/' + symbol)
+						shutil.copytree(constants.dataDirectory + 'ameritrade/quotes/' + symbol, constants.dataDirectory + 'ameritrade/pruned/' + symbol)
 	
 	def download(self):
 		print ('Running download at ' + datetime.datetime.today().isoformat())

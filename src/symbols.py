@@ -1,3 +1,5 @@
+import constants
+
 # Q = NASDAQ, 1 = AMEX, N = NYSE, O = OTC
 exchanges=['Q', 'N', '1']
 
@@ -15,7 +17,7 @@ def downloadSymbolList(exchange):
 	conn.close()
 	
 	print('Done downloading.  Writing to file.\n')
-	file = open('data/symbols/' + exchange + '.csv', 'w')
+	file = open(constants.dataDirectory + 'symbols/' + exchange + '.csv', 'w')
 	data = data.decode('windows-1252')
 	
 	# mixed \n and \r\n seem to be causing problems.  This replace deletes the
@@ -46,9 +48,9 @@ def writeSymbolToDictionary(symbol, marketValue):
 		symbolDictionary[symbol] = float(marketValue)
 
 def reformatSymbolList(exchange):
-	deleteLines('data/symbols/' + exchange + '.csv')
+	deleteLines(constants.dataDirectory + 'symbols/' + exchange + '.csv')
 	
-	filename = 'data/symbols/' + exchange + '.csv'
+	filename = constants.dataDirectory + 'symbols/' + exchange + '.csv'
 	inputFile = open(filename, 'r', newline='')
 	import csv
 	reader = csv.reader(inputFile)
@@ -64,16 +66,16 @@ def reformatSymbolList(exchange):
 
 def downloadSymbols():
 	import os
-	if os.path.exists('data/symbols'):
+	if os.path.exists(constants.dataDirectory + 'symbols'):
 		import shutil
-		shutil.rmtree('data/symbols')
-	os.makedirs('data/symbols/')
+		shutil.rmtree(constants.dataDirectory + 'symbols')
+	os.makedirs(constants.dataDirectory + 'symbols/')
 
 	for exchange in exchanges:
 		downloadSymbolList(exchange)
 		reformatSymbolList(exchange)
 	
-	filename='data/symbols/symbols.txt'
+	filename=constants.dataDirectory + 'symbols/symbols.txt'
 	file = open(filename, 'w')
 	
 	for symbol in symbolDictionary.keys():
@@ -83,7 +85,7 @@ def downloadSymbols():
 	file.close()
 
 def getSymbols():
-	symbolFilename = 'data/symbols/symbols.txt'
+	symbolFilename = constants.dataDirectory + 'symbols/symbols.txt'
 	symbolFile = open(symbolFilename, 'r')
 	symbols = symbolFile.readlines()
 	symbolFile.close()

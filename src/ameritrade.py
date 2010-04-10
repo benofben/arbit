@@ -74,7 +74,7 @@ class ameritrade(object):
 		params=urllib.parse.urlencode({'source': constants.sourceID})
 		
 		try:
-			f = urllib.request.urlopen(url)
+			f = urllib.request.urlopen(url, params)
 		except IOError:
 			return None
 		
@@ -87,7 +87,7 @@ class ameritrade(object):
 		params=urllib.parse.urlencode({'source': constants.sourceID})
 		
 		try:
-			f = urllib.request.urlopen(url)
+			f = urllib.request.urlopen(url, params)
 		except IOError:
 			return None
 		
@@ -163,7 +163,7 @@ class ameritrade(object):
 		params=urllib.parse.urlencode({'source': constants.sourceID})
 		
 		try:
-			f = urllib.request.urlopen(url)
+			f = urllib.request.urlopen(url, params)
 		except IOError:
 			return None
 		
@@ -176,7 +176,7 @@ class ameritrade(object):
 		params=urllib.parse.urlencode({'source': constants.sourceID})
 		
 		try:
-			f = urllib.request.urlopen(url)
+			f = urllib.request.urlopen(url, params)
 		except IOError:
 			return None
 		
@@ -188,7 +188,7 @@ class ameritrade(object):
 		url = baseurl + 'EquityTrade;jsessionid=' + self.jsessionid + '?source=' + constants.sourceID + '&orderstring=' + orderstring
 		params=urllib.parse.urlencode({'source': constants.sourceID})
 		try:
-			f = urllib.request.urlopen(url)
+			f = urllib.request.urlopen(url, params)
 		except IOError:
 			return None
 		
@@ -201,7 +201,7 @@ class ameritrade(object):
 		params=urllib.parse.urlencode({'source': constants.sourceID})
 		
 		try:
-			f = urllib.request.urlopen(url)
+			f = urllib.request.urlopen(url, params)
 		except IOError:
 			return None
 		
@@ -214,7 +214,7 @@ class ameritrade(object):
 		params=urllib.parse.urlencode({'source': constants.sourceID})
 		
 		try:
-			f = urllib.request.urlopen(url)
+			f = urllib.request.urlopen(url, params)
 		except IOError:
 			return None
 		

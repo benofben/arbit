@@ -3,6 +3,7 @@ import ameritrade
 import symbols
 import datetime
 import csv
+import constants
 
 def __downloadQuotes(symbol, currentDate, atd):
 	if currentDate.weekday()==5 or currentDate.weekday()==6:
@@ -20,7 +21,7 @@ def __downloadQuotes(symbol, currentDate, atd):
 	# This is hideous, but I've been having filesystem issues.
 	sanitizedSymbol=symbol.replace('^','c')
 	sanitizedSymbol=sanitizedSymbol.replace('/','s')
-	filename = 'data/ameritrade/quotes/' + sanitizedSymbol + '/' + dateString + '.csv'
+	filename = constants.dataDirectory + 'ameritrade/quotes/' + sanitizedSymbol + '/' + dateString + '.csv'
 	if os.path.exists(filename):
 		return 'exists'
 	
@@ -30,8 +31,8 @@ def __downloadQuotes(symbol, currentDate, atd):
 		return 'failed'
 	
 	if priceHistory:
-		if not os.path.exists('data/ameritrade/quotes/' + sanitizedSymbol):
-			os.makedirs('data/ameritrade/quotes/' + sanitizedSymbol)
+		if not os.path.exists(constants.dataDirectory + 'ameritrade/quotes/' + sanitizedSymbol):
+			os.makedirs(constants.dataDirectory + 'ameritrade/quotes/' + sanitizedSymbol)
 		
 		f=open(filename, 'w')
 		for i in range(0,len(priceHistory['Open'])):
@@ -87,7 +88,7 @@ def downloadEverything():
 
 def getAllQuotes(startDate, endDate):
 	quotes = {}
-	for symbol in os.listdir('data/ameritrade/pruned'):
+	for symbol in os.listdir(constants.dataDirectory + 'ameritrade/pruned'):
 		quotes[symbol]=__getQuotes(symbol, startDate, endDate)
 		print ('Loaded ' + symbol)
 	return quotes
@@ -105,7 +106,7 @@ def __getQuotes(symbol, startDate, endDate):
 			day = '0' + day
 		dateString = year + month + day
 		
-		filename = 'data/ameritrade/pruned/' + symbol + '/' + dateString + '.csv'
+		filename = constants.dataDirectory + 'ameritrade/pruned/' + symbol + '/' + dateString + '.csv'
 		
 		try:
 			file = open(filename, 'r')

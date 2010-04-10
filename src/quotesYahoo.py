@@ -1,3 +1,5 @@
+import constants
+
 def downloadQuotes(symbol):
 	print('Downloading historical data for ' + symbol + '...')
 	import http.client
@@ -50,7 +52,7 @@ def reformatAndSaveQuotes(data, symbol):
 	# we want the list to go from oldest quote to newest
 	quotes.reverse()
 
-	filename='data/yahoo/quotes/' + symbol + '.csv'
+	filename=constants.dataDirectory + 'yahoo/quotes/' + symbol + '.csv'
 	file=open(filename, 'w')
 	i=0
 	for line in quotes:
@@ -61,20 +63,20 @@ def reformatAndSaveQuotes(data, symbol):
 
 def cleanUp():
 	import os
-	if os.path.exists('data/yahoo/quotes'):
+	if os.path.exists(constants.dataDirectory + 'yahoo/quotes'):
 		import shutil
-		shutil.rmtree('data/yahoo/quotes')
-	os.makedirs('data/yahoo/quotes/')
+		shutil.rmtree(constants.dataDirectory + 'yahoo/quotes')
+	os.makedirs(constants.dataDirectory + 'yahoo/quotes/')
 
 def downloadAllQuotes():
 	cleanUp()
 	
-	symbolFilename = 'data/symbols/symbols.txt'
+	symbolFilename = constants.dataDirectory + 'symbols/symbols.txt'
 	symbolFile = open(symbolFilename, 'r')
 	symbols = symbolFile.readlines()
 	symbolFile.close()
 	
-	failedSymbolsFilename = 'data/yahoo/failedQuotesSymbols.txt'
+	failedSymbolsFilename = constants.dataDirectory + 'yahoo/failedQuotesSymbols.txt'
 	failedSymbolsFile = open(failedSymbolsFilename, 'w')
 	
 	while symbols:
@@ -99,7 +101,7 @@ def getAllQuotes():
 	return quotes
 
 def getQuotes(symbol):
-	inputFilename='data/yahoo/quotes/' + symbol + '.csv'
+	inputFilename=constants.dataDirectory + 'yahoo/quotes/' + symbol + '.csv'
 	inputFile=open(inputFilename, 'r')
 
 	quotes={}
@@ -167,7 +169,7 @@ def getSubquote(currentDate, quotes):
 	return False
 
 def getSymbolsFromQuoteFiles():
-	dirname='data/yahoo/quotes'
+	dirname=constants.dataDirectory + 'yahoo/quotes'
 	symbols=[]
 	import os
 	files=os.listdir(dirname)
