@@ -1,16 +1,14 @@
 import constants
 
-# Q = NASDAQ, 1 = AMEX, N = NYSE, O = OTC
-exchanges=['Q', 'N', '1']
-
-# Dictionary holds a bunch of Symbol and MarketValue
-symbolDictionary={}
+# Options are: NYSE, NASDAQ, AMEX
+exchanges=['NYSE', 'NASDAQ']
+symbols=[]
 
 def downloadSymbolList(exchange):
 	print('Trying to get exchange ' + exchange + '...')
 	import http.client
 	conn = http.client.HTTPConnection('www.nasdaq.com')
-	conn.request('GET', '/asp/symbols.asp?exchange=' + exchange + '&start=0')
+	conn.request('GET', '/screening/companies-by-industry.aspx?exchange=' + exchange + '&render=download')
 	response = conn.getresponse()
 	print(response.status, response.reason)
 	data = response.read()
@@ -18,34 +16,25 @@ def downloadSymbolList(exchange):
 	
 	print('Done downloading.  Writing to file.\n')
 	file = open(constants.dataDirectory + 'symbols/' + exchange + '.csv', 'w')
-	data = data.decode('windows-1252')
 	
-	# mixed \n and \r\n seem to be causing problems.  This replace deletes the
-	# endlines in the company descriptions, which allows the csv reader to work
-	# on both Linux and Windows
-	data = data.replace('\n','')
+	# The download files have broken line endings.  This seems to be working on Windows and will probably
+	# cause horrible disasters if this is run on Linux.
+	data = data.decode('windows-1252')
+	data = data.replace(',\r','')
 	
 	file.write(data)
 	file.close()
 
-# delete the first, second and last lines from a symbols file
-# the first is a header line, the last is a copyright notice
+# delete the first line, a header line, from a symbols file
 def deleteLines(filename):
 	inputFile = open(filename, 'r')
 	lines = inputFile.readlines()
 	inputFile.close()
 	
 	outputFile=open(filename, 'w')
-	for line in lines[2:-1]:
+	for line in lines[1:]:
 		outputFile.write(line)
 	outputFile.close()
-
-def writeSymbolToDictionary(symbol, marketValue):
-	if marketValue != 'N/A':
-		marketValue=marketValue.replace('$','')
-		marketValue=marketValue.replace(',','')
-		symbol=symbol.replace('^','.')
-		symbolDictionary[symbol] = float(marketValue)
 
 def reformatSymbolList(exchange):
 	deleteLines(constants.dataDirectory + 'symbols/' + exchange + '.csv')
@@ -54,14 +43,11 @@ def reformatSymbolList(exchange):
 	inputFile = open(filename, 'r', newline='')
 	import csv
 	reader = csv.reader(inputFile)
-	
-	if exchange == 'Q':
-		for name, symbol, securityType, sharesOutstanding, marketValue, description in reader:
-			writeSymbolToDictionary(symbol, marketValue)
-	elif exchange == '1' or exchange == 'N':
-		for name, symbol, marketValue, description in reader:
-			writeSymbolToDictionary(symbol, marketValue)
-	
+
+	for symbol, name, lastSale, marketCap, iPOYear, sector, industry, summaryQuote in reader:
+		if float(marketCap)>10.0**9:
+			symbols.append(symbol)
+		
 	inputFile.close()
 
 def downloadSymbols():
@@ -70,7 +56,7 @@ def downloadSymbols():
 		import shutil
 		shutil.rmtree(constants.dataDirectory + 'symbols')
 	os.makedirs(constants.dataDirectory + 'symbols/')
-
+	
 	for exchange in exchanges:
 		downloadSymbolList(exchange)
 		reformatSymbolList(exchange)
@@ -78,10 +64,11 @@ def downloadSymbols():
 	filename=constants.dataDirectory + 'symbols/symbols.txt'
 	file = open(filename, 'w')
 	
-	for symbol in symbolDictionary.keys():
-		# if MarketValue>$1 billion
-		if float(symbolDictionary[symbol])>1000:
-			file.write(symbol + '\n')
+	import re
+	for symbol in symbols:
+		#remove whitespace from end of symbol
+		symbol = re.sub(r'\s', '', symbol)
+		file.write(symbol + '\n')
 	file.close()
 
 def getSymbols():
