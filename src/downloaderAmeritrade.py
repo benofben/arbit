@@ -39,8 +39,8 @@ class downloaderAmeritrade:
 					
 					file.close()
 					
-					# If it was greater than 1,000,000, then copy the data into pruned.
-					# These were screened back in symbols to have a market cap > $1 billion
+					# If the total volume for the most recent day  was greater than 1,000,000 then copy the data into pruned.
+					# These symbols screened back in symbols to have a market cap > $1 billion
 					if v>1000000:
 						shutil.copytree(constants.dataDirectory + 'ameritrade/quotes/' + symbol, constants.dataDirectory + 'ameritrade/pruned/' + symbol)
 	
@@ -58,9 +58,7 @@ class downloaderAmeritrade:
 		
 		print ('Downloading...')
 		
-		# Download all the symbols from the last two days
-		# We overwrite the last day in case it failed previously
-		startDate=datetime.date.today()-datetime.timedelta(days=3)
+		startDate=datetime.date.today()-datetime.timedelta(days=1)
 		endDate=datetime.date.today()-datetime.timedelta(days=1)
 		quotesAmeritrade.downloadAllQuotes(startDate, endDate)
 		
