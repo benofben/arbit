@@ -19,7 +19,7 @@ def run():
 		
 		for timeIndex in range(0, len(q[symbol][dayIndex]['Open'])):
 			h=q[symbol][dayIndex]['High'][timeIndex]
-			l=q[symbol][dayIndex]['Low'][timeIndex]
+			unused_l=q[symbol][dayIndex]['Low'][timeIndex]
 			
 			'''
 			# Stop Loss

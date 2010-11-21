@@ -2,7 +2,7 @@ import sys	# for maxint
 import data
 import constants
 
-class classifier:
+class naiveBayes:
 	def __init__(self, symbol, currentDate, quotes):
 		self.symbol=symbol
 		self.currentDate=currentDate
@@ -30,7 +30,7 @@ class classifier:
 		if currentIndex and currentIndex-window>0:
 			for day in range(currentIndex-window, currentIndex):
 				Open=self.quotes[self.symbol]['Open'][day]
-				Low=self.quotes[self.symbol]['Low'][day]
+				unused_Low=self.quotes[self.symbol]['Low'][day]
 				High=self.quotes[self.symbol]['High'][day]
 				Close=self.quotes[self.symbol]['Close'][day]
 				

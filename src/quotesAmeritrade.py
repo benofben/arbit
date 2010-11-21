@@ -1,6 +1,6 @@
-import os
 import ameritrade
 import symbols
+import os
 import datetime
 import csv
 import constants
@@ -79,6 +79,11 @@ def downloadAllQuotes(startDate, endDate):
 		currentDate = currentDate - datetime.timedelta(days=1)
 		
 	atd.LogOut()
+
+def downloadYesterday():
+	startDate=datetime.date.today()-datetime.timedelta(days=1)
+	endDate=datetime.date.today()-datetime.timedelta(days=1)
+	downloadAllQuotes(startDate, endDate)
 
 def downloadEverything():
 	# Ameritrade stores 2 years of back data, but starts at the 1st of the month

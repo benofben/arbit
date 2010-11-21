@@ -1,6 +1,5 @@
 import quotesYahoo
 import symbols
-
 import sched
 import datetime
 import time
@@ -15,7 +14,7 @@ class downloaderYahoo:
 	def download(self):
 		print ('Running download at ' + datetime.datetime.today().isoformat())
 	
-		# Assume the local time is NY time.
+		# Assume the system clock uses NY time.
 		today = datetime.date.today()
 		tomorrow = today + datetime.timedelta(days=1)
 	

@@ -71,17 +71,15 @@ def cleanUp():
 def downloadAllQuotes():
 	cleanUp()
 	
-	symbolFilename = constants.dataDirectory + 'symbols/symbols.txt'
-	symbolFile = open(symbolFilename, 'r')
-	symbols = symbolFile.readlines()
-	symbolFile.close()
+	import symbols
+	s = symbols.getSymbols()
 	
 	failedSymbolsFilename = constants.dataDirectory + 'yahoo/failedQuotesSymbols.txt'
 	failedSymbolsFile = open(failedSymbolsFilename, 'w')
 	
-	while symbols:
-		print(str(len(symbols)) + ' symbols remaining.')
-		symbol = symbols.pop()
+	while s:
+		print(str(len(s)) + ' symbols remaining.')
+		symbol = s.pop()
 		symbol = symbol.replace('\n','')
 		if not downloadQuotes(symbol):
 			failedSymbolsFile.write(symbol + '\n')

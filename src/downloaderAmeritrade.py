@@ -1,7 +1,7 @@
+import quotesAmeritrade
 import sched
 import datetime
 import time
-import quotesAmeritrade
 import os
 import csv
 import shutil
@@ -15,7 +15,7 @@ class downloaderAmeritrade:
 		self.schedule.run()
 	
 	def __prune(self):
-		# first, nuke the prune directory
+		# Delete the prune directory
 		print ('Cleaning up the prune directory.')
 		if os.path.exists(constants.dataDirectory + 'ameritrade/pruned'):
 			shutil.rmtree(constants.dataDirectory + 'ameritrade/pruned')
@@ -32,22 +32,21 @@ class downloaderAmeritrade:
 					file = open(filename,'r')
 					reader=csv.reader(file)
 					
-					# Figure out what the total volume was that day.
+					# Figure out what the total volume was for the most recent trading day.
 					v=0
-					for TimeStamp, Open, High, Low, Close, Volume in reader:
+					for unused_TimeStamp, unused_Open, unused_High, unused_Low, unused_Close, Volume in reader:
 						v+=float(Volume)
 					
 					file.close()
 					
-					# If the total volume for the most recent day  was greater than 1,000,000 then copy the data into pruned.
-					# These symbols screened back in symbols to have a market cap > $1 billion
+					# If the total volume for the most recent trading day was greater than 1,000,000 then copy the data into pruned.
 					if v>1000000:
 						shutil.copytree(constants.dataDirectory + 'ameritrade/quotes/' + symbol, constants.dataDirectory + 'ameritrade/pruned/' + symbol)
 	
 	def download(self):
 		print ('Running download at ' + datetime.datetime.today().isoformat())
 		
-		# Assume the local time is NY time.
+		# Assume the system clock uses NY time.
 		today = datetime.date.today()
 		tomorrow = today + datetime.timedelta(days=1)
 		
@@ -57,10 +56,7 @@ class downloaderAmeritrade:
 		downloadTime = time.mktime(downloadDateTime.timetuple())
 		
 		print ('Downloading...')
-		
-		startDate=datetime.date.today()-datetime.timedelta(days=1)
-		endDate=datetime.date.today()-datetime.timedelta(days=1)
-		quotesAmeritrade.downloadAllQuotes(startDate, endDate)
+		quotesAmeritrade.downloadYesterday()
 		
 		# This eliminates low volume symbols
 		self.__prune()
