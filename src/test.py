@@ -21,31 +21,37 @@ def run():
 		
 		if(quotesYahoo.isTradingDay(currentDate, quotes)):
 			previousTradingDay = quotesYahoo.getPreviousTradingDay(currentDate, quotes)
-			bestSymbol = naiveBayes.run(previousTradingDay, quotes, symbolInformation)
+			bestSymbols = naiveBayes.run(previousTradingDay, quotes, symbolInformation)
 		
-			currentDateIndex = quotesYahoo.getIndex(currentDate, quotes[bestSymbol])
-			if currentDateIndex:
-				# If we have training data
-				Open = quotes[bestSymbol]['Open'][currentDateIndex]
-				High = quotes[bestSymbol]['High'][currentDateIndex]
-				Close = quotes[bestSymbol]['Close'][currentDateIndex]
+			results = ''
+			newCapital=0
+			for symbol in bestSymbols:
+				currentDateIndex = quotesYahoo.getIndex(currentDate, quotes[symbol])
+				if not currentDateIndex:
+					# then do nothing
+					newCapital = newCapital + capital/len(bestSymbols)
+				if currentDateIndex:
+					# If we have training data
+					Open = quotes[symbol]['Open'][currentDateIndex]
+					High = quotes[symbol]['High'][currentDateIndex]
+					Close = quotes[symbol]['Close'][currentDateIndex]
 		
-				state = ''
-				if High>Open*(1+constants.take):
-					state = 'Win'	
-					capital*=1+(leverage*constants.take)
-				else:
-					state = 'Loss'
-					capital*=1+(((Close/Open)-1)*leverage)
-		
-				print(bestSymbol + '\t' + str(currentDate) + '\t' + state + '\t' + str(int(capital)))
+					if High>Open*(1+constants.take):	
+						newCapital = newCapital + capital/len(bestSymbols)*(1+(leverage*constants.take))
+						results = results + symbol + '=' + 'Win' + '\t'
+					else:
+						newCapital = newCapital + capital/len(bestSymbols)*(1+(((Close/Open)-1)*leverage))
+						results = results + symbol + '=' + 'Loss' + '\t'
+			capital = newCapital
+			print(str(currentDate) + '\t' + str(int(capital))+ '\t' + results)
 		elif currentDate==endDate:
 			# This is the most recent day and we don't have training data
 			previousTradingDay = quotesYahoo.getPreviousTradingDay(endDate, quotes)
-			bestSymbol = naiveBayes.run(previousTradingDay, quotes, symbolInformation)
-			print('I think you should buy ' + bestSymbol + ' for ' + str(endDate))
+			bestSymbols = naiveBayes.run(previousTradingDay, quotes, symbolInformation)
+			print('I think you should buy ' + str(bestSymbols) + ' for ' + str(endDate))
 			
 		currentDate = currentDate + datetime.timedelta(days=1)
 
+# need to check if main for multiprocessing
 if __name__ == "__main__":
 	run()

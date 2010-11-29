@@ -8,10 +8,10 @@ def run(currentDate, quotes, symbolInformation):
 	[trainingSet, testSet]=createDataSet(currentDate, quotes, symbolInformation)
 	pWin=computeP(trainingSet, testSet)
 
-	b = dict(map(lambda item: (item[1],item[0]),pWin.items()))
-	bestSymbol = b[max(b.keys())]
+	sortedSymbols = sorted(pWin, key=pWin.__getitem__, reverse=True)
+	bestSymbols = sortedSymbols[0:3]
 	
-	return bestSymbol
+	return bestSymbols
 		
 def createDataSet(currentDate, quotes, symbolInformation):
 	symbols = findQualifyingSymbols(currentDate, quotes, symbolInformation)
@@ -172,11 +172,8 @@ def classify(args):
 		for predictor in p_F:
 			if p_F[predictor]!=0:
 				p[C]*=p_F_C[predictor][C]/p_F[predictor]
-		
+	
 	return p
 	
 def roundToTheNearestBillion(x):
 	return round(x/10**9)*10**9
-
-if __name__ == '__main__':
-	pass
