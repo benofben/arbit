@@ -1,4 +1,5 @@
 import constants
+import datetime
 
 def downloadQuotes(symbol):
 	print('Downloading historical data for ' + symbol + '...')
@@ -16,7 +17,6 @@ def downloadQuotes(symbol):
 	c=start year (2002)
 	'''
 	
-	import datetime
 	today = datetime.date.today()
 	endYear = today.strftime('%Y')
 	endMonth = str(int(today.strftime('%m'))-1)
@@ -98,6 +98,14 @@ def getAllQuotes():
 		quotes[symbol]=getQuotes(symbol)
 	return quotes
 
+# get quotes for all dates for some bucket of symbols
+def getQuotesBucket(bucket):
+	quotes={}
+	for symbol in bucket:
+		print('Loading symbol ' + symbol + '.')
+		quotes[symbol]=getQuotes(symbol)
+	return quotes
+
 def getQuotes(symbol):
 	inputFilename=constants.dataDirectory + 'yahoo/quotes/' + symbol + '.csv'
 	inputFile=open(inputFilename, 'r')
@@ -111,7 +119,6 @@ def getQuotes(symbol):
 	quotes['Volume']=[]
 	quotes['AdjClose']=[]
 	
-	import datetime
 	import csv
 	reader=csv.reader(inputFile)
 	
@@ -150,6 +157,20 @@ def getSubquoteForSymbol(symbol, currentDate, quotes):
 	return subquote
 
 # returns False if there is no quote for the currentDate
+# otherwise returns the list [currentDate-window, currentDate)
+def getSubquoteForSymbolWithWindow(symbol, currentDate, quotes, window):
+	index=getIndex(currentDate, quotes[symbol])
+	if not index:
+		return False
+	if index<window:
+		return False
+	
+	subquote={}
+	for item in quotes[symbol]:
+		subquote[item]=quotes[symbol][item][index-window:index]
+	return subquote
+
+# returns False if there is no quote for the currentDate
 # otherwise returns the list [0, currentDate)
 def getSubquote(currentDate, quotes):
 	subquote={}
@@ -174,3 +195,20 @@ def getSymbolsFromQuoteFiles():
 	for file in files:
 		symbols.append(file.replace('.csv', ''))
 	return symbols
+
+def getPreviousTradingDay(date, quotes):
+	#if date was a trading day then down a lookup using index-1
+	if(getIndex(date, quotes['F'])):
+		return quotes['F']['Date'][getIndex(date, quotes['F'])-1]
+
+	#if date wasn't a trading day then
+	i=1
+	while i<len(quotes['F']):
+		if getIndex(date-datetime.timedelta(days=i), quotes['F']):
+			return date-datetime.timedelta(days=i)
+		i=i+1
+
+def isTradingDay(date, quotes):
+	if(getIndex(date, quotes['F'])):
+		return True
+	return False

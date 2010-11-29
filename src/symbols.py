@@ -34,7 +34,7 @@ def downloadSymbols():
 		downloadSymbolList(exchange)
 
 def getSymbolInformationForExchange(exchange):
-	symbolInformation = []
+	symbolInformation = {}
 	inputFile = open(constants.dataDirectory + 'symbols/' + exchange + '.csv', 'r')
 	import csv
 	reader = csv.reader(inputFile)
@@ -46,21 +46,31 @@ def getSymbolInformationForExchange(exchange):
 		else:
 			#remove whitespace from end of symbol
 			Symbol = re.sub(r'\s', '', Symbol)
-			symbolInformation.append([exchange, Symbol, MarketCap, IPOyear, Sector, Industry])
+			symbolInformation[Symbol]={}
+			symbolInformation[Symbol]['Exchange']=exchange
+			symbolInformation[Symbol]['MarketCap']=float(MarketCap)
+			symbolInformation[Symbol]['IPOYear']=IPOyear
+			symbolInformation[Symbol]['Sector']=Sector
+			symbolInformation[Symbol]['Industry']=Industry
 	
 	inputFile.close()
 	
 	return symbolInformation
 	
 def getSymbolInformation():
-	symbolInformation = []
+	symbolInformation = {}
 	for exchange in exchanges:
-		symbolInformation = symbolInformation + getSymbolInformationForExchange(exchange)
+		dict = getSymbolInformationForExchange(exchange)
+		# copy the dictionary for one exchange to the aggregated dictionary
+		for key in dict.keys(): 
+			symbolInformation[key]=dict[key]
+			
 	return symbolInformation
 
 def getSymbols():
 	symbolInformation = getSymbolInformation()
 	symbols = []
-	for unused_exchange, Symbol, unused_MarketCap, unused_IPOyear, unused_Sector, unused_Industry in symbolInformation:
-		symbols.append(Symbol)
+	for symbol in symbolInformation:
+		symbol = symbol.replace('/', '')
+		symbols.append(symbol)
 	return symbols

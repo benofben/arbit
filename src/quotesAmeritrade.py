@@ -59,8 +59,8 @@ def downloadAllQuotes(startDate, endDate):
 		print ('Could not log in.')
 		return 'failed'
 	
-	currentDate = endDate
-	while currentDate >= startDate:
+	currentDate = startDate
+	while currentDate <= endDate:
 		for symbol in s:
 			priceHistory = __downloadQuotes(symbol, currentDate, atd)
 			
@@ -76,7 +76,7 @@ def downloadAllQuotes(startDate, endDate):
 				status='succeeded'
 				print ('Download for ' + symbol + ' on ' + currentDate.isoformat() + ' ' + status + '.')
 			
-		currentDate = currentDate - datetime.timedelta(days=1)
+		currentDate = currentDate + datetime.timedelta(days=1)
 		
 	atd.LogOut()
 
@@ -86,9 +86,10 @@ def downloadYesterday():
 	downloadAllQuotes(startDate, endDate)
 
 def downloadEverything():
-	# Ameritrade stores 2 years of back data, but starts at the 1st of the month
-	startDate = datetime.date.today() - datetime.timedelta(days=365*2)
-	startDate = startDate.replace(day=1)
+	# Ameritrade has data from Jan 1 2009 onward as of 11/22/2010.
+	# So, maybe it stores the current year plus 1 more
+	startDate = datetime.date.today()
+	startDate = startDate.replace(day=2, month=1, year=startDate.year-1)
 	endDate=datetime.date.today() - datetime.timedelta(days=1)
 	downloadAllQuotes(startDate, endDate)
 

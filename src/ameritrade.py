@@ -135,7 +135,7 @@ class ameritrade(object):
 		data['Volume']=[]
 		data['TimeStamp']=[]
 		
-		for bar in range(0, barCount):
+		for unused_bar in range(0, barCount):
 			data['Close'].append(bytesToFloat(d[i:i+4]))
 			i+=4
 			

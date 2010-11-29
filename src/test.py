@@ -1,78 +1,51 @@
-import quotesAmeritrade
+import quotesYahoo
+import constants
+import naiveBayes
+import symbols
 import datetime
 
-startDate = datetime.date.today() - datetime.timedelta(days=50)
-endDate = datetime.date.today()
-q = quotesAmeritrade.getAllQuotes(startDate, endDate)
-# q[symbol][day][TimeStamp, Open, High, Low, Close][bar]
-
 def run():
-	capital=10000
-	leverage=2
-	
-	for dayIndex in range (0,50):
-		[symbol, averagePeaks] = predictorAveragePeaks(dayIndex)
-		
-		o = q[symbol][dayIndex]['Open'][0]
-		
-		state = False
-		
-		for timeIndex in range(0, len(q[symbol][dayIndex]['Open'])):
-			h=q[symbol][dayIndex]['High'][timeIndex]
-			unused_l=q[symbol][dayIndex]['Low'][timeIndex]
-			
-			'''
-			# Stop Loss
-			if l<o*0.98:
-				capital*=1-(0.02*leverage)
-				state="Stop"
-				break
-			'''
-			
-			# Win
-			if h>o*1.02:
-				capital*=1+(.02*leverage)
-				state="Win"
-				break
-			
-		if state != "Win" and state != "Stop":
-			c=q[symbol][dayIndex]['Close'][timeIndex]
-			capital*=(((c/o)-1)*leverage)+1
-			state="Loss"
-		
-		print(symbol + '\t' + state + '\t' + str(q[symbol][dayIndex]['TimeStamp'][timeIndex]) + '\t' + str(int(capital)) + '\t' + str(averagePeaks))
+	#bucket = ['AAPL', 'AMGN', 'ACOR', 'F']
+	#quotes = quotesYahoo.getQuotesBucket(bucket)
+	quotes = quotesYahoo.getAllQuotes()
+	symbolInformation = symbols.getSymbolInformation()
 
-def predictorAveragePeaks(index):
-	peaks={}
-	averagePeaks={}
-	for symbol in q:
-		peaks[symbol]=[]
-		for day in range(index-3,index):
-			p=0
-			try:
-				t0=q[symbol][day]['Open'][0]
-				
-				t=0
-				target='high'
-				while t<len(q[symbol][day]['High']):
-					if target=='high' and q[symbol][day]['High'][t]>t0*1.02:
-						p=p+1
-						target='low'
-					
-					if target=='low' and q[symbol][day]['Low'][t]<=t0:
-						target='high'
-					t=t+1
-			except IndexError:
-				pass
-			peaks[symbol].append(p)
-		
-		averagePeaks[symbol]=0.0
-		for p in peaks[symbol]:
-			averagePeaks[symbol]+=p
-		averagePeaks[symbol]/=len(peaks[symbol])
-	
-	b = dict(map(lambda item: (item[1],item[0]),averagePeaks.items()))
-	symbol = b[max(b.keys())]
-	return [symbol,averagePeaks[symbol]]
+	capital = 10000
+	leverage = 2
 
-run()
+	currentDate = datetime.date.today() - datetime.timedelta(days=30)
+	endDate = datetime.date.today()
+	
+	# try to classify currentDate using data from currentDate-1 and before
+	while currentDate<=endDate:
+		
+		if(quotesYahoo.isTradingDay(currentDate, quotes)):
+			previousTradingDay = quotesYahoo.getPreviousTradingDay(currentDate, quotes)
+			bestSymbol = naiveBayes.run(previousTradingDay, quotes, symbolInformation)
+		
+			currentDateIndex = quotesYahoo.getIndex(currentDate, quotes[bestSymbol])
+			if currentDateIndex:
+				# If we have training data
+				Open = quotes[bestSymbol]['Open'][currentDateIndex]
+				High = quotes[bestSymbol]['High'][currentDateIndex]
+				Close = quotes[bestSymbol]['Close'][currentDateIndex]
+		
+				state = ''
+				if High>Open*(1+constants.take):
+					state = 'Win'	
+					capital*=1+(leverage*constants.take)
+				else:
+					state = 'Loss'
+					capital*=1+(((Close/Open)-1)*leverage)
+		
+				print(bestSymbol + '\t' + str(currentDate) + '\t' + state + '\t' + str(int(capital)))
+		elif currentDate==endDate:
+			# This is the most recent day and we don't have training data
+			previousTradingDay = quotesYahoo.getPreviousTradingDay(endDate, quotes)
+			bestSymbol = naiveBayes.run(previousTradingDay, quotes, symbolInformation)
+			print('I think you should buy ' + bestSymbol + ' for ' + str(endDate))
+			
+		currentDate = currentDate + datetime.timedelta(days=1)
+
+if __name__ == "__main__":
+	run()
