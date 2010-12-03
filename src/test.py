@@ -1,52 +1,55 @@
-import quotesYahoo
+import yahoo.quotes as q
 import constants
 import naiveBayes
 import symbols
 import datetime
 
 def run():
-	#bucket = ['AAPL', 'AMGN', 'ACOR', 'F']
+	#bucket = ['AAPL', 'AMGN', 'ACOR', 'F', 'VSH']
 	#quotes = quotesYahoo.getQuotesBucket(bucket)
-	quotes = quotesYahoo.getAllQuotes()
+	quotes = q.getAllQuotes()
 	symbolInformation = symbols.getSymbolInformation()
 
 	capital = 10000
 	leverage = 2
 
-	currentDate = datetime.date.today() - datetime.timedelta(days=30)
+	currentDate = datetime.date.today() - datetime.timedelta(days=365)
 	endDate = datetime.date.today()
 	
 	# try to classify currentDate using data from currentDate-1 and before
 	while currentDate<=endDate:
 		
-		if(quotesYahoo.isTradingDay(currentDate, quotes)):
-			previousTradingDay = quotesYahoo.getPreviousTradingDay(currentDate, quotes)
+		if(q.isTradingDay(currentDate, quotes)):
+			previousTradingDay = q.getPreviousTradingDay(currentDate, quotes)
 			bestSymbols = naiveBayes.run(previousTradingDay, quotes, symbolInformation)
-		
 			results = ''
 			newCapital=0
 			for symbol in bestSymbols:
-				currentDateIndex = quotesYahoo.getIndex(currentDate, quotes[symbol])
+				currentDateIndex = q.getIndex(currentDate, quotes[symbol])
 				if not currentDateIndex:
 					# then do nothing
 					newCapital = newCapital + capital/len(bestSymbols)
+					results = results + symbol + '=' + 'NA' + '\t'
 				if currentDateIndex:
 					# If we have training data
 					Open = quotes[symbol]['Open'][currentDateIndex]
-					High = quotes[symbol]['High'][currentDateIndex]
+					Low = quotes[symbol]['Low'][currentDateIndex]
 					Close = quotes[symbol]['Close'][currentDateIndex]
 		
-					if High>Open*(1+constants.take):	
+					if Low<Open*(1-constants.take):	
 						newCapital = newCapital + capital/len(bestSymbols)*(1+(leverage*constants.take))
 						results = results + symbol + '=' + 'Win' + '\t'
 					else:
-						newCapital = newCapital + capital/len(bestSymbols)*(1+(((Close/Open)-1)*leverage))
+						#sold at open
+						#bought at close
+						delta = 1+(((Open/Close)-1)*leverage)
+						newCapital = newCapital + capital/len(bestSymbols)*delta
 						results = results + symbol + '=' + 'Loss' + '\t'
 			capital = newCapital
 			print(str(currentDate) + '\t' + str(int(capital))+ '\t' + results)
 		elif currentDate==endDate:
 			# This is the most recent day and we don't have training data
-			previousTradingDay = quotesYahoo.getPreviousTradingDay(endDate, quotes)
+			previousTradingDay = q.getPreviousTradingDay(endDate, quotes)
 			bestSymbols = naiveBayes.run(previousTradingDay, quotes, symbolInformation)
 			print('I think you should buy ' + str(bestSymbols) + ' for ' + str(endDate))
 			

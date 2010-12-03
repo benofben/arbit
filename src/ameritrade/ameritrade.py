@@ -121,7 +121,7 @@ class ameritrade(object):
 			errorText=d[i:i+errorLength]
 			i+=errorLength
 			
-			print (errorText + 'hi')
+			print ('error: ' + errorText)
 			return None
 		
 		barCount=bytesToInt(d[i:i+4])

@@ -1,5 +1,6 @@
 import constants
 import datetime
+import nasdaq.symbols as symbols
 
 def downloadQuotes(symbol):
 	print('Downloading historical data for ' + symbol + '...')
@@ -70,8 +71,6 @@ def cleanUp():
 
 def downloadAllQuotes():
 	cleanUp()
-	
-	import symbols
 	s = symbols.getSymbols()
 	
 	failedSymbolsFilename = constants.dataDirectory + 'yahoo/failedQuotesSymbols.txt'

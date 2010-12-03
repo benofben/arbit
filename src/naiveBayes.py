@@ -1,13 +1,15 @@
 #import sys	# for maxint
 import constants
-import quotesYahoo
+import yahoo.quotes as quotesYahoo
+import yahoo.predictors as predictors
 import datetime
 import multiprocessing
+
 
 def run(currentDate, quotes, symbolInformation):
 	[trainingSet, testSet]=createDataSet(currentDate, quotes, symbolInformation)
 	pWin=computeP(trainingSet, testSet)
-
+	
 	sortedSymbols = sorted(pWin, key=pWin.__getitem__, reverse=True)
 	bestSymbols = sortedSymbols[0:3]
 	
@@ -35,9 +37,9 @@ def findQualifyingSymbols(currentDate, quotes, symbolInformation):
 	symbols = []
 	for symbol in symbolInformation:
 		if symbol in quotes:
-			date = getMostRecentTradingDayForSymbolBeforeCurrentDate(symbol, currentDate, quotes)
-			volume = quotes[symbol]['Volume'][quotesYahoo.getIndex(date, quotes[symbol])]
-			enoughData = quotesYahoo.getSubquoteForSymbolWithWindow(symbol, date, quotes, 100)
+			volume = quotes[symbol]['Volume'][quotesYahoo.getIndex(currentDate, quotes[symbol])]
+			enoughData = quotesYahoo.getSubquoteForSymbolWithWindow(symbol, currentDate, quotes, 100)
+			
 			if symbolInformation[symbol]['MarketCap']>10**9 and volume > 10**6 and enoughData:
 				symbols.append(symbol)
 	return symbols
@@ -88,6 +90,13 @@ def createTestPointForDateForSymbol(date, symbol, quotes, symbolInformation):
 	testPoint['IPOYear']=symbolInformation[symbol]['IPOYear']
 	testPoint['Sector']=symbolInformation[symbol]['Sector']
 	testPoint['Industry']=symbolInformation[symbol]['Industry']
+	
+	# Not particularly independent
+	#testPoint['Volume']=roundToTheNearestMillion(quotes[symbol]['Volume'][quotesYahoo.getIndex(date, quotes[symbol])])
+	
+	for i in (1,5,8): #(1,2,3,5,8,13,21,34,55, 89, 144):
+		testPoint['pWin' + str(i)]=bin(predictors.pWin(date, symbol, quotes, i))
+	
 	return testPoint
 		
 def computeP(trainingSet, testSet):
@@ -173,7 +182,20 @@ def classify(args):
 			if p_F[predictor]!=0:
 				p[C]*=p_F_C[predictor][C]/p_F[predictor]
 	
+	# scale p(C) by 1/Z
+	Z=0
+	for C in p:
+		Z=Z+p[C]
+	for C in p:
+		p[C]=p[C]/Z
+
 	return p
 	
+def bin(x):
+	return round(x*20)/20
+
 def roundToTheNearestBillion(x):
 	return round(x/10**9)*10**9
+
+def roundToTheNearestMillion(x):
+	return round(x/10**6)*10**6

@@ -1,4 +1,5 @@
 import constants
+import datetime
 
 # Options are: NYSE, NASDAQ, AMEX
 exchanges=['NYSE', 'NASDAQ', 'AMEX']
@@ -39,7 +40,7 @@ def getSymbolInformationForExchange(exchange):
 	import csv
 	reader = csv.reader(inputFile)
 	import re
-	for Symbol, unused_Name, unused_LastSale, MarketCap, IPOyear, Sector, Industry, unused_SummaryQuote in reader:
+	for Symbol, Name, LastSale, MarketCap, IPOyear, Sector, Industry, unused_SummaryQuote in reader:
 		if(Symbol == 'Symbol'):
 			# Then this is the first line
 			pass
@@ -48,6 +49,9 @@ def getSymbolInformationForExchange(exchange):
 			Symbol = re.sub(r'\s', '', Symbol)
 			symbolInformation[Symbol]={}
 			symbolInformation[Symbol]['Exchange']=exchange
+			symbolInformation[Symbol]['Date']=datetime.date.today()
+			symbolInformation[Symbol]['Name']=Name
+			symbolInformation[Symbol]['LastSale']=float(LastSale)
 			symbolInformation[Symbol]['MarketCap']=float(MarketCap)
 			symbolInformation[Symbol]['IPOYear']=IPOyear
 			symbolInformation[Symbol]['Sector']=Sector

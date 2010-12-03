@@ -1,4 +1,4 @@
-import quotesAmeritrade
+import quotes
 import sched
 import datetime
 import time
@@ -56,7 +56,7 @@ class downloaderAmeritrade:
 		downloadTime = time.mktime(downloadDateTime.timetuple())
 		
 		print ('Downloading...')
-		quotesAmeritrade.downloadYesterday()
+		quotes.downloadYesterday()
 		
 		# This eliminates low volume symbols
 		self.__prune()

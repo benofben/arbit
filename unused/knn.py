@@ -1,8 +1,8 @@
-import quotesYahoo
+import yahoo.quotes as quotes
 import datetime
 
 class knn:
-	quotes=quotesYahoo.getAllQuotes()
+	quotes=quotes.getAllQuotes()
 	
 	def __init__(self):
 		capital=10000
@@ -31,7 +31,7 @@ class knn:
 					bestSymbol=testingPoint[len(testingPoint)-1]
 			
 			if bestSymbol:
-				q=quotesYahoo.getSubquoteForSymbol(bestSymbol, currentDate, self.quotes)
+				q=quotes.getSubquoteForSymbol(bestSymbol, currentDate, self.quotes)
 				actualR=q['Close'][len(q['Close'])-1]/q['Open'][len(q['Open'])-1]
 				capital=capital*(((actualR-1)*leverage)+1)
 				print(str(currentDate) + '\t' + bestSymbol + '\t' + str(capital) + '\t' + str(bestR) + '\t' + str(actualR))
@@ -65,7 +65,7 @@ class knn:
 		return d
 	
 	def getPoints(self, currentDate):
-		q=quotesYahoo.getSubquote(currentDate, self.quotes)
+		q=quotes.getSubquote(currentDate, self.quotes)
 		if not q:
 			return False
 	

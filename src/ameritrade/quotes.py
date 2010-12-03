@@ -1,5 +1,5 @@
 import ameritrade
-import symbols
+import nasdaq.symbols as symbols
 import os
 import datetime
 import csv

@@ -1,5 +1,5 @@
-import quotesYahoo
-import symbols
+import quotes
+import nasdaq.symbols as symbols
 import sched
 import datetime
 import time
@@ -27,7 +27,7 @@ class downloaderYahoo:
 	
 		# Download everything from scratch
 		symbols.downloadSymbols()
-		quotesYahoo.downloadAllQuotes()
+		quotes.downloadAllQuotes()
 	
 		# Reschedule the download to run again tomorrow.
 		self.schedule.enterabs(downloadTime, 0, self.download, ())

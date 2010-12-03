@@ -1,6 +1,6 @@
-import quotesAmeritrade
+import quotes
 import datetime
 
 print ('Downloading...')	
-quotesAmeritrade.downloadEverything()
+quotes.downloadEverything()
 print ('Done with download at ' + datetime.datetime.today().isoformat())
