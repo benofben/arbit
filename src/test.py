@@ -1,14 +1,14 @@
 import yahoo.quotes as q
 import constants
 import naiveBayes
-import symbols
+import nasdaq.symbols
 import datetime
 
 def run():
-	#bucket = ['AAPL', 'AMGN', 'ACOR', 'F', 'VSH']
-	#quotes = quotesYahoo.getQuotesBucket(bucket)
-	quotes = q.getAllQuotes()
-	symbolInformation = symbols.getSymbolInformation()
+	bucket = ['AAPL', 'AMGN', 'ACOR', 'F', 'VSH']
+	quotes = q.getQuotesBucket(bucket)
+	#quotes = q.getAllQuotes()
+	symbolInformation = nasdaq.symbols.downloader.getSymbolInformation()
 
 	capital = 10000
 	leverage = 2

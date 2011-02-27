@@ -1,5 +1,5 @@
 import ameritrade
-import nasdaq.symbols as symbols
+import nasdaq.symbols.downloader as symbols
 import os
 import datetime
 import csv
@@ -94,24 +94,32 @@ def downloadEverything():
 	downloadAllQuotes(startDate, endDate)
 
 def getAllQuotes(startDate, endDate):
+	bucket = os.listdir(constants.dataDirectory + 'ameritrade/pruned')
+	return getQuotesBucket(startDate, endDate, bucket)
+
+def getQuotesBucket(startDate, endDate, bucket):
 	quotes = {}
-	for symbol in os.listdir(constants.dataDirectory + 'ameritrade/pruned'):
+	for symbol in bucket:
 		quotes[symbol]=__getQuotes(symbol, startDate, endDate)
 		print ('Loaded ' + symbol)
 	return quotes
+
+def getDateString(date):
+	year=str(date.year)
+	month=str(date.month)
+	if len(month)==1:
+		month = '0' + month
+	day=str(date.day)
+	if len(day)==1:
+		day = '0' + day
+	dateString = year + month + day
+	return dateString
 
 def __getQuotes(symbol, startDate, endDate):
 	a=[]
 	currentDate = endDate
 	while currentDate >= startDate:
-		year=str(currentDate.year)
-		month=str(currentDate.month)
-		if len(month)==1:
-			month = '0' + month
-		day=str(currentDate.day)
-		if len(day)==1:
-			day = '0' + day
-		dateString = year + month + day
+		dateString = getDateString(currentDate)
 		
 		filename = constants.dataDirectory + 'ameritrade/pruned/' + symbol + '/' + dateString + '.csv'
 		

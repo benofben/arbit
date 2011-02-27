@@ -1,5 +1,5 @@
-import quotes
-import nasdaq.symbols as symbols
+import yahoo.quotes as quotes
+import nasdaq.symbols.downloader as symbols
 import sched
 import datetime
 import time

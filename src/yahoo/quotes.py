@@ -1,6 +1,6 @@
 import constants
 import datetime
-import nasdaq.symbols as symbols
+import nasdaq.symbols.downloader as symbols
 
 def downloadQuotes(symbol):
 	print('Downloading historical data for ' + symbol + '...')

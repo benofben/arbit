@@ -1,8 +1,9 @@
 import constants
 import datetime
+import nasdaq.symbols.sql as sql
 
 # Options are: NYSE, NASDAQ, AMEX
-exchanges=['NYSE', 'NASDAQ', 'AMEX']
+exchanges=['NYSE', 'NASDAQ']
 
 def downloadSymbolList(exchange):
 	print('Trying to get exchange ' + exchange + '...')
@@ -23,7 +24,15 @@ def downloadSymbolList(exchange):
 	
 	file.write(data)
 	file.close()
-
+	
+def insertSymbolsIntoDB():
+	mySql = sql.sql()
+	
+	for exchange in exchanges:
+		symbolInformation = getSymbolInformationForExchange(exchange)
+		for symbol in symbolInformation:
+			mySql.insert(symbolInformation[symbol])
+	
 def downloadSymbols():
 	import os
 	if os.path.exists(constants.dataDirectory + 'symbols'):
@@ -48,12 +57,21 @@ def getSymbolInformationForExchange(exchange):
 			#remove whitespace from end of symbol
 			Symbol = re.sub(r'\s', '', Symbol)
 			symbolInformation[Symbol]={}
+			symbolInformation[Symbol]['Symbol']=Symbol
 			symbolInformation[Symbol]['Exchange']=exchange
 			symbolInformation[Symbol]['Date']=datetime.date.today()
 			symbolInformation[Symbol]['Name']=Name
+
+			if(LastSale=='n/a'):
+				LastSale=0
 			symbolInformation[Symbol]['LastSale']=float(LastSale)
+			
 			symbolInformation[Symbol]['MarketCap']=float(MarketCap)
+
+			if(not IPOyear.isdigit()):
+				IPOyear=0
 			symbolInformation[Symbol]['IPOYear']=IPOyear
+			
 			symbolInformation[Symbol]['Sector']=Sector
 			symbolInformation[Symbol]['Industry']=Industry
 	
@@ -78,3 +96,7 @@ def getSymbols():
 		symbol = symbol.replace('/', '')
 		symbols.append(symbol)
 	return symbols
+
+def run():
+	#downloadSymbols()
+	insertSymbolsIntoDB()
