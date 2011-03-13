@@ -5,3 +5,7 @@ dataDirectory='C:/arbitdata/'
 sourceID='LCK'
 userid='benofdeth'
 password='80trek80'
+
+import datetime
+startDate = datetime.date.today() - datetime.timedelta(days=30)
+endDate = datetime.date.today()

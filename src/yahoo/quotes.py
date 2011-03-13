@@ -1,6 +1,7 @@
 import constants
 import datetime
 import nasdaq.symbols.downloader as symbols
+import yahoo.sql as sql
 
 def downloadQuotes(symbol):
 	print('Downloading historical data for ' + symbol + '...')
@@ -76,13 +77,21 @@ def downloadAllQuotes():
 	failedSymbolsFilename = constants.dataDirectory + 'yahoo/failedQuotesSymbols.txt'
 	failedSymbolsFile = open(failedSymbolsFilename, 'w')
 	
+	mySql = sql.sql()
+	mySql.drop_table()
+	mySql.create_table()
+
 	while s:
 		print(str(len(s)) + ' symbols remaining.')
 		symbol = s.pop()
 		symbol = symbol.replace('\n','')
 		if not downloadQuotes(symbol):
 			failedSymbolsFile.write(symbol + '\n')
-	
+		else:
+			quotes = getQuotes(symbol)
+			quotes['Symbol'] = symbol
+			mySql.insert(quotes)
+			
 	failedSymbolsFile.close()
 
 #########################################################################

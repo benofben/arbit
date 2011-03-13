@@ -27,7 +27,9 @@ def downloadSymbolList(exchange):
 	
 def insertSymbolsIntoDB():
 	mySql = sql.sql()
-	
+	mySql.drop_table()
+	mySql.create_table()
+		
 	for exchange in exchanges:
 		symbolInformation = getSymbolInformationForExchange(exchange)
 		for symbol in symbolInformation:
@@ -98,5 +100,5 @@ def getSymbols():
 	return symbols
 
 def run():
-	#downloadSymbols()
+	downloadSymbols()
 	insertSymbolsIntoDB()
