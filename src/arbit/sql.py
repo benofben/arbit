@@ -1,7 +1,6 @@
 import cx_Oracle
 import constants
 import sys
-import datetime
 
 class sql():
 	def __init__(self):
@@ -23,7 +22,7 @@ class sql():
 	
 	def createClassificationTable(self):	
 		cursor = self.connection.cursor()
-		sql = 'CREATE TABLE Classification(Classification float, Symbol varchar(8), CurrentTestDate date, Outcome varchar(8), High float, Close float, CONSTRAINT ClassificationPK PRIMARY KEY (Classification, Symbol, CurrentTestDate, Outcome))'
+		sql = 'CREATE TABLE Classification(Classification varchar(8), Symbol varchar(8), CurrentTestDate date, Outcome varchar(8), CONSTRAINT ClassificationPK PRIMARY KEY (Classification, Symbol, CurrentTestDate, Outcome))'
 				
 		try:	
 			response = cursor.execute(sql)
@@ -179,54 +178,13 @@ class sql():
 
 	def insertClassification(self, classification):
 		cursor = self.connection.cursor()
-		cursor.execute("INSERT INTO Classification(Classification, Symbol, CurrentTestDate, Outcome, High, Close) VALUES (:Classification, :Symbol, :CurrentTestDate, :Outcome, :High, :Close)",
+		cursor.execute("INSERT INTO Classification(Classification, Symbol, CurrentTestDate, Outcome) VALUES (:Classification, :Symbol, :CurrentTestDate, :Outcome)",
 			{
 				'Classification' : classification['Classification'],
 				'Symbol' : classification['Symbol'],
 				'CurrentTestDate' : classification['CurrentTestDate'],
 				'Outcome' : classification['Outcome'],
-				'High' : classification['High'],
-				'Close' : classification['Close'],
 			}
 		)
 		self.connection.commit()
 		cursor.close()
-
-	def fetchClassifications(self):
-		classifications = {}
-		classifications['Classification']=[]
-		classifications['Symbol']=[]
-		classifications['CurrentTestDate']=[]
-		classifications['Outcome']=[]
-		classifications['High']=[]
-		classifications['Close']=[]
-		
-		cursor = self.connection.cursor()
-		
-		currentTestDate = constants.startDate
-		while currentTestDate < constants.endDate:
-			# need to find the symbol with the maximum confidence for this date
-			
-			cursor.execute("SELECT MAX(Classification) FROM Classification WHERE CurrentTestDate=:currentTestDate",			 
-				CurrentTestDate = currentTestDate
-			)
-			rows = cursor.fetchall()
-			if rows:
-				if rows[0]:
-					classification = rows[0][0]
-
-					# Now get the data for this classification score
-					cursor.execute("SELECT Classification, Symbol, CurrentTestDate, Outcome, High, Close FROM Classification WHERE Classification=:classification",			 
-						Classification = classification,
-					)
-					
-					rows = cursor.fetchall()
-					for row in rows:
-						classifications['Classification'].append(row[0])
-						classifications['Symbol'].append(row[1])
-						classifications['CurrentTestDate'].append(row[2])
-						classifications['Outcome'].append(row[3])
-						classifications['High'].append(row[4])
-						classifications['Close'].append(row[5])
-			currentTestDate = currentTestDate + datetime.timedelta(days=1)
-		return classifications
