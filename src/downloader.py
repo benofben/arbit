@@ -1,6 +1,5 @@
 import yahoo.quotes
 import nasdaq.symbols.downloader
-import arbit.predictors
 import sched
 import datetime
 import time
@@ -29,9 +28,6 @@ class downloader:
 		# Download everything from scratch
 		nasdaq.symbols.downloader.run()
 		yahoo.quotes.downloadAllQuotes()
-
-		# Rebuild the training (and testing) points
-		arbit.predictors.rebuild()
 		
 		# Reschedule the download to run again tomorrow.
 		self.schedule.enterabs(downloadTime, 0, self.download, ())
