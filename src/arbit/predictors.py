@@ -36,7 +36,7 @@ def rebuild():
 		
 		if yahooInformation:
 			for i in range(0, len(yahooInformation['QuoteDate'])):	
-				point['Outcome']=getOutcome(i, yahooInformation)
+				[point['Outcome'], point['Return']]=getOutcome(i, yahooInformation)
 				point['High']=yahooInformation['High'][i]/yahooInformation['Open'][i]
 				point['Low']=yahooInformation['Low'][i]/yahooInformation['Open'][i]
 				point['Close']=yahooInformation['Close'][i]/yahooInformation['Open'][i]
@@ -48,14 +48,22 @@ def rebuild():
 def getOutcome(i, yahooTrainingInformation):
 	# Check if this is a training point
 	if i+1<len(yahooTrainingInformation['QuoteDate']):
-		if yahooTrainingInformation['High'][i+1]>yahooTrainingInformation['Open'][i+1]*(1.0+constants.take):
-			outcome = 'Win'
+		High = yahooTrainingInformation['High'][i+1]
+		Open = yahooTrainingInformation['Open'][i+1]
+		Close = yahooTrainingInformation['Close'][i+1]
+		
+		if High > Open * (1.0+constants.take):
+			Outcome = 'Win'
+			Return = 1.0+constants.take
 		else:
-			outcome = 'Loss'
+			Outcome = 'Loss'
+			Return = Close/Open
 	else:
 		# test point
-		outcome = 'No Data'
-	return outcome
+		Outcome = 'No Data'
+		Return = 0
+	
+	return [Outcome, Return]
 	
 def getVolume(i, yahooTrainingInformation):
 	avgPrice = (yahooTrainingInformation['Open'][i]+yahooTrainingInformation['Close'][i] + yahooTrainingInformation['High'][i] + yahooTrainingInformation['Low'][i])/4
