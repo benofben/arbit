@@ -1,44 +1,10 @@
-import arbit.sql
-import constants
-import datetime
-import nasdaq.symbols.sql
-import arbit.knn
+# Rebuild the training (and testing) points
+import arbit.predictors
+arbit.predictors.rebuild()
 
-class classifier:
-	
-	def __init__(self):
-		arbitSql = arbit.sql.sql()
-		
-		nasdaqSql = nasdaq.symbols.sql.sql()
-		symbols = nasdaqSql.fetchSymbols()
+import arbit.classifier
+classifier = arbit.classifier.classifier()
 
-		arbitSql.dropClassificationTable()
-		arbitSql.createClassificationTable()
-		
-		currentTestDate = constants.startDate
-		while currentTestDate < constants.endDate:
-			currentTrainingDate = currentTestDate - datetime.timedelta(days=1)
-			trainingPoints = arbitSql.fetchTrainingPoints(currentTrainingDate)
-			
-			# Bundle more information into outcome????
-			# Maybe as classification[return]
-			
-			for symbol in symbols:
-				testPoint = arbitSql.fetchTestPoint(symbol, currentTestDate)
-								
-				if trainingPoints and testPoint:
-					print('Processing ' + symbol + ' at date ' + currentTestDate.isoformat())
-
-					classification={}
-					classification['Classification']=self.classify(testPoint, trainingPoints)					
-					classification['Symbol']=symbol
-					classification['CurrentTestDate']=currentTestDate
-					classification['Outcome']=testPoint['Outcome'][0]
-					classification['Return'] = testPoint['Return'][0]
-					arbitSql.insertClassification(classification)
-				
-			currentTestDate = currentTestDate + datetime.timedelta(days=1)
-
-	def classify(self, testPoint, trainingPoints):
-		return arbit.knn.classify(testPoint, trainingPoints)
-	
+# now we want to run simulate on the classification table
+#import arbit.simulate
+#simulate = arbit.simulate.simulate()
