@@ -32,6 +32,6 @@ class downloader:
 		# Reschedule the download to run again tomorrow.
 		self.schedule.enterabs(downloadTime, 0, self.download, ())
 	
-		print ('Done with download and training/testing creation at ' + datetime.datetime.today().isoformat())
-
+		print ('Done with download at ' + datetime.datetime.today().isoformat())
+		
 downloader()
