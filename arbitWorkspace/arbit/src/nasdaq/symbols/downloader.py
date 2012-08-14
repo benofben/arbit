@@ -51,8 +51,7 @@ def getSymbolInformationForExchange(exchange):
 	import csv
 	reader = csv.reader(inputFile)
 	import re
-	
-	for Symbol, Name, LastSale, MarketCap, unused_ADRTSO, IPOyear, Sector, Industry, unused_SummaryQuote in reader:
+	for Symbol, Name, LastSale, MarketCap, IPOyear, Sector, Industry, unused_SummaryQuote in reader:
 		if(Symbol == 'Symbol'):
 			# Then this is the first line
 			pass
@@ -85,10 +84,10 @@ def getSymbolInformationForExchange(exchange):
 def getSymbolInformation():
 	symbolInformation = {}
 	for exchange in exchanges:
-		dictionary = getSymbolInformationForExchange(exchange)
+		dict = getSymbolInformationForExchange(exchange)
 		# copy the dictionary for one exchange to the aggregated dictionary
-		for key in dictionary.keys(): 
-			symbolInformation[key]=dictionary[key]
+		for key in dict.keys(): 
+			symbolInformation[key]=dict[key]
 			
 	return symbolInformation
 

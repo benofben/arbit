@@ -7,5 +7,5 @@ userid='benofdeth'
 password='80trek80'
 
 import datetime
-startDate = datetime.date.today() - datetime.timedelta(days=2000)
+startDate = datetime.date.today() - datetime.timedelta(days=300)
 endDate = datetime.date.today()
