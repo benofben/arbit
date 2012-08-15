@@ -59,7 +59,8 @@ public class EWrapperMsgGenerator extends AnyWrapperMsgGenerator {
         " parent Id=" + parentId + " whyHeld=" + whyHeld;
     }
     
-    static public String openOrder( int orderId, Contract contract, Order order, OrderState orderState) {
+    @SuppressWarnings("rawtypes")
+	static public String openOrder( int orderId, Contract contract, Order order, OrderState orderState) {
         String msg = "open order: orderId=" + orderId +
         " action=" + order.m_action +
         " quantity=" + order.m_totalQuantity +
@@ -338,7 +339,8 @@ public class EWrapperMsgGenerator extends AnyWrapperMsgGenerator {
     static public String contractDetailsSecIdList(ContractDetails contractDetails) {
         String msg = "secIdList={";
         if (contractDetails.m_secIdList != null) {
-            Vector secIdList = contractDetails.m_secIdList;
+            @SuppressWarnings("rawtypes")
+			Vector secIdList = contractDetails.m_secIdList;
             for (int i = 0; i < secIdList.size(); ++i) {
                 TagValue param = (TagValue)secIdList.elementAt(i);
                 if (i > 0) {

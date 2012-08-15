@@ -13,12 +13,16 @@ import com.ib.client.CommissionReport;
 public class InteractiveBrokers implements EWrapper {
 
 	private EClientSocket m_client = new EClientSocket(this);
+	
 	private String[] tickTypes = new String[57];
+	private int nextValidId = 0;
+	
 	public InteractiveBrokers()
 	{
 		initializeTickTypes();
 		connect();
-		requestMarketData();
+		Contract contract = createContract();
+		requestMarketData(1, contract);
 	}
 	
 	private void initializeTickTypes()
@@ -95,18 +99,38 @@ public class InteractiveBrokers implements EWrapper {
 		}
 	}
 	
-	private void requestMarketData()
+	private Contract createContract()
 	{
-		int tickerId = 123;
-		
 		Contract contract = new Contract();
 		contract.m_symbol = "F";
 		contract.m_exchange="NYSE";
 		contract.m_secType="STK";
 		
+		return contract;
+	}
+	
+	private Order createOrder(double price)
+	{
+		Order order = new Order();
+		order.m_orderType = "LMT";
+		order.m_lmtPrice = price;
+		order.m_action = "BUY";
+		order.m_totalQuantity = 100;
+		return order;
+	}
+	
+	private void requestMarketData(int tickerId, Contract contract)
+	{	
 		String genericTickList = "";
 		boolean snapshot = true;
 		m_client.reqMktData(tickerId, contract, genericTickList, snapshot);	
+	}
+	
+	private void placeOrder(double price)
+	{
+		Contract contract = createContract();
+		Order order = createOrder(price);
+		m_client.placeOrder(nextValidId, contract, order);
 	}
 
 	public void disconnect()
@@ -117,50 +141,37 @@ public class InteractiveBrokers implements EWrapper {
 
 	@Override
 	public void error(Exception e) {
-		System.out.println("error - e");
-		System.out.println(e);
+		System.out.println("error" + "\te: " + e);
 	}
 
 	@Override
 	public void error(String str) {
-		System.out.println("error - str");
-		System.out.println(str);
+		System.out.println("error" + "\tstr: " + str);
 	}
 
 	@Override
-	public void error(int id, int errorCode, String errorMsg) {
-		System.out.println("---error---");
-		System.out.println("id: " + id);
-		System.out.println("errorCode: " + errorCode);
-		System.out.println("errorMsg: " + errorMsg);
-		System.out.println("");
+	public void error(int id, int errorCode, String errorMsg) {			
+		System.out.println("error" + "\tid: " + id + "\terrorCode: " + errorCode + "\terrorMsg: " + errorMsg);
 	}
 
 	@Override
 	public void connectionClosed() {
 		System.out.println("connection closed");
-		
 	}
 
 	@Override
 	public void tickPrice(int tickerId, int field, double price, int canAutoExecute) {
-		System.out.println("---tickPrice---");
-		System.out.println("tickerId: " + tickerId);
-		System.out.println("field: " + field + " " + tickTypes[field]);
-		System.out.println("price: " + price);
-		System.out.println("canAutoExecute: " + canAutoExecute);
-		System.out.println("");
+		System.out.println("tickPrice" + "\ttickerId: " + tickerId + "\tfield: " + field + " " + tickTypes[field] + "\tprice: " + price  + "\tcanAutoExecute: " + canAutoExecute);
 		
+		if(tickerId == 1 && field ==4) // then this is our snapshot on starting the program and field is last price.
+		{
+			placeOrder(price);
+		}
 	}
 
 	@Override
 	public void tickSize(int tickerId, int field, int size) {
-		System.out.println("---tickSize---");
-		System.out.println("tickerId: " + tickerId);
-		System.out.println("field: " + field + " " + tickTypes[field]);
-		System.out.println("size: " + size);
-		System.out.println("");
-		
+		System.out.println("tickSize" + "\ttickerId: " + tickerId + "\tfield: " + field + " " + tickTypes[field] + "\tsize: " + size);
 	}
 
 	@Override
@@ -174,51 +185,37 @@ public class InteractiveBrokers implements EWrapper {
 
 	@Override
 	public void tickGeneric(int tickerId, int tickType, double value) {
-		System.out.println("---tickGeneric---");
-		System.out.println("tickerId: " + tickerId);
-		System.out.println("tickType: " + tickType + " " + tickTypes[tickType]);
-		System.out.println("value: " + value);
-		System.out.println();
-		
+		System.out.println("tickGeneric" + "\ttickerId: " + tickerId + "\ttickType: " + tickType + " " + tickTypes[tickType] + "\tvalue: " + value);
 	}
 
 	@Override
 	public void tickString(int tickerId, int tickType, String value) {
-		System.out.println("---tickString---");
-		System.out.println("tickerId: " + tickerId);
-		System.out.println("tickType: "  + tickType + " " + tickTypes[tickType]);
-		System.out.println("value: " + value);
-		System.out.println();
-		
+		System.out.println("tickString" + "\ttickerId: " + tickerId + "\ttickType: "  + tickType + " " + tickTypes[tickType] + "\tvalue: " + value);
 	}
 
 	@Override
 	public void tickEFP(int tickerId, int tickType, double basisPoints,
 			String formattedBasisPoints, double impliedFuture, int holdDays,
 			String futureExpiry, double dividendImpact, double dividendsToExpiry) {
-		System.out.println("tick EFP");
-		
+		System.out.println("tickEFP");	
 	}
 
 	@Override
 	public void orderStatus(int orderId, String status, int filled,
 			int remaining, double avgFillPrice, int permId, int parentId,
 			double lastFillPrice, int clientId, String whyHeld) {
-		System.out.println("order status");
-		
+		System.out.println("orderStatus" + "\torderId: " + orderId + "\tstatus: " + status + "\tfilled: " + filled + "\tremaining: " + remaining + "\tavgFillPrice: " + avgFillPrice + "\tpermId: " + permId + "\tparentId:" + parentId + "\tlastFillPrice: "+ lastFillPrice + "\tclientId: " + clientId + "\twhyHeld: " + whyHeld);
 	}
 
 	@Override
 	public void openOrder(int orderId, Contract contract, Order order,
 			OrderState orderState) {
-		System.out.println("open order");
-		
+		System.out.println("openOrder" + "\torderId: " + orderId + "\tcontract: " + contract + "\torder: " +order + "\torderState: " + orderState);	
 	}
 
 	@Override
 	public void openOrderEnd() {
-		System.out.println("openOrderEnd");
-		
+		System.out.println("openOrderEnd");	
 	}
 
 	@Override
@@ -247,9 +244,10 @@ public class InteractiveBrokers implements EWrapper {
 
 	@Override
 	public void nextValidId(int orderId) {
-		System.out.println("---nextValidId---");
-		System.out.println("orderId: " + orderId);
-		System.out.println("");
+		System.out.println("nextValidId" + "\torderId: " + orderId);
+		
+		//concurrency issues to be fixed here
+		nextValidId = orderId;
 	}
 
 	@Override
@@ -269,7 +267,7 @@ public class InteractiveBrokers implements EWrapper {
 
 	@Override
 	public void execDetails(int reqId, Contract contract, Execution execution) {
-		System.out.println("execDetails");
+		System.out.println("execDetails" + "\reqId: " + reqId + "\tcontract: " + contract + "\texecution: " + execution);
 	}
 
 	@Override
@@ -298,9 +296,7 @@ public class InteractiveBrokers implements EWrapper {
 
 	@Override
 	public void managedAccounts(String accountsList) {
-		System.out.println("---managedAccounts---");
-		System.out.println("accountsList: " + accountsList);
-		System.out.println();
+		System.out.println("managedAccounts" +  " accountsList: " + accountsList);
 	}
 
 	@Override
@@ -355,9 +351,7 @@ public class InteractiveBrokers implements EWrapper {
 
 	@Override
 	public void tickSnapshotEnd(int reqId) {
-		System.out.println("---tickSnapshotEnd---");
-		System.out.println("reqId: " + reqId);
-		System.out.println();
+		System.out.println("tickSnapshotEnd" +  "\treqId: " + reqId);
 	}
 
 	@Override
@@ -367,6 +361,6 @@ public class InteractiveBrokers implements EWrapper {
 
 	@Override
 	public void commissionReport(CommissionReport commissionReport) {
-		System.out.println("commissionReport");
+		System.out.println("commissionReport" + "\tcommissionReport: " + commissionReport);
 	}
 }

@@ -23,7 +23,7 @@ public class Util {
     	return NormalizeString(lhs).compareToIgnoreCase(NormalizeString(rhs));
     }
     
-    public static boolean VectorEqualsUnordered(Vector lhs, Vector rhs) {
+    public static boolean VectorEqualsUnordered(@SuppressWarnings("rawtypes") Vector lhs, @SuppressWarnings("rawtypes") Vector rhs) {
     	
     	if (lhs == rhs)
     		return true;

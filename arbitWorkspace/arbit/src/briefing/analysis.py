@@ -2,8 +2,9 @@
 def getAnalysisForDate(currentDate, mySql):
 
 	#skip if we already have data for this day
-	upgrades = mySql.fetch(currentDate)
-	if upgrades:
+	upgrades = mySql.fetch(currentDate, 'Upgrade')
+	downgrades = mySql.fetch(currentDate, 'Downgrade')
+	if upgrades or downgrades:
 		print ('Skipping download for ' + currentDate.isoformat())
 		return
 	

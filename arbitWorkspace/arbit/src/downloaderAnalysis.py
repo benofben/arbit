@@ -18,8 +18,8 @@ class downloader:
 		today = datetime.date.today()
 		tomorrow = today + datetime.timedelta(days=1)
 	
-		# 11:50pm tomorrow
-		downloadTime=datetime.time(23,50,0)
+		# 4am tomorrow
+		downloadTime=datetime.time(4,0,0)
 		downloadDateTime = datetime.datetime.combine(tomorrow, downloadTime)
 		downloadTime = time.mktime(downloadDateTime.timetuple())
 	
@@ -27,7 +27,7 @@ class downloader:
 
 		mySql = sql.sql()
 		#mySql.drop_table()
-		#mySql.create_table()
+		mySql.create_table()
 
 		startDate = datetime.date.today()
 		endDate = startDate - datetime.timedelta(days=365)

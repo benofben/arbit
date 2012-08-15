@@ -892,7 +892,8 @@ public class EClientSocket {
       }
     }
 
-    public synchronized void placeOrder( int id, Contract contract, Order order) {
+    @SuppressWarnings("rawtypes")
+	public synchronized void placeOrder( int id, Contract contract, Order order) {
         // not connected?
         if( !m_connected) {
             error( EClientErrors.NO_VALID_ID, EClientErrors.NOT_CONNECTED, "");
@@ -1192,7 +1193,7 @@ public class EClientSocket {
             }
 
             if(m_serverVersion >= MIN_SERVER_VER_SMART_COMBO_ROUTING_PARAMS && BAG_SEC_TYPE.equalsIgnoreCase(contract.m_secType)) {
-                java.util.Vector smartComboRoutingParams = order.m_smartComboRoutingParams;
+				java.util.Vector smartComboRoutingParams = order.m_smartComboRoutingParams;
                 int smartComboRoutingParamsCount = smartComboRoutingParams == null ? 0 : smartComboRoutingParams.size();
                 send( smartComboRoutingParamsCount);
                 if( smartComboRoutingParamsCount > 0) {
