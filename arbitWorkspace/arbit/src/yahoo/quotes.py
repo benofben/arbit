@@ -78,8 +78,8 @@ def downloadAllQuotes():
 	failedSymbolsFile = open(failedSymbolsFilename, 'w')
 	
 	mySql = sql.sql()
-	mySql.drop_table()
-	mySql.create_table()
+	#mySql.drop_table()
+	#mySql.create_table()
 
 	while s:
 		print(str(len(s)) + ' symbols remaining.')

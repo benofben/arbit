@@ -1,7 +1,7 @@
-import yahoo.quotes
-import nasdaq.symbols.downloader
-import sched
+import briefing.sql as sql
+import briefing.analysis
 import datetime
+import sched
 import time
 
 class downloader:
@@ -12,26 +12,33 @@ class downloader:
 		self.schedule.run()
 
 	def download(self):
-		print ('Running download at ' + datetime.datetime.today().isoformat())
+		print ('Running analyst download at ' + datetime.datetime.today().isoformat())
 	
 		# Assume the system clock uses NY time.
 		today = datetime.date.today()
 		tomorrow = today + datetime.timedelta(days=1)
 	
-		# 3:00am tomorrow
-		downloadTime=datetime.time(3,0,0)
+		# 11:50pm tomorrow
+		downloadTime=datetime.time(23,50,0)
 		downloadDateTime = datetime.datetime.combine(tomorrow, downloadTime)
 		downloadTime = time.mktime(downloadDateTime.timetuple())
 	
 		print ('Downloading...')
+
+		mySql = sql.sql()
+		#mySql.drop_table()
+		#mySql.create_table()
+
+		startDate = datetime.date.today()
+		endDate = startDate - datetime.timedelta(days=365)
+		currentDate = startDate
+		while currentDate>=endDate:
+			briefing.analysis.getAnalysisForDate(currentDate, mySql)
+			currentDate = currentDate - datetime.timedelta(days=1)
 	
-		# Download everything from scratch
-		nasdaq.symbols.downloader.run()
-		yahoo.quotes.downloadAllQuotes()
-		
 		# Reschedule the download to run again tomorrow.
 		self.schedule.enterabs(downloadTime, 0, self.download, ())
 	
-		print ('Done with download and training/testing creation at ' + datetime.datetime.today().isoformat())
-
+		print ('Done with analyst download at ' + datetime.datetime.today().isoformat())
+		
 downloader()

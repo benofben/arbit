@@ -27,8 +27,8 @@ def downloadSymbolList(exchange):
 	
 def insertSymbolsIntoDB():
 	mySql = sql.sql()
-	mySql.drop_table()
-	mySql.create_table()
+	#mySql.drop_table()
+	#mySql.create_table()
 		
 	for exchange in exchanges:
 		symbolInformation = getSymbolInformationForExchange(exchange)
@@ -51,7 +51,8 @@ def getSymbolInformationForExchange(exchange):
 	import csv
 	reader = csv.reader(inputFile)
 	import re
-	for Symbol, Name, LastSale, MarketCap, IPOyear, Sector, Industry, unused_SummaryQuote in reader:
+	
+	for Symbol, Name, LastSale, MarketCap, unused_ADRTSO, IPOyear, Sector, Industry, unused_SummaryQuote in reader:
 		if(Symbol == 'Symbol'):
 			# Then this is the first line
 			pass
@@ -84,10 +85,10 @@ def getSymbolInformationForExchange(exchange):
 def getSymbolInformation():
 	symbolInformation = {}
 	for exchange in exchanges:
-		dict = getSymbolInformationForExchange(exchange)
+		dictionary = getSymbolInformationForExchange(exchange)
 		# copy the dictionary for one exchange to the aggregated dictionary
-		for key in dict.keys(): 
-			symbolInformation[key]=dict[key]
+		for key in dictionary.keys(): 
+			symbolInformation[key]=dictionary[key]
 			
 	return symbolInformation
 
