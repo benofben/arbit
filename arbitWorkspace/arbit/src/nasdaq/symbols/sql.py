@@ -7,7 +7,7 @@ class sql():
 		
 	def create_table(self):	
 		cursor = self.connection.cursor()
-		sql = 'CREATE TABLE NASDAQSymbolInformation(Symbol varchar2(8), Exchange varchar2(6), updateDate date, Name varchar(99), LastSale number(8,2), MarketCap number(14,2), IPOYear number(4), Sector varchar(21), Industry varchar(62), CONSTRAINT NASDAQSymbolInformationPK PRIMARY KEY (Symbol, Exchange, updateDate))'
+		sql = 'CREATE TABLE NASDAQSymbolInformation(Symbol varchar2(9), Exchange varchar2(6), updateDate date, Name varchar(99), LastSale number(8,2), MarketCap number(14,2), IPOYear number(4), Sector varchar(21), Industry varchar(62), CONSTRAINT NASDAQSymbolInformationPK PRIMARY KEY (Symbol, Exchange, updateDate))'
 		try:	
 			response = cursor.execute(sql)
 			print(response)

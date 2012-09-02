@@ -1,11 +1,7 @@
-take = 0.02
-dataDirectory='C:/arbitdata/'
+dataDirectory='I:/arbitdata/'
 
-# Ameritrade Login
-sourceID='LCK'
-userid='benofdeth'
-password='80trek80'
 
+# used in the yahoo downloader
 import datetime
-startDate = datetime.date.today() - datetime.timedelta(days=365)
-endDate = datetime.date.today() - datetime.timedelta(days=200)
+startDate = datetime.date.today() - datetime.timedelta(days=2000)
+endDate = datetime.date.today()
