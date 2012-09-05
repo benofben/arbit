@@ -3,10 +3,18 @@ import datetime
 import constants
 import os
 import gzip
+import edgar.sql
+import edgar.form4
+import socket
 
 def run():
 	ftp = ftplib.FTP('sec.gov')
 	ftp.login()
+	
+	# session is getting closed after 600 seconds.  See if this works...
+	ftp.sock.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
+
+	mySql = edgar.sql.sql()
 
 	directoryNames = getDirectoryNames()
 	
@@ -14,17 +22,27 @@ def run():
 	for directoryName in directoryNames:
 		masterFilenames += getMasterFilenames(ftp, directoryName)
 	
-	downloadMasterFiles(ftp, masterFilenames)
-	
-	masterFilenames = os.listdir(constants.dataDirectory + 'edgar/masterFiles/')
-	masterFilenames.reverse() # we want to do the newest ones first
-	
-	form4Filenames = []
 	for masterFilename in masterFilenames:
-		form4Filenames += parseForm4FilenamesFromMasterFile(constants.dataDirectory + 'edgar/masterFiles/' + masterFilename)
-	
-	downloadForm4Files(ftp, form4Filenames)
-			
+		downloadMasterFile(ftp, masterFilename)
+		masterFilename = masterFilename.split('/')
+		masterFilename = masterFilename[len(masterFilename)-1]
+		form4Filenames = parseForm4FilenamesFromMasterFile(constants.dataDirectory + 'edgar/masterFiles/' + masterFilename)
+		
+		for form4Filename in form4Filenames:
+			try:
+				downloadForm4File(ftp, form4Filename)
+				form4Filename = constants.dataDirectory + form4Filename
+				print('Parsing Form 4 file ' + form4Filename)
+				transactions = edgar.form4.parse(form4Filename)
+				for transaction in transactions:
+					try:
+						mySql.insert(transaction)
+					except:
+						pass
+						#print('Duplicate record')
+			except:
+				# Either couldn't download file or it already exists
+				pass
 	ftp.quit()
 
 def parseForm4FilenamesFromMasterFile(filename):
@@ -92,45 +110,34 @@ def getMasterFilenames(ftp, directoryName):
 	
 	return masterFilenames
 
-def downloadMasterFiles(ftp, filenames):
+def downloadMasterFile(ftp, filename):
 	downloadDirectoryName = constants.dataDirectory + 'edgar/masterFiles/'
 	if not os.path.exists(downloadDirectoryName):
 		os.makedirs(downloadDirectoryName)
 	
-	for filename in filenames:
-		downloadFilename = filename.split('/')
-		downloadFilename = downloadFilename[len(downloadFilename)-1]
-		downloadFilename = downloadDirectoryName + downloadFilename
+	downloadFilename = filename.split('/')
+	downloadFilename = downloadFilename[len(downloadFilename)-1]
+	downloadFilename = downloadDirectoryName + downloadFilename
 		
-		if not os.path.exists(downloadFilename) and not os.path.exists(str.replace(downloadFilename,'.idx.gz','.idx')):
-			print('Downloading master file ' + filename + '.')
-			ftp.retrbinary('RETR ' + filename, open(downloadFilename, 'wb').write)
-		else:
-			print('Skipping existing file ' + filename + '.')
+	if not os.path.exists(downloadFilename) and not os.path.exists(str.replace(downloadFilename,'.idx.gz','.idx')):
+		print('Downloading master file ' + filename + '.')
+		ftp.retrbinary('RETR ' + filename, open(downloadFilename, 'wb').write)
+	else:
+		print('Skipping existing master file ' + filename + '.')
 
-def downloadForm4Files(ftp, filenames):
-	numberOfFilesRemaining = len(filenames) 
-	
-	downloadDirectoryName = constants.dataDirectory + 'edgar/'
+def downloadForm4File(ftp, filename):	
+	downloadFilename = filename.split('/')
+	downloadDirectoryName = constants.dataDirectory + downloadFilename[0]+ '/'+ downloadFilename[1]+ '/'+ downloadFilename[2]+ '/'
 	if not os.path.exists(downloadDirectoryName):
-		os.makedirs(downloadDirectoryName)
-	
-	for filename in filenames:
-		downloadFilename = filename.split('/')
+		os.makedirs(downloadDirectoryName)			
+	downloadFilename = downloadFilename[3]
+	downloadFilename = downloadDirectoryName + downloadFilename
 		
-		downloadDirectoryName = constants.dataDirectory + downloadFilename[0]+ '/'+ downloadFilename[1]+ '/'+ downloadFilename[2]+ '/'
-		if not os.path.exists(downloadDirectoryName):
-			os.makedirs(downloadDirectoryName)		
-		
-		downloadFilename = downloadFilename[3]
-		downloadFilename = downloadDirectoryName + downloadFilename
-		
-		if os.path.exists(downloadFilename):
-			print('Skipping existing form 4 file ' + filename + ', ' + str(numberOfFilesRemaining) + ' files remaining.')
-		else:
-			try:
-				ftp.retrbinary('RETR ' + filename, open(downloadFilename, 'wb').write)
-				print('Downloaded form 4 file ' + filename + ', ' + str(numberOfFilesRemaining) + ' files remaining.')
-			except:
-				print('Failed to download form 4 file ' + filename + ', ' + str(numberOfFilesRemaining) + ' files remaining.')
-		numberOfFilesRemaining-=1
+	if os.path.exists(downloadFilename):
+		raise Exception('Skipping existing form 4 file ' + filename)
+	else:
+		try:
+			ftp.retrbinary('RETR ' + filename, open(downloadFilename, 'wb').write)
+			print('Downloaded form 4 file ' + filename)
+		except:
+			raise Exception('Failed to download form 4 file ' + filename)

@@ -70,3 +70,38 @@ class sql():
 		)
 		self.connection.commit()
 		cursor.close()
+
+	def fetchForDate(self, curentDate):
+			cursor = self.connection.cursor()
+			
+			cursor.execute("SELECT SecDocument, AcceptanceDatetime, IssuerTradingSymbol, RptOwnerCik, RptOwnerName, IsDirector, IsOfficer, IsTenPercentOwner, IsOther, TransactionDate, TransactionShares, TransactionPricePerShare, TransactionAcquiredDisposed FROM Form4 WHERE ACCEPTANCEDATETIME>=:CurrentDate AND ACCEPTANCEDATETIME<:NextDate AND TransactionAcquiredDisposed='A'",
+				CurrentDate = curentDate,
+				NextDate = curentDate + datetime.timedelta(days=1),
+			)
+	
+			rows = cursor.fetchall()
+			if not rows:
+				return None
+			
+			forms = []
+			for row in rows:
+				form = {}
+				form['SecDocument'] = row[0]
+				form['AcceptanceDatetime'] = row[1] 
+				form['IssuerTradingSymbol'] = row[2] 
+				form['RptOwnerCik'] = row[3]
+				form['RptOwnerName'] = row[4] 
+				form['IsDirector'] = row[5]
+				form['IsOfficer'] = row[6]
+				form['IsTenPercentOwner'] = row[7] 
+				form['IsOther'] = row[8]
+				form['TransactionDate'] = row[9]
+				form['TransactionShares'] = row[10]
+				form['TransactionPricePerShare'] = row[11]
+				form['TransactionAcquiredDisposed'] = row[12]
+				
+				forms.append(form)
+								
+			cursor.close()
+			
+			return forms

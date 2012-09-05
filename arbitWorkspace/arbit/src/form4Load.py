@@ -4,6 +4,8 @@ import edgar.sql
 import os
 import constants
 
+# This reads all form 4 files from the local filesystem and writes them to the database.  In most cases, downloaderEDGAR could be run instead.  This only needs to be run if that job was killed part way through.
+
 def run():
 	mySql = edgar.sql.sql()
 	#mySql.drop_table()
@@ -18,7 +20,7 @@ def run():
 
 	for filename in form4Filenames:	
 		filename = constants.dataDirectory + filename
-		print('Processing 4 Form file ' + filename)
+		print('Parsing 4 Form file ' + filename)
 		transactions = edgar.form4.parse(filename)
 		for transaction in transactions:
 			try:
