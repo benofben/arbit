@@ -3,6 +3,7 @@ import briefing.analysis
 import datetime
 import sched
 import time
+import constants
 
 class downloader:
 	schedule = sched.scheduler(time.time, time.sleep)
@@ -18,8 +19,7 @@ class downloader:
 		today = datetime.date.today()
 		tomorrow = today + datetime.timedelta(days=1)
 	
-		# 4am tomorrow
-		downloadTime=datetime.time(4,0,0)
+		downloadTime=constants.downloadtimeAnalysis
 		downloadDateTime = datetime.datetime.combine(tomorrow, downloadTime)
 		downloadTime = time.mktime(downloadDateTime.timetuple())
 	

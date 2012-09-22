@@ -50,4 +50,31 @@ class sql():
 		
 		self.connection.commit()
 		cursor.close()
+
+	def fetch(self, currentDate, symbol):
+		cursor = self.connection.cursor()
+		
+		#########################this needs to be written without the >=
+		cursor.execute("SELECT * FROM Fundamentals WHERE DownloadDate>=:CurrentDate AND Symbol=:Symbol",
+			Symbol = symbol,
+			CurrentDate = currentDate
+		)
+		
+		rows = cursor.fetchall()
+		if not rows:
+			return None
+		
+		row = rows[0]
+
+		fundamentals = {}
+		fundamentals['Symbol']=row[0]
+		fundamentals['DownloadDate']=row[1]
+		fundamentals['Dividend']=row[2]
+		fundamentals['EPS']=row[3]
+		fundamentals['Shares']=row[4]
+		fundamentals['InstitutionalOwnership']=row[5]
+
+		cursor.close()
+		
+		return fundamentals
 	

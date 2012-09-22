@@ -3,6 +3,7 @@ import nasdaq.symbols.downloader
 import sched
 import datetime
 import time
+import constants
 
 class downloader:
 	schedule = sched.scheduler(time.time, time.sleep)
@@ -18,8 +19,7 @@ class downloader:
 		today = datetime.date.today()
 		tomorrow = today + datetime.timedelta(days=1)
 	
-		# 3:00am tomorrow
-		downloadTime=datetime.time(3,0,0)
+		downloadTime=constants.downloadtimeQuotes
 		downloadDateTime = datetime.datetime.combine(tomorrow, downloadTime)
 		downloadTime = time.mktime(downloadDateTime.timetuple())
 	

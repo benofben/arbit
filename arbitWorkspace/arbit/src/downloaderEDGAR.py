@@ -1,7 +1,9 @@
 import edgar.downloader
+import edgar.mail
 import sched
 import datetime
 import time
+import constants
 
 class downloader:
 	schedule = sched.scheduler(time.time, time.sleep)
@@ -17,16 +19,14 @@ class downloader:
 		today = datetime.date.today()
 		tomorrow = today + datetime.timedelta(days=1)
 	
-		# 2:30am tomorrow
-		# It looks like new master files show up at 2:01am, though are sometimes delayed as late as 2:14am.
-		# Need to check when form 4 files show up
-		downloadTime=datetime.time(2,30,0)
+		downloadTime=constants.downloadtimeEDGAR
 		downloadDateTime = datetime.datetime.combine(tomorrow, downloadTime)
 		downloadTime = time.mktime(downloadDateTime.timetuple())
 	
 		print ('Downloading...')
 	
 		edgar.downloader.run()
+		edgar.mail.run()
 		
 		# Reschedule the download to run again tomorrow.
 		self.schedule.enterabs(downloadTime, 0, self.download, ())

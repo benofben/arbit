@@ -92,12 +92,15 @@ class sql():
 		
 		return trainingInformation
 
-	def fetchForSymbolAndDate(self, symbol, curentDate):
+	def fetchForSymbolAndDate(self, symbol, currentDate):
+			# make a date that Oracle likes.  This avoids having to do <, >= tricks with a proper Oracle date.
+			currentDate = currentDate.strftime('%d-%b-%y')
+			
 			cursor = self.connection.cursor()
 			
 			cursor.execute("SELECT Symbol, QuoteDate, Open, High, Low, Close, Volume FROM YahooQuotes WHERE Symbol=:symbol AND QuoteDate=:CurrentDate",
 				Symbol = symbol,
-				CurrentDate = curentDate
+				CurrentDate = currentDate
 			)
 	
 			rows = cursor.fetchall()

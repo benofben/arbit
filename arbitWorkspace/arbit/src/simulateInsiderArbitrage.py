@@ -3,7 +3,7 @@ import yahoo.sql
 import edgar.sql
 
 def run():
-	profit = 0
+	capital = 10000
 	
 	quoteSql = yahoo.sql.sql()	
 	edgarSql = edgar.sql.sql()
@@ -11,67 +11,63 @@ def run():
 	startDate = datetime.date.today() - datetime.timedelta(days=365)
 	endDate = datetime.date.today()
 	currentDate = startDate
-
+	
 	while currentDate<endDate:
-		
-		[profitToday, symbols] = runForDate(currentDate, edgarSql, quoteSql)
-		capital = len(symbols) * 10000  # this is actually much worse since we're holding for 90 days.
-		profit+=profitToday
-		
-		print(currentDate.isoformat() + '\t' + str(currentDate.isoweekday()) +'\t$' + str(profit)  + '\t' + str(capital))
-			
+		capital = runForDate(currentDate, capital, edgarSql, quoteSql)		
+		print(currentDate.isoformat() + '\t' + str(currentDate.isoweekday()) +'\t$' + str(round(capital,2)))
+	
 		currentDate = currentDate + datetime.timedelta(days=1)
 	
-def runForDate(currentDate, edgarSql, quoteSql):
-	transactions = edgarSql.fetchForDate(currentDate - datetime.timedelta(days=1))
-	symbols=[]
-	profit = 0
+def runForDate(currentDate, capital, edgarSql, quoteSql):
+	if currentDate.weekday() == 0:
+		transactions = edgarSql.fetchForDate(currentDate - datetime.timedelta(days=3))
+	elif currentDate.weekday() == 1 or currentDate.weekday() == 2 or currentDate.weekday() == 3 or currentDate.weekday() == 4:
+		transactions = edgarSql.fetchForDate(currentDate - datetime.timedelta(days=1))
+	elif currentDate.weekday() == 5 or currentDate.weekday() == 6:
+		return capital
 	
-	# Check if there are transactions to trade on today.
-	if(not transactions):
-		return [0, symbols]
-	
+	if not transactions:
+		return capital
+
+	symbolsAndReturns=[]	
 	for transaction in transactions:
 		r = calculateReturnForDate(transaction, currentDate, quoteSql)
 		if r!=0:
-			symbols.append([transaction['IssuerTradingSymbol'], r])
+			symbolsAndReturns.append([transaction['IssuerTradingSymbol'], r])
 	
-	if len(symbols)>0:
-		for [unused_ticker, r] in symbols:
-			profit = profit + (10000 * r)
-	
-	return [profit, symbols]
+	if len(symbolsAndReturns)>0:
+		for [unused_symbol, r] in symbolsAndReturns:
+			capital = capital + (1000 * r)
+			
+	return capital
 
 def calculateReturnForDate(transaction, currentDate, quoteSql):
 	quote = quoteSql.fetchForSymbolAndDate(transaction['IssuerTradingSymbol'], currentDate)
-	
-	r = 0
+	if not quote:
+		return 0
 	
 	value = transaction['TransactionPricePerShare']*transaction['TransactionShares']
-	buyPrice = transaction['TransactionPricePerShare']
-	sellPrice = buyPrice *1.05
-	
-	if not quote:
-		return r
-	elif value<100000:
-		return r
-	elif quote['Low']<buyPrice:
+	if value<100000:
+		return 0
 
-		# then we own some stock
-		for timedelta in range(1,90):
-			sellDate = currentDate + datetime.timedelta(days=timedelta)
+	buyPrice = transaction['TransactionPricePerShare']	
+	if buyPrice<quote['Low']:
+		return 0
+	
+	if quote['Low']<=buyPrice:
+		# then we own some stock, now let's try to sell it
+		quote = None
+		sellDate = currentDate + datetime.timedelta(days=90)
+		while not quote:
 			quote = quoteSql.fetchForSymbolAndDate(transaction['IssuerTradingSymbol'], sellDate)
-			if quote and quote['High']>sellPrice:
-				return r
-	
-	quote = None
-	sellDate = currentDate + datetime.timedelta(days=90)
-	while not quote:
-		quote = quoteSql.fetchForSymbolAndDate(transaction['IssuerTradingSymbol'], sellDate)
-		sellDate = sellDate + datetime.timedelta(days=1)
-	
-	sellPrice = quote['Close']
-	r = (sellPrice - buyPrice) / buyPrice			
-	return r
+			sellDate = sellDate + datetime.timedelta(days=1)
+
+		sellPrice = quote['Close']
+		capital = 10000
+		sharesPurchased = capital/buyPrice
+		newCapital = sharesPurchased*sellPrice
+		r = newCapital/capital
+		r = r-1
+		return r
 
 run()
