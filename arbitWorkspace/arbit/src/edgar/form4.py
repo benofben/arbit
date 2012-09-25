@@ -82,6 +82,7 @@ def parse(filename):
 			transactionShares = nonDerivativeTransaction['transactionAmounts'][0]['transactionShares'][0]['value'][0]
 			transactionPricePerShare = nonDerivativeTransaction['transactionAmounts'][0]['transactionPricePerShare'][0]['value'][0]
 			transactionAcquiredDisposedCode = nonDerivativeTransaction['transactionAmounts'][0]['transactionAcquiredDisposedCode'][0]['value'][0]
+			sharesOwned = nonDerivativeTransaction['postTransactionAmounts'][0]['sharesOwnedFollowingTransaction'][0]['value'][0]
 			
 			if float(transactionPricePerShare) == 0:
 				pass
@@ -101,7 +102,8 @@ def parse(filename):
 				transaction['transactionDate'] = transactionDate 
 				transaction['transactionShares'] = transactionShares 
 				transaction['transactionPricePerShare'] = transactionPricePerShare 
-				transaction['transactionAcquiredDisposedCode'] = transactionAcquiredDisposedCode 
+				transaction['transactionAcquiredDisposedCode'] = transactionAcquiredDisposedCode
+				transaction['sharesOwned'] = sharesOwned 
 				transactions.append(transaction)
 			
 		except KeyError:

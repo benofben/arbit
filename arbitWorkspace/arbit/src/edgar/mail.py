@@ -10,6 +10,7 @@ import datetime
 def run():
 	currentDate = datetime.date.today() - datetime.timedelta(days=1)
 	s = constructInsiderTable(currentDate)
+	print('I am going to email a summary of inside trades for ' + currentDate.isoformat() + '.')
 	mail(currentDate, s)
 	
 def constructInsiderTable(currentDate):
@@ -18,10 +19,14 @@ def constructInsiderTable(currentDate):
 
 	googleSql = google.sql.sql()
 	yahooSql = yahoo.sql.sql() 
-	
-	s = '<tr><td>' + 'Acceptance Datetime' + '</td><td>' + 'Transaction Date' + '</td><td>' + 'Symbol' + '</td><td>' + 'Insider Trade Price' + '</td><td>' + 'Close Price' + '</td><td>' + 'PE' + '</td><td>' + 'Yield' + '</td><td>' + 'Insider Name' + '</td><td>' + 'Insider Trade Shares' + '</td><td>' + 'Insider Trade Value'
+		
+	if not forms:
+		return 'No insider trades today.'
+
+	s = '<tr><td>' + 'Acceptance Datetime' + '</td><td>' + 'Transaction Date' + '</td><td>' + 'Symbol' + '</td><td>' + 'Insider Trade Price' + '</td><td>' + 'Close Price' + '</td><td>' + 'PE' + '</td><td>' + 'Yield' + '</td><td>' + 'Insider Name' + '</td><td>' + 'Insider Trade Shares' + '</td><td>' + 'Trade Value' + '</td><td>' + 'Shares Owned'+ '</td><td>' + 'Total Value'
 	s+= '</td><td>' + 'Director' + '</td><td>' + 'Officer' + '</td><td>' + '10% Owner' + '</td><td>' + 'Other'
 	s += '</td></tr>'
+	
 	for form in forms:
 		symbol = form['IssuerTradingSymbol']
 		fundamentals = googleSql.fetch(currentDate, symbol)
@@ -29,18 +34,35 @@ def constructInsiderTable(currentDate):
 		
 		if fundamentals and quote:
 			pe = calculatePE(fundamentals, quote)
-			if pe > 0 and pe < 10:
-				value = form['TransactionPricePerShare'] * form['TransactionShares'] 
+			if pe > 0 and pe < 15 and marketPrice(form, yahooSql):
+				tradeValue = form['TransactionPricePerShare'] * form['TransactionShares'] 
+				totalValue = form['TransactionPricePerShare'] * form['SharesOwned'] #maybe use close price for this instead?  not sure...
 
 				# assuming a quarterly dividend (this could be wrong!)
 				stockYield = str(round((fundamentals['Dividend']/quote['Close'])*100*4,2))+'%'
 				
 				symbolString = '<a href="http://www.google.com/finance?q=' + symbol + '">' + symbol +'</a>'
-				s+='<tr><td>' + str(form['AcceptanceDatetime']) + '</td><td>' + str(form['TransactionDate'].strftime('%Y-%m-%d')) + '</td><td>' + symbolString + '</td><td>' + '$' + str(round(form['TransactionPricePerShare'],2)) + '</td><td>' + '$' + str(round(quote['Close'],2)) + '</td><td>' + str(round(pe,2)) + '</td><td>' + stockYield + '</td><td>' + form['RptOwnerName'] + '</td><td>' + str(int(form['TransactionShares'])) + '</td><td>' + '$' + str(round(value,2))
+				s+='<tr><td>' + str(form['AcceptanceDatetime']) + '</td><td>' + str(form['TransactionDate'].strftime('%Y-%m-%d')) + '</td><td>' + symbolString + '</td><td>' + '$' + str(round(form['TransactionPricePerShare'],2)) + '</td><td>' + '$' + str(round(quote['Close'],2)) + '</td><td>' + str(round(pe,2)) + '</td><td>' + stockYield + '</td><td>' + form['RptOwnerName'] + '</td><td>' + str(int(form['TransactionShares'])) + '</td><td>' + '$' + str(round(tradeValue,2)) + '</td><td>' + str(int(form['SharesOwned'])) + '</td><td>' + '$' + str(round(totalValue,2))
 				s+= '</td><td>' + form['IsDirector'] + '</td><td>' + form['IsOfficer'] + '</td><td>' + form['IsTenPercentOwner'] + '</td><td>' + form['IsOther']
 				s+='</td></tr>'	
 	
+	if len(s)==326:
+		# Then no trades matched above
+		return 'None of the ' + str(len(forms)) + ' insider trades on ' + currentDate.isoformat() + ' met our criteria.'
+	
 	return s
+
+def marketPrice(form, yahooSql):
+	#returns true if low<price<high, otherwise false
+	quote = yahooSql.fetchForSymbolAndDate(form['IssuerTradingSymbol'], form['TransactionDate'])
+	
+	if not quote:
+		return False
+	
+	if quote['Low']<=form['TransactionPricePerShare'] and quote['High']>=form['TransactionPricePerShare']:
+		return True
+	
+	return False
 
 def calculatePE(fundamentals, quote):
 	if fundamentals['EPS']==0:
@@ -76,7 +98,7 @@ def mail(currentDate, s):
 	msg.attach(part2)
 
 	server = smtplib.SMTP('smtp.live.com', 587)
-	server.set_debuglevel(1)
+	#server.set_debuglevel(1)
 	server.ehlo()
 	server.starttls()
 	server.login(login, password)

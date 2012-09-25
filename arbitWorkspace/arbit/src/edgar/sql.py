@@ -8,7 +8,7 @@ class sql():
 		
 	def create_table(self):	
 		cursor = self.connection.cursor()
-		sql = 'CREATE TABLE Form4(SecDocument varchar(37), AcceptanceDatetime timestamp, IssuerTradingSymbol varchar(10), RptOwnerCik varchar(10), RptOwnerName varchar(21), IsDirector varchar(1), IsOfficer varchar(1), IsTenPercentOwner varchar(1), IsOther varchar(1), TransactionDate date, TransactionShares float, TransactionPricePerShare float, TransactionAcquiredDisposed varchar(1), CONSTRAINT Form4PK PRIMARY KEY (SecDocument))'
+		sql = 'CREATE TABLE Form4(SecDocument varchar(37), AcceptanceDatetime timestamp, IssuerTradingSymbol varchar(10), RptOwnerCik varchar(10), RptOwnerName varchar(21), IsDirector varchar(1), IsOfficer varchar(1), IsTenPercentOwner varchar(1), IsOther varchar(1), TransactionDate date, TransactionShares float, TransactionPricePerShare float, TransactionAcquiredDisposed varchar(1), SharesOwned float, CONSTRAINT Form4PK PRIMARY KEY (SecDocument))'
 		
 		try:	
 			response = cursor.execute(sql)
@@ -51,7 +51,7 @@ class sql():
 		transactionDate = datetime.date(year, month, day)
 
 		cursor = self.connection.cursor()
-		cursor.execute("INSERT INTO Form4(SecDocument, AcceptanceDatetime, IssuerTradingSymbol, RptOwnerCik, RptOwnerName, IsDirector, IsOfficer, IsTenPercentOwner, IsOther, TransactionDate, TransactionShares, TransactionPricePerShare, TransactionAcquiredDisposed) VALUES (:SecDocument, :AcceptanceDatetime, :IssuerTradingSymbol, :RptOwnerCik, :RptOwnerName, :IsDirector, :IsOfficer, :IsTenPercentOwner, :IsOther, :TransactionDate, :TransactionShares, :TransactionPricePerShare, :TransactionAcquiredDisposed)",
+		cursor.execute("INSERT INTO Form4(SecDocument, AcceptanceDatetime, IssuerTradingSymbol, RptOwnerCik, RptOwnerName, IsDirector, IsOfficer, IsTenPercentOwner, IsOther, TransactionDate, TransactionShares, TransactionPricePerShare, TransactionAcquiredDisposed, SharesOwned) VALUES (:SecDocument, :AcceptanceDatetime, :IssuerTradingSymbol, :RptOwnerCik, :RptOwnerName, :IsDirector, :IsOfficer, :IsTenPercentOwner, :IsOther, :TransactionDate, :TransactionShares, :TransactionPricePerShare, :TransactionAcquiredDisposed, :SharesOwned)",
 			{
 				'SecDocument' : form4Information['secDocument'],
 				'AcceptanceDatetime' : acceptanceDatetime, 
@@ -66,46 +66,12 @@ class sql():
 				'TransactionShares' : form4Information['transactionShares'], 
 				'TransactionPricePerShare' : form4Information['transactionPricePerShare'], 
 				'TransactionAcquiredDisposed' : form4Information['transactionAcquiredDisposedCode'],
+				'SharesOwned' : form4Information['sharesOwned'],
 			}
 		)
 		self.connection.commit()
 		cursor.close()
-
-	def fetchForDate(self, currentDate):
-			cursor = self.connection.cursor()
-			
-			cursor.execute("SELECT SecDocument, AcceptanceDatetime, IssuerTradingSymbol, RptOwnerCik, RptOwnerName, IsDirector, IsOfficer, IsTenPercentOwner, IsOther, TransactionDate, TransactionShares, TransactionPricePerShare, TransactionAcquiredDisposed FROM Form4 WHERE ACCEPTANCEDATETIME>=:CurrentDate AND ACCEPTANCEDATETIME<:NextDate AND TransactionAcquiredDisposed='A'",
-				CurrentDate = currentDate,
-				NextDate = currentDate + datetime.timedelta(days=1),
-			)
-	
-			rows = cursor.fetchall()
-			if not rows:
-				return None
-			
-			forms = []
-			for row in rows:
-				form = {}
-				form['SecDocument'] = row[0]
-				form['AcceptanceDatetime'] = row[1] 
-				form['IssuerTradingSymbol'] = row[2] 
-				form['RptOwnerCik'] = row[3]
-				form['RptOwnerName'] = row[4] 
-				form['IsDirector'] = row[5]
-				form['IsOfficer'] = row[6]
-				form['IsTenPercentOwner'] = row[7] 
-				form['IsOther'] = row[8]
-				form['TransactionDate'] = row[9]
-				form['TransactionShares'] = row[10]
-				form['TransactionPricePerShare'] = row[11]
-				form['TransactionAcquiredDisposed'] = row[12]
-				
-				forms.append(form)
-								
-			cursor.close()
-			
-			return forms
-	
+		
 	def fetch(self, currentDate):			
 		cursor = self.connection.cursor()
 		
@@ -135,6 +101,7 @@ class sql():
 			form['TransactionShares'] = row[10]
 			form['TransactionPricePerShare'] = row[11]
 			form['TransactionAcquiredDisposed'] = row[12]
+			form['SharesOwned'] = row[13]
 			forms.append(form)
 			
 		cursor.close()	

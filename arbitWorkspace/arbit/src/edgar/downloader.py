@@ -5,14 +5,10 @@ import os
 import gzip
 import edgar.sql
 import edgar.form4
-import socket
 
 def run():
 	ftp = ftplib.FTP('sec.gov')
 	ftp.login()
-	
-	# session is getting closed after 600 seconds.  See if this works...
-	ftp.sock.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
 
 	mySql = edgar.sql.sql()
 
@@ -32,17 +28,19 @@ def run():
 			try:
 				downloadForm4File(ftp, form4Filename)
 				form4Filename = constants.dataDirectory + form4Filename
-				print('Parsing Form 4 file ' + form4Filename)
-				transactions = edgar.form4.parse(form4Filename)
-				for transaction in transactions:
-					try:
-						mySql.insert(transaction)
-					except:
-						pass
-						#print('Duplicate record')
+				if os.path.exists(form4Filename):
+					print('Parsing Form 4 file ' + form4Filename)
+					transactions = edgar.form4.parse(form4Filename)
+					for transaction in transactions:
+						try:
+							mySql.insert(transaction)
+						except:
+							pass
+							#print('Duplicate record')
 			except:
 				# Either couldn't download file or it already exists
 				pass
+	
 	ftp.quit()
 
 def parseForm4FilenamesFromMasterFile(filename):
