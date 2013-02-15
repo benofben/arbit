@@ -8,7 +8,13 @@ class downloader:
 	schedule = sched.scheduler(time.time, time.sleep)
 	
 	def __init__(self):
-		self.schedule.enterabs(time.time(), 0, self.download, ())
+		#don't want to run immediately because we won't get a close price
+		today = datetime.date.today()
+		downloadTime=constants.downloadtimeFundamentals
+		downloadDateTime = datetime.datetime.combine(today, downloadTime)
+		downloadTime = time.mktime(downloadDateTime.timetuple())
+		
+		self.schedule.enterabs(downloadTime, 0, self.download, ())
 		self.schedule.run()
 
 	def download(self):

@@ -8,7 +8,7 @@ def run():
 	quoteSql = yahoo.sql.sql()	
 	edgarSql = edgar.sql.sql()
 	
-	startDate = datetime.date.today() - datetime.timedelta(days=365)
+	startDate = datetime.date.today() - datetime.timedelta(days=180)
 	endDate = datetime.date.today()
 	currentDate = startDate
 	
@@ -20,9 +20,9 @@ def run():
 	
 def runForDate(currentDate, capital, edgarSql, quoteSql):
 	if currentDate.weekday() == 0:
-		transactions = edgarSql.fetchForDate(currentDate - datetime.timedelta(days=3))
+		transactions = edgarSql.fetch(currentDate - datetime.timedelta(days=3))
 	elif currentDate.weekday() == 1 or currentDate.weekday() == 2 or currentDate.weekday() == 3 or currentDate.weekday() == 4:
-		transactions = edgarSql.fetchForDate(currentDate - datetime.timedelta(days=1))
+		transactions = edgarSql.fetch(currentDate - datetime.timedelta(days=1))
 	elif currentDate.weekday() == 5 or currentDate.weekday() == 6:
 		return capital
 	

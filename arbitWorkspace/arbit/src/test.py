@@ -1,5 +1,5 @@
-import edgar.mail
-edgar.mail.run()
+#import edgar.mail
+#edgar.mail.run()
 
 '''
 import edgar.form4
@@ -19,4 +19,20 @@ mySql.create_table()
 '''
 import edgar.downloader
 edgar.downloader.run()
+'''
+
+'''
+import google.sql
+mySql= google.sql.sql()
+mySql.drop_table()
+mySql.create_table()
+'''
+
+'''
+import datetime
+symbol = 'tibx'
+now = datetime.datetime.now()
+google.fundamentals.run(symbol, mySql, now)
+fundamentals = mySql.fetch(datetime.date.today(), symbol)
+print(fundamentals)
 '''

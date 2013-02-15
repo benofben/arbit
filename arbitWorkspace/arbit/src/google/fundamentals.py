@@ -33,6 +33,33 @@ def downloadFundamentals(symbol):
 def parseFundamentals(data):
 	fundamentals = {}
 	
+	temp = data.split('<span class="pr">')
+	temp = temp[1]
+	temp = temp.split('</span>')
+	temp = temp[0]
+	temp = temp.split('">')
+	temp = temp[1]
+	temp = float(temp)
+	fundamentals['Close'] = temp
+
+	data = data.split('data-snapfield="range">Range')
+	data = data[1]
+	temp = data.split('<td class="val">')
+	temp = temp[1]
+	temp = temp.split('</td>')
+	temp = temp[0].strip()
+	temp = temp.split(' - ')
+	fundamentals['Low'] = float(temp[0])
+	fundamentals['High'] = float(temp[1])
+	
+	data = data.split('data-snapfield="open">Open')
+	data = data[1]
+	temp = data.split('<td class="val">')
+	temp = temp[1]
+	temp = temp.split('</td>')
+	temp = temp[0].strip()
+	fundamentals['Open'] = float(temp)
+	
 	data = data.split('data-snapfield="latest_dividend-dividend_yield">Div/yield')
 	data = data[1]
 	temp = data.split('<td class="val">')

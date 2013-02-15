@@ -7,7 +7,7 @@ class sql():
 		
 	def create_table(self):
 		cursor = self.connection.cursor()		
-		sql = 'CREATE TABLE Fundamentals(Symbol varchar2(5), DownloadDate date, Dividend float, EPS float, Shares float, InstitutionalOwnership float, CONSTRAINT FundamentalsPK PRIMARY KEY (Symbol, DownloadDate))'
+		sql = 'CREATE TABLE Fundamentals(Symbol varchar2(5), DownloadDate date, Dividend float, EPS float, Shares float, InstitutionalOwnership float, Open float, High float, Low float, Close float, CONSTRAINT FundamentalsPK PRIMARY KEY (Symbol, DownloadDate))'
 		try:
 			response = cursor.execute(sql)
 			print(response)
@@ -37,7 +37,7 @@ class sql():
 	def insert(self, fundamentals):	
 		cursor = self.connection.cursor()
 		
-		cursor.execute("INSERT INTO Fundamentals(Symbol,DownloadDate,Dividend,EPS,Shares,InstitutionalOwnership) VALUES (:Symbol,:DownloadDate,:Dividend,:EPS,:Shares,:InstitutionalOwnership)",
+		cursor.execute("INSERT INTO Fundamentals(Symbol,DownloadDate,Dividend,EPS,Shares,InstitutionalOwnership,Open,High,Low,Close) VALUES (:Symbol,:DownloadDate,:Dividend,:EPS,:Shares,:InstitutionalOwnership,:Open,:High,:Low,:Close)",
 			{
 				'Symbol' : fundamentals['Symbol'],
 				'DownloadDate' : fundamentals['Date'],
@@ -45,6 +45,10 @@ class sql():
 				'EPS' : fundamentals['EPS'],
 				'Shares' : fundamentals['Shares'],
 				'InstitutionalOwnership' : fundamentals['InstitutionalOwnership'],
+				'Open' : fundamentals['Open'],
+				'High' : fundamentals['High'],
+				'Low' : fundamentals['Low'],
+				'Close' : fundamentals['Close'],
 			}
 		)
 		
@@ -54,8 +58,7 @@ class sql():
 	def fetch(self, currentDate, symbol):
 		cursor = self.connection.cursor()
 		
-		#########################this needs to be written without the >=
-		cursor.execute("SELECT * FROM Fundamentals WHERE DownloadDate>=:CurrentDate AND Symbol=:Symbol",
+		cursor.execute("SELECT * FROM Fundamentals WHERE DownloadDate>=:CurrentDate AND DownloadDate<:CurrentDate+1 AND Symbol=:Symbol",
 			Symbol = symbol,
 			CurrentDate = currentDate
 		)
@@ -73,6 +76,10 @@ class sql():
 		fundamentals['EPS']=row[3]
 		fundamentals['Shares']=row[4]
 		fundamentals['InstitutionalOwnership']=row[5]
+		fundamentals['Open']=row[6]
+		fundamentals['High']=row[7]
+		fundamentals['Low']=row[8]
+		fundamentals['Close']=row[9]
 
 		cursor.close()
 		

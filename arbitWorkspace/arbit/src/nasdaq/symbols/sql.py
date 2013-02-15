@@ -34,7 +34,7 @@ class sql():
 	def __del__(self):
 		self.connection.close()
 
-	def insert(self, symbolInformation):	
+	def insert(self, symbolInformation):
 		cursor = self.connection.cursor()
 		cursor.execute("INSERT INTO NASDAQSymbolInformation(Symbol,Exchange,updateDate,Name,LastSale,MarketCap,IPOYear,Sector,Industry) VALUES (:Symbol,:Exchange,:updateDate,:Name,:LastSale,:MarketCap,:IPOYear,:Sector,:Industry)",
 			{

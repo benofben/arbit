@@ -7,7 +7,7 @@ import edgar.sql
 import edgar.form4
 
 def run():
-	ftp = ftplib.FTP('sec.gov')
+	ftp = ftplib.FTP('ftp.sec.gov')
 	ftp.login()
 
 	mySql = edgar.sql.sql()
