@@ -185,7 +185,7 @@ def getSubquote(currentDate, quotes):
 	
 	for symbol in quotes:
 		index=getIndex(currentDate, quotes[symbol])
-		if index:		
+		if index:	
 			subquote[symbol]={}		
 			for item in quotes[symbol]:
 				subquote[symbol][item]=quotes[symbol][item][0:index]

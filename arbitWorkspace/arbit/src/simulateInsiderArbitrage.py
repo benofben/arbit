@@ -9,13 +9,13 @@ def run():
 	edgarSql = edgar.sql.sql()
 	googleSql = google.sql.sql()
 
-	capital = 100000
+	capital = 150*360
 	holdings = []
 
-	startDate = datetime.date.today() - datetime.timedelta(days=180)
+	startDate = datetime.date.today() - datetime.timedelta(days=360)
 	endDate = datetime.date.today()
 	currentDate = startDate
-		
+	
 	while currentDate<endDate:
 		[capital, holdings] = runForDate(currentDate, capital, holdings, quoteSql, edgarSql, googleSql)
 		printHoldings(capital, holdings, currentDate, quoteSql)
@@ -29,19 +29,16 @@ def printHoldings(capital, holdings, currentDate, quoteSql):
 		quote = quoteSql.fetchForSymbolAndDate(holding['Symbol'], currentDate)
 		if quote:
 			value = value + quote['Close']*holding['Shares']
-	print(value)
+	if currentDate.weekday()<5: #check if this is a weekday - sat, sun are 5 and 6.
+		print(value)
 	#print(holdings)
 	
 def runForDate(currentDate, capital, holdings, quoteSql, edgarSql, googleSql):
 	[capital, holdings] = buy(currentDate, capital, holdings, quoteSql, edgarSql, googleSql)
-	[capital, holdings] = sell(currentDate, capital, holdings, quoteSql, edgarSql, googleSql)
+	#[capital, holdings] = sell(currentDate, capital, holdings, quoteSql, edgarSql, googleSql)
 	return [capital, holdings]
 	
-def buy(currentDate, capital, holdings, quoteSql, edgarSql, googleSql):
-	blocksToBuy = math.floor(capital/1000)
-	if blocksToBuy==0:
-		return [capital, holdings]
-	
+def buy(currentDate, capital, holdings, quoteSql, edgarSql, googleSql):	
 	if currentDate.weekday() == 0:
 		transactions = edgarSql.fetch(currentDate - datetime.timedelta(days=3))
 	elif currentDate.weekday() == 1 or currentDate.weekday() == 2 or currentDate.weekday() == 3 or currentDate.weekday() == 4:
@@ -55,24 +52,12 @@ def buy(currentDate, capital, holdings, quoteSql, edgarSql, googleSql):
 	for transaction in transactions:
 		if transactionIsABuy(transaction, holdings, currentDate, googleSql, quoteSql):
 			holding={}
-			holding['Shares'] = math.floor(1000/transaction['TransactionPricePerShare'])
+			holding['Shares'] = math.floor(150/transaction['TransactionPricePerShare'])
 			holding['PricePerShare'] = transaction['TransactionPricePerShare']
 			holding['Symbol'] = transaction['IssuerTradingSymbol']
 			holdings.append(holding)
-			capital = capital - (holding['Shares']*holding['PricePerShare'])
-			
-			if capital<1000:
-				return [capital, holdings]
-
-	return [capital, holdings]
-
-def sell(currentDate, capital, holdings, quoteSql, edgarSql, googleSql):
-	for holding in holdings:
-		quote = quoteSql.fetchForSymbolAndDate(holding['Symbol'], currentDate)
-		if quote:
-			if quote['High']>=holding['PricePerShare']*1.05:
-				capital = capital + holding['PricePerShare']*1.05*holding['Shares']
-				holdings.remove(holding)
+			capital = capital - (holding['Shares']*holding['PricePerShare'])	
+			return [capital, holdings]
 
 	return [capital, holdings]
 
