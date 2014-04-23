@@ -1,39 +1,31 @@
 import constants
 import datetime
-import nasdaq.symbols.sql as sql
+import nasdaq.symbols.database as db
 
 # Options are: NYSE, NASDAQ, AMEX
 exchanges=['NYSE', 'NASDAQ']
 
 def downloadSymbolList(exchange):
 	print('Trying to get exchange ' + exchange + '...')
-	import http.client
-	conn = http.client.HTTPConnection('www.nasdaq.com')
+	import httplib
+	conn = httplib.HTTPConnection('www.nasdaq.com')
 	conn.request('GET', '/screening/companies-by-industry.aspx?exchange=' + exchange + '&render=download')
 	response = conn.getresponse()
 	print(response.status, response.reason)
 	data = response.read()
 	conn.close()
-	
+
+	data = data.decode()
+
 	print('Done downloading.  Writing to file.\n')
-	file = open(constants.dataDirectory + 'symbols/' + exchange + '.csv', 'w')
-	
-	# The download files have broken line endings.  This seems to be working on Windows and will probably cause horrible disasters if this is run on Linux.
-	data = data.decode('windows-1252')
-	data = data.replace(',\r','')
-	
-	file.write(data)
-	file.close()
+	outputFile = open(constants.dataDirectory + 'symbols/' + exchange + '.csv', 'w')	
+	outputFile.write(data)
+	outputFile.close()
 	
 def insertSymbolsIntoDB():
-	mySql = sql.sql()
-	mySql.drop_table()
-	mySql.create_table()
-		
 	for exchange in exchanges:
 		symbolInformation = getSymbolInformationForExchange(exchange)
-		for symbol in symbolInformation:
-			mySql.insert(symbolInformation[symbol])
+		db.batchInsert(symbolInformation)
 	
 def downloadSymbols():
 	import os
@@ -52,7 +44,7 @@ def getSymbolInformationForExchange(exchange):
 	reader = csv.reader(inputFile)
 	import re
 	
-	for Symbol, Name, LastSale, MarketCap, unused_ADRTSO, IPOyear, Sector, Industry, unused_SummaryQuote in reader:
+	for Symbol, Name, LastSale, MarketCap, unused_ADRTSO, IPOyear, Sector, Industry, unused_SummaryQuote, unused_EmptyColumn in reader:
 		if(Symbol == 'Symbol'):
 			# Then this is the first line
 			pass
@@ -82,24 +74,6 @@ def getSymbolInformationForExchange(exchange):
 	
 	return symbolInformation
 	
-def getSymbolInformation():
-	symbolInformation = {}
-	for exchange in exchanges:
-		dictionary = getSymbolInformationForExchange(exchange)
-		# copy the dictionary for one exchange to the aggregated dictionary
-		for key in dictionary.keys(): 
-			symbolInformation[key]=dictionary[key]
-			
-	return symbolInformation
-
-def getSymbols():
-	symbolInformation = getSymbolInformation()
-	symbols = []
-	for symbol in symbolInformation:
-		symbol = symbol.replace('/', '')
-		symbols.append(symbol)
-	return symbols
-
 def run():
 	downloadSymbols()
 	insertSymbolsIntoDB()
