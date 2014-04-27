@@ -3,14 +3,14 @@ import datetime
 import constants
 import os
 import gzip
-import edgar.sql
 import edgar.form4
+import edgar.database
 
 def run():
 	ftp = ftplib.FTP('ftp.sec.gov')
 	ftp.login()
 
-	mySql = edgar.sql.sql()
+	form4DB = edgar.database.database()
 
 	directoryNames = getDirectoryNames()
 	
@@ -33,7 +33,7 @@ def run():
 					transactions = edgar.form4.parse(form4Filename)
 					for transaction in transactions:
 						try:
-							mySql.insert(transaction)
+							form4DB.insert(transaction)
 						except:
 							pass
 							#print('Duplicate record')

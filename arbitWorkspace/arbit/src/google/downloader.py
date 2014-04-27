@@ -1,15 +1,27 @@
 import http.client
-import nasdaq.symbols.downloader as symbols
-import google.sql as sql
 import datetime
+import nasdaq.database
+import google.database
 
-def run(symbol, mySql, now):
+def run():
+	fundamentalsDB = google.database.database()
+	now = datetime.datetime.now()
+
+	symbolsDB = nasdaq.database.database()
+	s = symbolsDB.getAllSymbols()	
+	while s:
+		print(str(len(s)) + ' symbols remaining.')
+		symbol = s.pop()
+		symbol = symbol.replace('\n','')
+		runForSymbol(symbol, fundamentalsDB, now)
+
+def runForSymbol(symbol, fundamentalsDB, now):
 	try:
 		data = downloadFundamentals(symbol)
 		fundamentals = parseFundamentals(data)
 		fundamentals['Symbol'] = symbol
 		fundamentals['Date'] = now
-		mySql.insert(fundamentals)
+		fundamentalsDB.insert(fundamentals)
 		print('Saved fundamental data for ' + symbol + '.\n')
 	except:
 		print('Download of fundamental data for ' + symbol + ' failed.\n')
@@ -119,18 +131,3 @@ def parseFundamentals(data):
 		fundamentals['InstitutionalOwnership']/=100	
 	
 	return fundamentals
-
-def downloadAllFundamentals():
-	s = symbols.getSymbols()
-	
-	mySql = sql.sql()
-	#mySql.drop_table()
-	#mySql.create_table()
-
-	now = datetime.datetime.now()
-	
-	while s:
-		print(str(len(s)) + ' symbols remaining.')
-		symbol = s.pop()
-		symbol = symbol.replace('\n','')
-		run(symbol, mySql, now)

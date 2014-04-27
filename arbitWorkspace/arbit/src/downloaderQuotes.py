@@ -1,5 +1,5 @@
 import yahoo.downloader
-import nasdaq.symbols.downloader
+import nasdaq.downloader
 import sched
 import datetime
 import time
@@ -25,7 +25,7 @@ class downloader:
 	
 		print ('Downloading...')
 	
-		nasdaq.symbols.downloader.run()
+		nasdaq.downloader.run()
 		yahoo.downloader.run()
 		
 		# Reschedule the download to run again tomorrow.

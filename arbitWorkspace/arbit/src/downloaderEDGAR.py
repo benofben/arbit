@@ -1,5 +1,5 @@
 import edgar.downloader
-import edgar.mail
+#import edgar.mail
 import sched
 import datetime
 import time
@@ -23,7 +23,7 @@ class downloader:
 		print ('Running EDGAR download at ' + datetime.datetime.today().isoformat())
 	
 		edgar.downloader.run()
-		edgar.mail.run()
+#		edgar.mail.run()
 			
 		print ('Done with EDGAR download at ' + datetime.datetime.today().isoformat())
 	
@@ -39,6 +39,4 @@ class downloader:
 		print('Going to run next at ' + downloadDateTime.isoformat())
 		self.schedule.enterabs(downloadTime, 0, self.download, ())
 
-
-		
 downloader()

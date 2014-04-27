@@ -1,15 +1,15 @@
 import edgar.downloader
 import edgar.form4
-import edgar.sql
+import edgar.database
 import os
 import constants
 
-# This reads all form 4 files from the local filesystem and writes them to the database.  In most cases, downloaderEDGAR could be run instead.  This only needs to be run if that job was killed part way through.
+# This reads all form 4 files from the local filesystem and writes them to the database.  
+# In most cases, downloaderEDGAR could be run instead.  
+# This only needs to be run if that job was killed part way through.
 
 def run():
-	mySql = edgar.sql.sql()
-	#mySql.drop_table()
-	#mySql.create_table()
+	form4DB = edgar.database.database()
 
 	masterFilenames = os.listdir(constants.dataDirectory + 'edgar/masterFiles/')
 	masterFilenames.reverse() # we want to do the newest ones first
@@ -24,7 +24,7 @@ def run():
 		transactions = edgar.form4.parse(filename)
 		for transaction in transactions:
 			try:
-				mySql.insert(transaction)
+				form4DB.insert(transaction)
 			except:
 				print('Duplicate record')
 

@@ -1,5 +1,5 @@
-import briefing.sql as sql
-import briefing.analysis
+import briefing.downloader
+import briefing.database
 import datetime
 import sched
 import time
@@ -24,16 +24,13 @@ class downloader:
 		downloadTime = time.mktime(downloadDateTime.timetuple())
 	
 		print ('Downloading...')
-
-		mySql = sql.sql()
-		#mySql.drop_table()
-		mySql.create_table()
+		ratingsChangesDB = briefing.database.database()
 
 		startDate = datetime.date.today()
 		endDate = startDate - datetime.timedelta(days=365)
 		currentDate = startDate
 		while currentDate>=endDate:
-			briefing.analysis.getAnalysisForDate(currentDate, mySql)
+			briefing.downloader.getAnalysisForDate(currentDate, ratingsChangesDB)
 			currentDate = currentDate - datetime.timedelta(days=1)
 	
 		# Reschedule the download to run again tomorrow.

@@ -1,4 +1,4 @@
-import google.fundamentals
+import google.downloader
 import sched
 import datetime
 import time
@@ -30,7 +30,7 @@ class downloader:
 	
 		print ('Downloading...')
 	
-		google.fundamentals.downloadAllFundamentals()
+		google.downloader.run()
 		
 		# Reschedule the download to run again tomorrow.
 		self.schedule.enterabs(downloadTime, 0, self.download, ())

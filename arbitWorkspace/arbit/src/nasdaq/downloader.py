@@ -1,5 +1,5 @@
 import constants
-import nasdaq.symbols.database
+import nasdaq.database
 
 # Options are: NYSE, NASDAQ, AMEX
 exchanges=['NYSE', 'NASDAQ']
@@ -21,7 +21,7 @@ def downloadSymbolList(exchange):
 	file.close()
 	
 def insertSymbolsIntoDB():
-	db = nasdaq.symbols.database.database()
+	db = nasdaq.database.database()
 	db.dropCollection()
 		
 	for exchange in exchanges:
@@ -44,15 +44,15 @@ def getSymbolInformationForExchange(exchange):
 	inputFile = open(constants.dataDirectory + 'symbols/' + exchange + '.csv', 'r')
 	import csv
 	reader = csv.reader(inputFile)
-	import re
 	
-	for Symbol, Name, LastSale, MarketCap, unused_ADRTSO, IPOyear, Sector, Industry, unused_SummaryQuotem, unused_Null in reader:
+	for Symbol, Name, LastSale, MarketCap, unused_ADRTSO, IPOyear, Sector, Industry, unused_SummaryQuote, unused_Null in reader:
 		if(Symbol == 'Symbol'):
 			# Then this is the first line
 			pass
 		else:
-			#remove whitespace from end of symbol
-			Symbol = re.sub(r'\s', '', Symbol)
+			Symbol = Symbol.replace('^','.')
+			Symbol = Symbol.replace('/','.')
+			
 			symbolInformation[Symbol]={}
 			symbolInformation[Symbol]['Symbol']=Symbol
 			symbolInformation[Symbol]['Exchange']=exchange

@@ -1,10 +1,10 @@
+import datetime
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-import edgar.sql
-import google.sql
-import datetime
+import edgar.database
+import google.database
 
 def run():
 	currentDate = datetime.date.today()
@@ -13,10 +13,10 @@ def run():
 	mail(currentDate, s)
 	
 def constructInsiderTable(currentDate):
-	edgarSql = edgar.sql.sql()
-	forms = edgarSql.fetch(currentDate)
+	form4DB = edgar.database.database()
+	forms = form4DB.fetch(currentDate)
 
-	googleSql = google.sql.sql() 
+	fundamentalsDB = google.database.database() 
 		
 	if not forms:
 		return 'No insider trades today.'
@@ -27,13 +27,14 @@ def constructInsiderTable(currentDate):
 	
 	for form in forms:
 		symbol = form['IssuerTradingSymbol']
-		fundamentals = googleSql.fetch(currentDate, symbol)
+		fundamentals = fundamentalsDB.fetch(currentDate, symbol)
+		print(fundamentals)
 		
 		if fundamentals:
 			pe = calculatePE(fundamentals)
 			if pe > 0 and pe < 15:
 				#print(symbol + str(form['TransactionPricePerShare']) + ' ' + str(fundamentals['Low']) + ' ' + str(fundamentals['High']) + ' ' + str(form['TransactionDate']))
-				if marketPrice(form, googleSql):
+				if marketPrice(form, fundamentalsDB):
 					tradeValue = form['TransactionPricePerShare'] * form['TransactionShares'] 
 					totalValue = form['TransactionPricePerShare'] * form['SharesOwned'] #maybe use close price for this instead?  not sure...
 	
@@ -51,9 +52,9 @@ def constructInsiderTable(currentDate):
 	
 	return s
 
-def marketPrice(form, googleSql):
+def marketPrice(form, fundamentalsDB):
 	#returns true if low<price<high, otherwise false
-	quote = googleSql.fetch(form['TransactionDate'], form['IssuerTradingSymbol'])
+	quote = fundamentalsDB.fetch(form['TransactionDate'], form['IssuerTradingSymbol'])
 	
 	if not quote:
 		return False
@@ -72,10 +73,9 @@ def calculatePE(fundamentals):
 
 def mail(currentDate, s):	
 	fromAddress = 'ben.lackey@hotmail.com'
-	#recipients = ['ben.lackey@hotmail.com', 'l_lackey@yahoo.com', 'collin.poczatek@gmail.com']
 	recipients = ['ben.lackey@hotmail.com']
 	login    = fromAddress
-	password = 'jesbus02'
+	password = 'x/}G?n2WbR3ZXc>f'
 	
 	# Create message container - the correct MIME type is multipart/alternative.
 	msg = MIMEMultipart('alternative')

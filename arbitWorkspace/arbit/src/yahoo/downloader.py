@@ -1,6 +1,6 @@
 import constants
 import datetime
-import nasdaq.symbols.database
+import nasdaq.database
 import yahoo.database
 
 def run():
@@ -12,7 +12,7 @@ def run():
 	quotesDB = yahoo.database.database()
 	quotesDB.dropCollection()
 
-	symbolsDB = nasdaq.symbols.database.database()
+	symbolsDB = nasdaq.database.database()
 	s = symbolsDB.getAllSymbols()
 	
 	while s:

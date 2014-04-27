@@ -1,9 +1,9 @@
 
-def getAnalysisForDate(currentDate, mySql):
+def getAnalysisForDate(currentDate, ratingsChangesDB):
 
 	#skip if we already have data for this day
-	upgrades = mySql.fetch(currentDate, 'Upgrade')
-	downgrades = mySql.fetch(currentDate, 'Downgrade')
+	upgrades = ratingsChangesDB.fetch(currentDate, 'Upgrade')
+	downgrades = ratingsChangesDB.fetch(currentDate, 'Downgrade')
 	if upgrades or downgrades:
 		print ('Skipping download for ' + currentDate.isoformat())
 		return
@@ -11,12 +11,12 @@ def getAnalysisForDate(currentDate, mySql):
 	data = downloadUpgradeForDate(currentDate)	
 	upgrades = parseForDate(data, currentDate, 'Upgrade')
 	for upgrade in upgrades:
-		mySql.insert(upgrade)
+		ratingsChangesDB.insert(upgrade)
 
 	data = downloadDowngradeForDate(currentDate)	
 	downgrades = parseForDate(data, currentDate, 'Downgrade')
 	for downgrade in downgrades:
-		mySql.insert(downgrade)
+		ratingsChangesDB.insert(downgrade)
 	
 def downloadUpgradeForDate(currentDate):
 	directory = '/Investor/Calendars/Upgrades-Downgrades/Upgrades/'
