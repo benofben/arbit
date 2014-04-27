@@ -1,24 +1,30 @@
-import boto.dynamodb2
-from boto.dynamodb2.fields import HashKey
-from boto.dynamodb2.table import Table
+from pymongo import MongoClient
 
-def createTable():
-	Table.create('symbols', schema=[HashKey('symbol'),])
-
-def dropTable():
-	try:
-		symbols = Table('symbols')
-		symbols.delete()
-	except boto.exception.JSONResponseError as e:
-		# probably means the table doesn't exist
-		print(e)
+class database():
+	def __init__(self):
+		self.client = MongoClient()
 	
-def insert(symbol):
-		symbols = Table('symbols')
-		symbols.put_item(data={'symbol': symbol})
-		
-def batchInsert(symbolInformation):
-		symbols = Table('symbols')
-		with symbols.batch_write() as batch:
-			for symbol in symbolInformation:
-				batch.put_item(data={'symbol': symbol})
+	def dropCollection(self):
+		self.client.arbit.symbols.drop()
+	
+	def __del__(self):
+		self.client.disconnect()
+
+	def insert(self, symbolInformation):
+		symbol = {
+				'Symbol' : symbolInformation['Symbol'],
+				'Exchange' : symbolInformation['Exchange'],
+				'Name' : symbolInformation['Name'],
+				'LastSale' : symbolInformation['LastSale'],
+				'MarketCap' : symbolInformation['MarketCap'],
+				'IPOYear' : symbolInformation['IPOYear'],
+				'Sector' : symbolInformation['Sector'],
+				'Industry' : symbolInformation['Industry']
+			}
+		self.client.arbit.symbols.insert(symbol)
+
+	def getAllSymbols(self):
+		symbols=[]
+		for symbolInformation in self.client.arbit.symbols.find():
+			symbols.append(symbolInformation['Symbol'])
+		return symbols

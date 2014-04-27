@@ -1,31 +1,33 @@
 import constants
-import datetime
-import nasdaq.symbols.database as db
+import nasdaq.symbols.database
 
 # Options are: NYSE, NASDAQ, AMEX
 exchanges=['NYSE', 'NASDAQ']
 
 def downloadSymbolList(exchange):
 	print('Trying to get exchange ' + exchange + '...')
-	import httplib
-	conn = httplib.HTTPConnection('www.nasdaq.com')
+	import http.client
+	conn = http.client.HTTPConnection('www.nasdaq.com')
 	conn.request('GET', '/screening/companies-by-industry.aspx?exchange=' + exchange + '&render=download')
 	response = conn.getresponse()
 	print(response.status, response.reason)
 	data = response.read()
 	conn.close()
-
-	data = data.decode()
-
+	
 	print('Done downloading.  Writing to file.\n')
-	outputFile = open(constants.dataDirectory + 'symbols/' + exchange + '.csv', 'w')	
-	outputFile.write(data)
-	outputFile.close()
+	file = open(constants.dataDirectory + 'symbols/' + exchange + '.csv', 'w')
+	data = data.decode()	
+	file.write(data)
+	file.close()
 	
 def insertSymbolsIntoDB():
+	db = nasdaq.symbols.database.database()
+	db.dropCollection()
+		
 	for exchange in exchanges:
 		symbolInformation = getSymbolInformationForExchange(exchange)
-		db.batchInsert(symbolInformation)
+		for symbol in symbolInformation:
+			db.insert(symbolInformation[symbol])
 	
 def downloadSymbols():
 	import os
@@ -44,7 +46,7 @@ def getSymbolInformationForExchange(exchange):
 	reader = csv.reader(inputFile)
 	import re
 	
-	for Symbol, Name, LastSale, MarketCap, unused_ADRTSO, IPOyear, Sector, Industry, unused_SummaryQuote, unused_EmptyColumn in reader:
+	for Symbol, Name, LastSale, MarketCap, unused_ADRTSO, IPOyear, Sector, Industry, unused_SummaryQuotem, unused_Null in reader:
 		if(Symbol == 'Symbol'):
 			# Then this is the first line
 			pass
@@ -54,7 +56,6 @@ def getSymbolInformationForExchange(exchange):
 			symbolInformation[Symbol]={}
 			symbolInformation[Symbol]['Symbol']=Symbol
 			symbolInformation[Symbol]['Exchange']=exchange
-			symbolInformation[Symbol]['Date']=datetime.date.today()
 			symbolInformation[Symbol]['Name']=Name
 
 			if(LastSale=='n/a'):
