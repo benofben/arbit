@@ -25,7 +25,9 @@ class database():
 
 	def fetch(self, currentDate, symbol):
 		d = currentDate
-		dt = datetime.datetime(d.year, d.month, d.day)
-
-		fundamentals = self.client.arbit.ratingsChanges.find({'Symbol' : symbol, 'DownloadDate' : dt})
-		return fundamentals
+		startDatetime = datetime.datetime(d.year, d.month, d.day, 0, 0, 0)
+		endDatetime = datetime.datetime(d.year, d.month, d.day, 23, 59, 59)
+				
+		for result in self.client.arbit.fundamentals.find({'Symbol' : symbol, 'DownloadDate': {'$gte': startDatetime, '$lt': endDatetime}}):
+			return(result)
+		return([])

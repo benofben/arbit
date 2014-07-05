@@ -57,7 +57,7 @@ def parseForm4FilenamesFromMasterFile(filename):
 		if os.path.exists(plainTextFilename):
 			# we already created a gunzipped version of this file and will read it later
 			return []
-		else:		 
+		else:
 			#read the gzipped file in
 			file = gzip.open(filename, 'r')
 			content = file.read()
@@ -70,7 +70,7 @@ def parseForm4FilenamesFromMasterFile(filename):
 			
 			filename=plainTextFilename
 		
-	file = open(filename, 'r')
+	file = open(filename, encoding='ISO-8859-1')
 	for line in file:
 		splitLine = line.split('|')
 		if len(splitLine)!=5:

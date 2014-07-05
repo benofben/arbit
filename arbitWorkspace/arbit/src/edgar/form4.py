@@ -99,11 +99,11 @@ def parse(filename):
 				transaction['isOfficer'] = isOfficer 
 				transaction['isTenPercentOwner'] = isTenPercentOwner 
 				transaction['isOther'] = isOther 
-				transaction['transactionDate'] = transactionDate 
-				transaction['transactionShares'] = transactionShares 
-				transaction['transactionPricePerShare'] = transactionPricePerShare 
+				transaction['transactionDate'] = transactionDate
+				transaction['transactionShares'] = float(transactionShares)
+				transaction['transactionPricePerShare'] = float(transactionPricePerShare)
 				transaction['transactionAcquiredDisposedCode'] = transactionAcquiredDisposedCode
-				transaction['sharesOwned'] = sharesOwned 
+				transaction['sharesOwned'] = float(sharesOwned)
 				transactions.append(transaction)
 			
 		except KeyError:

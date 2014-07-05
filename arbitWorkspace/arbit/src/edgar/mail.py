@@ -28,7 +28,6 @@ def constructInsiderTable(currentDate):
 	for form in forms:
 		symbol = form['IssuerTradingSymbol']
 		fundamentals = fundamentalsDB.fetch(currentDate, symbol)
-		print(fundamentals)
 		
 		if fundamentals:
 			pe = calculatePE(fundamentals)
@@ -41,8 +40,9 @@ def constructInsiderTable(currentDate):
 					# assuming a quarterly dividend (this could be wrong!)
 					stockYield = str(round((fundamentals['Dividend']/fundamentals['Close'])*100*4,2))+'%'
 					
+					acceptanceDateTimeString = '<a href="http://54.83.73.232/index.php?symbol=' + symbol + '">' +  str(form['AcceptanceDatetime']) + '</a>' 
 					symbolString = '<a href="http://www.google.com/finance?q=' + symbol + '">' + symbol +'</a>'
-					s+='<tr><td>' + str(form['AcceptanceDatetime']) + '</td><td>' + str(form['TransactionDate'].strftime('%Y-%m-%d')) + '</td><td>' + symbolString + '</td><td>' + '$' + str(round(form['TransactionPricePerShare'],2)) + '</td><td>' + '$' + str(round(fundamentals['Close'],2)) + '</td><td>' + str(round(pe,2)) + '</td><td>' + stockYield + '</td><td>' + form['RptOwnerName'] + '</td><td>' + str(int(form['TransactionShares'])) + '</td><td>' + '$' + str(round(tradeValue,2)) + '</td><td>' + str(int(form['SharesOwned'])) + '</td><td>' + '$' + str(round(totalValue,2))
+					s+='<tr><td>' + acceptanceDateTimeString + '</td><td>' + str(form['TransactionDate'].strftime('%Y-%m-%d')) + '</td><td>' + symbolString + '</td><td>' + '$' + str(round(form['TransactionPricePerShare'],2)) + '</td><td>' + '$' + str(round(fundamentals['Close'],2)) + '</td><td>' + str(round(pe,2)) + '</td><td>' + stockYield + '</td><td>' + form['RptOwnerName'] + '</td><td>' + str(int(form['TransactionShares'])) + '</td><td>' + '$' + str(round(tradeValue,2)) + '</td><td>' + str(int(form['SharesOwned'])) + '</td><td>' + '$' + str(round(totalValue,2))
 					s+= '</td><td>' + form['IsDirector'] + '</td><td>' + form['IsOfficer'] + '</td><td>' + form['IsTenPercentOwner'] + '</td><td>' + form['IsOther']
 					s+='</td></tr>'	
 	
@@ -72,8 +72,8 @@ def calculatePE(fundamentals):
 	return pe
 
 def mail(currentDate, s):	
-	fromAddress = 'ben.lackey@hotmail.com'
-	recipients = ['ben.lackey@hotmail.com']
+	fromAddress = 'ben.lackey@outlook.com'
+	recipients = ['ben.lackey@outlook.com']
 	login    = fromAddress
 	password = 'x/}G?n2WbR3ZXc>f'
 	

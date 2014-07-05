@@ -21,7 +21,7 @@ class database():
 		month = int(form4Information['transactionDate'][5:7])
 		day = int(form4Information['transactionDate'][8:10])
 		transactionDate = datetime.datetime(year, month, day)
-
+		
 		form4 = {
 				'SecDocument' : form4Information['secDocument'],
 				'AcceptanceDatetime' : acceptanceDatetime, 
@@ -32,9 +32,9 @@ class database():
 				'IsOfficer' : form4Information['isOfficer'],
 				'IsTenPercentOwner' : form4Information['isTenPercentOwner'], 
 				'IsOther' : form4Information['isOther'],
-				'TransactionDate' : transactionDate, 
-				'TransactionShares' : form4Information['transactionShares'], 
-				'TransactionPricePerShare' : form4Information['transactionPricePerShare'], 
+				'TransactionDate' : transactionDate,
+				'TransactionShares' : form4Information['transactionShares'],
+				'TransactionPricePerShare' : form4Information['transactionPricePerShare'],
 				'TransactionAcquiredDisposed' : form4Information['transactionAcquiredDisposedCode'],
 				'SharesOwned' : form4Information['sharesOwned'],
 			}
@@ -42,9 +42,10 @@ class database():
 
 	def fetch(self, currentDate):
 		d = currentDate
-		dt = datetime.datetime(d.year, d.month, d.day)
-
+		startDatetime = datetime.datetime(d.year, d.month, d.day, 0, 0, 0)
+		endDatetime = datetime.datetime(d.year, d.month, d.day, 23, 59, 59)
+				
 		forms=[]
-		for form in self.client.arbit.form4.find({'AcceptanceDatetime' : dt}):
+		for form in self.client.arbit.form4.find({'TransactionAcquiredDisposed':'A','AcceptanceDatetime': {'$gte': startDatetime, '$lt': endDatetime}}):
 			forms.append(form)
 		return forms

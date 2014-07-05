@@ -16,6 +16,7 @@ def run():
 	
 	form4Filenames = []
 	for masterFilename in masterFilenames:
+		print(masterFilename)
 		form4Filenames += edgar.downloader.parseForm4FilenamesFromMasterFile(constants.dataDirectory + 'edgar/masterFiles/' + masterFilename)
 
 	for filename in form4Filenames:	
@@ -23,9 +24,6 @@ def run():
 		print('Parsing 4 Form file ' + filename)
 		transactions = edgar.form4.parse(filename)
 		for transaction in transactions:
-			try:
-				form4DB.insert(transaction)
-			except:
-				print('Duplicate record')
+			form4DB.insert(transaction)
 
 run()
