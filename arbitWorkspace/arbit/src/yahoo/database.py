@@ -52,8 +52,55 @@ class database():
 		# A quote from currentDate can then be used for testing
 		
 		endDatetime = datetime.datetime(currentDate.year, currentDate.month, currentDate.day)
-		startDatetime = endDatetime - datetime.timedelta(days=30)
+		startDatetime = endDatetime - datetime.timedelta(days=window)
 		quotes=[]
 		for quote in self.client.arbit.yahooQuotes.find({'Symbol': symbol, 'Date': {'$gte': startDatetime, '$lt': endDatetime}}):
 			quotes.append(quote)
 		return quotes
+
+	def writeQuotesToDisk(self):
+		splitDate = datetime.datetime(2014,1,1)
+		window = 30
+		trainFile = open('train.data', 'w')
+		testFile = open('test.data', 'w')
+
+		# write the header to the file
+		string = 'date,weekday,symbol,result'
+		for w in range(1,window):
+			string +=',win' + str(w)
+		string+='\n'
+		trainFile.write(string)
+		testFile.write(string)
+		
+		for quote in self.client.arbit.yahooQuotes.find():
+			d = str(quote['Date'].year) + '-' + str(quote['Date'].month) + '-' + str(quote['Date'].day)
+			weekday = quote['Date'].weekday()
+			
+			if quote['High']/quote['Open']>1.02:
+				result = 1
+			else:
+				result = -1
+			
+			string = d + ',' + str(weekday) + ',' + quote['Symbol'] + ',' + str(result)
+			
+			for w in range(1,window):
+				trainDatetime = quote['Date'] - datetime.timedelta(days=w)
+				q = self.findQuoteForDate(trainDatetime, quote['Symbol'])
+
+				if q:
+					if q['High']/q['Open']>1.02:
+						win='T'
+					else:
+						win='F'
+						
+					string += ',' + str(win)
+				else:
+					string += ',?'
+			string += '\n'
+			
+			if(quote['Date']<splitDate):
+				trainFile.write(string)
+			else:
+				testFile.write(string)
+		trainFile.close()
+		testFile.close()
