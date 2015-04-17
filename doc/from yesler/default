@@ -1,8 +1,0 @@
-DEFAULT livecd
-
-LABEL livecd
-        kernel vmlinuz
-        append root=/dev/nfs boot=casper netboot=nfs nfsroot=192.168.1.64:/srv/nfs/extract-cd initrd=initrd.gz quiet splash --
-
-PROMPT 1
-TIMEOUT 100
