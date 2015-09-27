@@ -1,1 +1,1 @@
-ssh -i ./arbit.pem ec2-user@54.173.70.188
+ssh -i ./arbit.pem ec2-user@52.23.200.34
