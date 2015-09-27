@@ -181,4 +181,3 @@ var tooltip = d3.select("body").append("div")
 </script>
 </body>
 </html>
-
