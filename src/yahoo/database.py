@@ -60,9 +60,9 @@ class database():
 
 	def writeQuotesToDisk(self):
 		splitDate = datetime.datetime(2014,1,1)
-		window = 50
-		trainFile = open('/home/ec2-user/train.data', 'w')
-		testFile = open('/home/ec2-user/test.data', 'w')
+		window = 30
+		trainFile = open('train.data', 'w')
+		testFile = open('test.data', 'w')
 
 		# write the header to the file
 		string = 'date,weekday,symbol,result'
@@ -76,9 +76,7 @@ class database():
 			d = str(quote['Date'].year) + '-' + str(quote['Date'].month) + '-' + str(quote['Date'].day)
 			weekday = quote['Date'].weekday()
 			
-			if quote['Open']==0:
-				result = -1
-			elif quote['High']/quote['Open']>1.02:
+			if quote['High']/quote['Open']>1.02:
 				result = 1
 			else:
 				result = -1
@@ -90,9 +88,7 @@ class database():
 				q = self.findQuoteForDate(trainDatetime, quote['Symbol'])
 
 				if q:
-					if q['Open']==0:
-						win='F'
-					elif q['High']/q['Open']>1.02:
+					if q['High']/q['Open']>1.02:
 						win='T'
 					else:
 						win='F'
