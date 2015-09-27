@@ -1,0 +1,13 @@
+# Python stuff we don't want in git
+*.pyc
+__pycache__
+
+# SSH private key
+*.pem
+
+# Apple files
+*.DS_Store
+
+# Pycharm file
+*.idea
+
