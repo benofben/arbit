@@ -1,4 +1,4 @@
-# Python stuff we don't want in git
+# Python related
 *.pyc
 __pycache__
 
