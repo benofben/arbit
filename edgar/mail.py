@@ -43,7 +43,7 @@ def constructInsiderTable(currentDate):
                     # assuming a quarterly dividend (this could be wrong!)
                     stockYield = str(round((fundamentals['Dividend'] / fundamentals['Close']) * 100 * 4, 2)) + '%'
 
-                    acceptanceDateTimeString = '<a href="http://54.173.70.188/index.php?symbol=' + symbol + '">' + str(
+                    acceptanceDateTimeString = '<a href="http://52.23.200.34/index.php?symbol=' + symbol + '">' + str(
                         form['AcceptanceDatetime']) + '</a>'
                     symbolString = '<a href="http://www.google.com/finance?q=' + symbol + '">' + symbol + '</a>'
                     s += '<tr><td>' + acceptanceDateTimeString + '</td><td>' + str(form['TransactionDate'].strftime(
@@ -91,7 +91,9 @@ def mail(currentDate, s):
     fromAddress = 'ben.lackey@outlook.com'
     recipients = ['ben.lackey@outlook.com']
     login = fromAddress
-    password = 'x/}G?n2WbR3ZXc>f'
+
+    with open ("~/emailPassword.txt", "r") as passwordFile:
+        password=passwordFile.readlines()
 
     # Create message container - the correct MIME type is multipart/alternative.
     msg = MIMEMultipart('alternative')
