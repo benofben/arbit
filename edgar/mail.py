@@ -92,7 +92,7 @@ def mail(currentDate, s):
     recipients = ['ben.lackey@outlook.com']
     login = fromAddress
 
-    with open("home/ec2-user/emailPassword.txt", "r") as passwordFile:
+    with open("/home/ec2-user/emailPassword.txt", "r") as passwordFile:
         password = passwordFile.readlines()
 
     # Create message container - the correct MIME type is multipart/alternative.
