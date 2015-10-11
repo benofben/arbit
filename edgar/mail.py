@@ -93,7 +93,7 @@ def mail(currentDate, s):
     login = fromAddress
 
     with open("/home/ec2-user/emailPassword.txt", "r") as passwordFile:
-        password = passwordFile.readlines()
+        password = passwordFile.read().strip()
 
     # Create message container - the correct MIME type is multipart/alternative.
     msg = MIMEMultipart('alternative')
