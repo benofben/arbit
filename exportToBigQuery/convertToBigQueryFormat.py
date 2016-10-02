@@ -10,7 +10,7 @@ def convertDate(olddate):
     try:
         newdate = olddate.replace("T", " ")
     except AttributeError:
-        print("Got an attribute error while parsing: " + olddate)
+        print("Got an attribute error while parsing date: " + str(olddate))
         exit(1)
     return newdate
 
