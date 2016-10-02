@@ -11,10 +11,10 @@ for line in inputfile:
     x.pop("_id")
 
     d=x.pop("AcceptanceDatetime")
-    x["Date"]=d["$date"]
+    x["AcceptanceDatetime"]=d["$date"]
 
     d=x.pop("TransactionDate")
-    x["Date"]=d["$date"]
+    x["TransactionDate"]=d["$date"]
 
     outputfile.write(json.dumps(x) + "\n")
 

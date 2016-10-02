@@ -15,4 +15,3 @@ for line in inputfile:
 
 inputfile.close()
 outputfile.close()
-
