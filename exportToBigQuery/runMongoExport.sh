@@ -10,4 +10,4 @@ mongoexport --db arbit --collection yahooQuotes --out yahooQuotes.json
 python3 converToBigQueryFormat.py
 
 # copy everything to a bucket so we can import it to BigQuery
-gsutil cp *.new gs://mongoexport
+gsutil cp *.bigquery gs://mongoexport
