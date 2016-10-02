@@ -7,7 +7,7 @@ mongoexport --db arbit --collection symbols --out symbols.json
 mongoexport --db arbit --collection yahooQuotes --out yahooQuotes.json
 
 # reformat the json in a way BigQuery will like
-python3 converToBigQueryFormat.py
+python3 convertToBigQueryFormat.py
 
 # copy everything to a bucket so we can import it to BigQuery
 gsutil cp *.bigquery gs://mongoexport
