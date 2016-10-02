@@ -133,10 +133,10 @@ def form4():
     outputfile.close()
 
 def run():
+    form4()
     yahooQuotes()
     symbols()
     ratingsChanges()
-    form4()
     fundamentals()
 
 run()
