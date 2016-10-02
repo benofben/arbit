@@ -138,7 +138,9 @@ def form4():
     outputfile.close()
 
 def run():
-    form4()
+# It looks like the mongo export for form4 has a bunch of garbage data.  Going to try using the raw data instead
+#    form4()
+
     yahooQuotes()
     symbols()
     ratingsChanges()

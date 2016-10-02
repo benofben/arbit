@@ -1,3 +1,11 @@
 [
   {"name": "name", "type": "string", "mode": "required"}
+  {"name": "name", "type": "string", "mode": "required"}
+  {"name": "name", "type": "string", "mode": "required"}
+  {"name": "name", "type": "string", "mode": "required"}
+  {"name": "name", "type": "string", "mode": "required"}
+  {"name": "name", "type": "string", "mode": "required"}
+  {"name": "name", "type": "string", "mode": "required"}
+  {"name": "name", "type": "string", "mode": "required"}
+  {"name": "name", "type": "string", "mode": "required"}
 ]
