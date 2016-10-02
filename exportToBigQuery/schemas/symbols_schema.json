@@ -2,6 +2,6 @@
   {"name": "Name", "type": "string", "mode": "required"},
   {"name": "Symbol", "type": "string", "mode": "required"},
   {"name": "Exchange", "type": "string", "mode": "required"},
-  {"name": "MarketCap", "type": "string", "mode": "required"},
-  {"name": "LastSale", "type": "string", "mode": "required"}
+  {"name": "MarketCap", "type": "float", "mode": "required"},
+  {"name": "LastSale", "type": "float", "mode": "required"}
 ]

@@ -13,7 +13,6 @@ python3 convertToBigQueryFormat.py
 gsutil cp *.bigquery gs://mongoexport
 
 # load the data into BigQuery
-bq load --schema=schemas/form4_schema.json arbit.form4 gs://mongoexport/form4.json.bigquery
 bq load --schema=schemas/fundamentals_schema.json arbit.fundamentals gs://mongoexport/fundamentals.json.bigquery
 bq load --schema=schemas/ratingsChanges_schema.json arbit.ratingsChanges gs://mongoexport/ratingsChanges.json.bigquery
 bq load --schema=schemas/symbols_schema.json arbit.symbols gs://mongoexport/symbols.json.bigquery
