@@ -58,7 +58,7 @@ def symbols():
 
 
 def ratingsChanges():
-    filename = '../../fundamentals/ratingsChanges.json'
+    filename = '../../exportData/ratingsChanges.json'
     inputfile = open(filename, 'r')
     outputfile = open(filename+'.bigquery', 'w')
 
