@@ -1,2 +1,7 @@
 #!/usr/bin/env bash
-ssh -i ./arbit.pem ec2-user@52.23.200.34
+
+#arbit 200
+#ssh -i ./arbit.pem ec2-user@54.204.122.58
+
+#arbit 60
+ssh -i ./arbit.pem ec2-user@54.88.93.175
