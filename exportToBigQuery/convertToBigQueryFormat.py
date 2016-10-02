@@ -1,13 +1,18 @@
 import json
 
-def convertDate(date):
+def convertDate(olddate):
     # BigQuery doesn't like the Mongo date format:
     # JSON parsing error in row starting at position 0 at file: gs://mongoexport/form4.json.new.
     # Could not parse '2014-04-02T20:00:00.000-0400' as a timestamp.
     # Required format is YYYY-MM-DD HH:MM[:SS[.SSSSSS]] Field: Date; Value: 2014-04-02T20:00:00.000-0400
     # (error code: invalid)
 
-    return date.replace("T", " ")
+    try:
+        newdate = olddate.replace("T", " ")
+    except AttributeError:
+        print("Got an attribute error while parsing: " + olddate)
+        exit(1)
+    return newdate
 
 def convertBoolean(b):
     if b=='T' or b =='A':
