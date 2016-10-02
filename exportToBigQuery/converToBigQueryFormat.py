@@ -1,17 +1,22 @@
 import json
 
-def convertDate(olddate):
+def convertDate(date):
     # BigQuery doesn't like the Mongo date format:
     # JSON parsing error in row starting at position 0 at file: gs://mongoexport/form4.json.new.
     # Could not parse '2014-04-02T20:00:00.000-0400' as a timestamp.
     # Required format is YYYY-MM-DD HH:MM[:SS[.SSSSSS]] Field: Date; Value: 2014-04-02T20:00:00.000-0400
     # (error code: invalid)
 
-    newdate = olddate.replace("T", " ")
-    return newdate
+    return date.replace("T", " ")
 
 def convertBoolean(b):
-    return b
+    if b=='T' or b =='A':
+        return True
+    elif b=='F' or b=='D':
+        return False
+    else:
+        print("Parse error for boolean value: " + b)
+        exit(1)
 
 def yahooQuotes():
     filename = '../../exportData/yahooQuotes.json'
@@ -106,6 +111,21 @@ def form4():
 
         d = x.pop("TransactionDate")
         x["TransactionDate"] = convertDate(d["$date"])
+
+        d = x.pop("IsDirector")
+        x["IsDirector"] = convertBoolean(d)
+
+        d = x.pop("IsOther")
+        x["IsOther"] = convertBoolean(d)
+
+        d = x.pop("IsOfficer")
+        x["IsOfficer"] = convertBoolean(d)
+
+        d = x.pop("IsTenPercentOwner")
+        x["IsTenPercentOwner"] = convertBoolean(d)
+
+        d = x.pop("TransactionAcquiredDisposed")
+        x["TransactionAcquired"] = convertBoolean(d)
 
         outputfile.write(json.dumps(x) + "\n")
 
