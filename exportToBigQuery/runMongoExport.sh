@@ -6,4 +6,8 @@ mongoexport --db arbit --collection ratingsChanges --out ratingsChanges.json
 mongoexport --db arbit --collection symbols --out symbols.json
 mongoexport --db arbit --collection yahooQuotes --out yahooQuotes.json
 
-cat symbols.json | ramda -c 'omit ["_id", "Industry","Sector"]' > symbols.json.new
+# reformat the json in a way BigQuery will like
+python3 converToBigQueryFormat.py
+
+# copy everything to a bucket so we can import it to BigQuery
+gsutil cp *.new gs://mongoexport
