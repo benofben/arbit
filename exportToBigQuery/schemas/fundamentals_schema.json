@@ -3,7 +3,7 @@
   {"name": "DownloadDate", "type": "datetime", "mode": "required"},
   {"name": "Open", "type": "float", "mode": "required"},
   {"name": "High", "type": "float", "mode": "required"},
-  {"name": "Low", "type": "float", "mode": "required"}
+  {"name": "Low", "type": "float", "mode": "required"},
   {"name": "Close", "type": "float", "mode": "required"},
   {"name": "Shares", "type": "integer", "mode": "required"},
   {"name": "EPS", "type": "float", "mode": "required"},
