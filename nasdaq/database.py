@@ -3,13 +3,13 @@ from pymongo import MongoClient
 
 class database():
     def __init__(self):
-        self.client = MongoClient()
+        pass
 
     def dropCollection(self):
-        self.client.arbit.symbols.drop()
+        pass
 
     def __del__(self):
-        self.client.disconnect()
+        pass
 
     def insert(self, symbolInformation):
         symbol = {
@@ -22,10 +22,10 @@ class database():
             'Sector': symbolInformation['Sector'],
             'Industry': symbolInformation['Industry']
         }
-        self.client.arbit.symbols.insert(symbol)
+        pass
 
     def getAllSymbols(self):
         symbols = []
-        for symbolInformation in self.client.arbit.symbols.find():
-            symbols.append(symbolInformation['Symbol'])
+        #for symbolInformation in self.client.arbit.symbols.find():
+        #    symbols.append(symbolInformation['Symbol'])
         return symbols
