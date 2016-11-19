@@ -1,6 +1,6 @@
 import datetime
 
-dataDirectory='/home/ec2-user/arbitData/'
+dataDirectory='/home/benton_lackey/arbitData/'
 
 # used in the yahoo downloader
 startDate = datetime.date.today() - datetime.timedelta(days=365)
