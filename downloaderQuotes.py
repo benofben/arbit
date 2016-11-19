@@ -1,4 +1,4 @@
-import yahoo.downloader
+#import yahoo.downloader
 import nasdaq.downloader
 import sched
 import datetime
