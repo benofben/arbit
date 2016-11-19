@@ -1,6 +1,3 @@
-from pymongo import MongoClient
-
-
 class database():
     def __init__(self):
         pass
