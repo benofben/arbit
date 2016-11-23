@@ -2,6 +2,8 @@ from google.cloud import bigquery
 
 class database():
     table = ''
+    rows = []
+
 
     def __init__(self):
         bigquery_client = bigquery.Client()
@@ -24,7 +26,7 @@ class database():
         self.table.create()
 
 
-    def insert(self, symbolInformation):
+    def addRow(self, symbolInformation):
         row = (
             symbolInformation['Symbol'],
             symbolInformation['Exchange'],
@@ -35,8 +37,11 @@ class database():
             symbolInformation['Sector'],
             symbolInformation['Industry']
         )
-        rows = [row]
-        self.table.insert_data(rows)
+        self.rows.append(row)
+
+
+    def insert():
+        self.table.insert_data(self.rows)
 
 
     def getAllSymbols(self):

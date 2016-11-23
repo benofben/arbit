@@ -28,8 +28,8 @@ def insertSymbolsIntoDB():
     for exchange in exchanges:
         symbolInformation = getSymbolInformationForExchange(exchange)
         for symbol in symbolInformation:
-            db.insert(symbolInformation[symbol])
-
+            db.addRow(symbolInformation[symbol])
+    db.insert()
 
 def downloadSymbols():
     import os
