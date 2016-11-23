@@ -11,7 +11,7 @@ class database():
         if self.table.exists():
             self.table.delete()
 
-        table.schema = (
+        self.table.schema = (
             bigquery.table.SchemaField(name='Symbol', field_type='STRING'),
             bigquery.table.SchemaField(name='Exchange', field_type='STRING'),
             bigquery.table.SchemaField(name='Name', field_type='STRING'),
@@ -21,7 +21,7 @@ class database():
             bigquery.table.SchemaField(name='Sector', field_type='STRING'),
             bigquery.table.SchemaField(name='Industry', field_type='STRING')
         )
-        table.create()
+        self.table.create()
 
 
     def insert(self, symbolInformation):
