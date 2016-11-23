@@ -1,6 +1,8 @@
 from google.cloud import bigquery
 
 class database():
+    table = pass
+
     def __init__(self):
         bigquery_client = bigquery.Client()
         dataset = bigquery_client.dataset('downloader')
