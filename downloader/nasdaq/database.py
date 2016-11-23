@@ -25,17 +25,17 @@ class database():
 
 
     def insert(self, symbolInformation):
-        symbol = {
-            'Symbol': symbolInformation['Symbol'],
-            'Exchange': symbolInformation['Exchange'],
-            'Name': symbolInformation['Name'],
-            'LastSale': symbolInformation['LastSale'],
-            'MarketCap': symbolInformation['MarketCap'],
-            'IPOYear': symbolInformation['IPOYear'],
-            'Sector': symbolInformation['Sector'],
-            'Industry': symbolInformation['Industry']
-        }
-        rows = []
+        row = (
+            symbolInformation['Symbol'],
+            symbolInformation['Exchange'],
+            symbolInformation['Name'],
+            symbolInformation['LastSale'],
+            symbolInformation['MarketCap'],
+            symbolInformation['IPOYear'],
+            symbolInformation['Sector'],
+            symbolInformation['Industry']
+        )
+        rows = [row]
         self.table.insert_data(rows)
 
 
