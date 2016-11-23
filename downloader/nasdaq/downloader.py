@@ -31,6 +31,7 @@ def insertSymbolsIntoDB():
             db.addRow(symbolInformation[symbol])
     db.insert()
 
+
 def downloadSymbols():
     import os
     if os.path.exists(constants.dataDirectory + 'symbols'):
