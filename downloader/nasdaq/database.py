@@ -1,8 +1,6 @@
 from google.cloud import bigquery
 
 class database():
-    table = ''
-
     def __init__(self):
         bigquery_client = bigquery.Client()
         dataset = bigquery_client.dataset('downloader')
@@ -36,7 +34,7 @@ class database():
             'Industry': symbolInformation['Industry']
         }
         rows = []
-        table.insert_data(rows)
+        self.table.insert_data(rows)
 
 
     def getAllSymbols(self):
