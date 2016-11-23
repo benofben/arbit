@@ -20,7 +20,6 @@ class database():
             bigquery.table.SchemaField(name='Industry', field_type='STRING')
         )
         table.create()
-        print('Created table {} in dataset {}.'.format(table_name, dataset_name))
 
 
     def insert(self, symbolInformation):
