@@ -40,7 +40,7 @@ class database():
         self.rows.append(row)
 
 
-    def insert():
+    def insert(self):
         self.table.insert_data(self.rows)
 
 
