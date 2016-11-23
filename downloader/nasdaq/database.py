@@ -8,8 +8,8 @@ class database():
         dataset = bigquery_client.dataset('downloader')
         self.table = dataset.table('symbols')
 
-        if table.exists():
-            table.delete()
+        if self.table.exists():
+            self.table.delete()
 
         table.schema = (
             bigquery.table.SchemaField(name='Symbol', field_type='STRING'),
