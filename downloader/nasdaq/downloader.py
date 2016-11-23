@@ -24,7 +24,6 @@ def downloadSymbolList(exchange):
 
 def insertSymbolsIntoDB():
     db = nasdaq.database.database()
-    db.dropCollection()
 
     for exchange in exchanges:
         symbolInformation = getSymbolInformationForExchange(exchange)
