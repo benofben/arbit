@@ -60,22 +60,17 @@ def getSymbolInformationForExchange(exchange):
             symbolInformation[Symbol]['Symbol'] = Symbol
             symbolInformation[Symbol]['Exchange'] = exchange
             symbolInformation[Symbol]['Name'] = Name
-
             if (LastSale == 'n/a'):
                 LastSale = 0
             symbolInformation[Symbol]['LastSale'] = float(LastSale)
-
             symbolInformation[Symbol]['MarketCap'] = float(MarketCap)
-
             if (not IPOyear.isdigit()):
                 IPOyear = 0
             symbolInformation[Symbol]['IPOYear'] = IPOyear
-
             symbolInformation[Symbol]['Sector'] = Sector
             symbolInformation[Symbol]['Industry'] = Industry
 
     inputFile.close()
-
     return symbolInformation
 
 
