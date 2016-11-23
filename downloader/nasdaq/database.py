@@ -33,7 +33,9 @@ class database():
             'Sector': symbolInformation['Sector'],
             'Industry': symbolInformation['Industry']
         }
-        pass
+        rows = []
+        table.insert_data(rows)
+
 
     def getAllSymbols(self):
         symbols = []
