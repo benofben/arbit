@@ -1,7 +1,7 @@
 from google.cloud import bigquery
 
 class database():
-    table = pass
+    table = ''
 
     def __init__(self):
         bigquery_client = bigquery.Client()
