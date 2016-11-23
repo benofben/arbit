@@ -9,19 +9,19 @@ class database():
         if table.exists():
             table.delete()
 
-        field1 = bigquery.table.SchemaField(name='Symbol', field_type='STRING')
-        field2 = bigquery.table.SchemaField(name='Exchange', field_type='STRING')
-        field3 = bigquery.table.SchemaField(name='Name', field_type='STRING')
-        field4 = bigquery.table.SchemaField(name='LastSale', field_type='FLOAT')
-        field5 = bigquery.table.SchemaField(name='MarketCap', field_type='FLOAT')
-        field6 = bigquery.table.SchemaField(name='IPOYear', field_type='INTEGER')
-        field7 = bigquery.table.SchemaField(name='Sector', field_type='STRING')
-        field8 = bigquery.table.SchemaField(name='Industry', field_type='STRING')
-        schema = [field1, field2, field3, field4, field5, field6, field7, field8]
-        table.create(schema=schema)
+        table.schema = (
+            bigquery.table.SchemaField(name='Symbol', field_type='STRING'),
+            bigquery.table.SchemaField(name='Exchange', field_type='STRING'),
+            bigquery.table.SchemaField(name='Name', field_type='STRING'),
+            bigquery.table.SchemaField(name='LastSale', field_type='FLOAT'),
+            bigquery.table.SchemaField(name='MarketCap', field_type='FLOAT'),
+            bigquery.table.SchemaField(name='IPOYear', field_type='INTEGER'),
+            bigquery.table.SchemaField(name='Sector', field_type='STRING'),
+            bigquery.table.SchemaField(name='Industry', field_type='STRING')
+        )
+        table.create()
+        print('Created table {} in dataset {}.'.format(table_name, dataset_name))
 
-    def __del__(self):
-        pass
 
     def insert(self, symbolInformation):
         symbol = {
