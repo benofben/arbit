@@ -1,6 +1,12 @@
+from google.cloud import bigquery
+
 class database():
     def __init__(self):
-        pass
+        bigquery_client = bigquery.Client()
+        dataset_name = 'downloader'
+        dataset = bigquery_client.dataset(dataset_name)
+        dataset.create()
+        print('Dataset {} created.'.format(dataset.name))
 
     def dropCollection(self):
         pass
