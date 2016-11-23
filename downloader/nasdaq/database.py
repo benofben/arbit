@@ -1,10 +1,12 @@
 from google.cloud import bigquery
 
 class database():
+    table = ''
+
     def __init__(self):
         bigquery_client = bigquery.Client()
         dataset = bigquery_client.dataset('downloader')
-        table = dataset.table('symbols')
+        self.table = dataset.table('symbols')
 
         if table.exists():
             table.delete()
