@@ -1,24 +1,24 @@
-import constants
-import nasdaq.database
 import os
 import shutil
 import http.client
 import csv
+import constants
+import nasdaq.database
 
 # Options are: NYSE, NASDAQ, AMEX
 exchanges = ['NYSE', 'NASDAQ']
 
 
-def downloadSymbols():
+def download():
     if os.path.exists(constants.dataDirectory + 'symbols'):
         shutil.rmtree(constants.dataDirectory + 'symbols')
     os.makedirs(constants.dataDirectory + 'symbols')
 
     for exchange in exchanges:
-        downloadSymbols(exchange)
+        download(exchange)
 
 
-def downloadSymbols(exchange):
+def download(exchange):
     print('Trying to get exchange ' + exchange + '...')
     conn = http.client.HTTPConnection('www.nasdaq.com')
     conn.request('GET', '/screening/companies-by-industry.aspx?exchange=' + exchange + '&render=download')
@@ -34,16 +34,15 @@ def downloadSymbols(exchange):
     file.close()
 
 
-def readSymbolInformation():
-    symbols=[]
+def reformat():
     for exchange in exchanges:
-        symbolInformation = readSymbolInformation(exchange)
+        symbolInformation = reformatFile(exchange)
         for symbol in symbolInformation:
             symbols.append(symbolInformation[symbol])
     return symbols
 
 
-def readSymbolInformation(exchange):
+def reformat(exchange):
     symbolInformation = {}
     inputFile = open(constants.dataDirectory + 'symbols/' + exchange + '.csv', 'r')
     reader = csv.reader(inputFile)
@@ -74,15 +73,17 @@ def readSymbolInformation(exchange):
     return symbolInformation
 
 
-def loadSymbolsIntoDB():
+def load():
+    pass
 
-    db = nasdaq.database.database()
-    db.insert()
+#    db = nasdaq.database.database()
+#    db.insert()
 
-    print('Inserted symbols into database.')
-    print(db.getSymbols())
+#    print('Inserted symbols into database.')
+#    print(db.getSymbols())
 
 
 def run():
-    downloadSymbols()
-    loadSymbolsIntoDB()
+    download()
+    reformat()
+    load()
