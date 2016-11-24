@@ -45,6 +45,8 @@ class database():
 
 
     def getSymbols(self):
+        query = 'SELECT * FROM downloader.symbols'
+
         symbols = []
         #for symbolInformation in self.client.arbit.symbols.find():
         #    symbols.append(symbolInformation['Symbol'])

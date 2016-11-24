@@ -30,7 +30,7 @@ def insertSymbolsIntoDB():
         for symbol in symbolInformation:
             db.addRow(symbolInformation[symbol])
     db.insert()
-
+    print('Inserted symbols into database.')
 
 def downloadSymbols():
     import os
