@@ -1,13 +1,25 @@
 import constants
 import nasdaq.database
+import os
+import shutil
+import http.client
+import csv
 
 # Options are: NYSE, NASDAQ, AMEX
 exchanges = ['NYSE', 'NASDAQ']
 
 
-def downloadSymbolList(exchange):
+def downloadSymbols():
+    if os.path.exists(constants.dataDirectory + 'symbols'):
+        shutil.rmtree(constants.dataDirectory + 'symbols')
+    os.makedirs(constants.dataDirectory + 'symbols')
+
+    for exchange in exchanges:
+        downloadSymbols(exchange)
+
+
+def downloadSymbols(exchange):
     print('Trying to get exchange ' + exchange + '...')
-    import http.client
     conn = http.client.HTTPConnection('www.nasdaq.com')
     conn.request('GET', '/screening/companies-by-industry.aspx?exchange=' + exchange + '&render=download')
     response = conn.getresponse()
@@ -22,33 +34,18 @@ def downloadSymbolList(exchange):
     file.close()
 
 
-def insertSymbolsIntoDB():
-    db = nasdaq.database.database()
-
+def readSymbolInformation():
+    symbols=[]
     for exchange in exchanges:
-        symbolInformation = getSymbolInformationForExchange(exchange)
+        symbolInformation = readSymbolInformation(exchange)
         for symbol in symbolInformation:
-            db.addRow(symbolInformation[symbol])
-
-    db.insert()
-    print('Inserted symbols into database.')
-    print(db.getSymbols())
-
-def downloadSymbols():
-    import os
-    if os.path.exists(constants.dataDirectory + 'symbols'):
-        import shutil
-        shutil.rmtree(constants.dataDirectory + 'symbols')
-    os.makedirs(constants.dataDirectory + 'symbols')
-
-    for exchange in exchanges:
-        downloadSymbolList(exchange)
+            symbols.append(symbolInformation[symbol])
+    return symbols
 
 
-def getSymbolInformationForExchange(exchange):
+def readSymbolInformation(exchange):
     symbolInformation = {}
     inputFile = open(constants.dataDirectory + 'symbols/' + exchange + '.csv', 'r')
-    import csv
     reader = csv.reader(inputFile)
 
     for Symbol, Name, LastSale, MarketCap, unused_ADRTSO, IPOyear, Sector, Industry, unused_SummaryQuote, unused_Null in reader:
@@ -77,6 +74,15 @@ def getSymbolInformationForExchange(exchange):
     return symbolInformation
 
 
+def loadSymbolsIntoDB():
+
+    db = nasdaq.database.database()
+    db.insert()
+
+    print('Inserted symbols into database.')
+    print(db.getSymbols())
+
+
 def run():
     downloadSymbols()
-    insertSymbolsIntoDB()
+    loadSymbolsIntoDB()

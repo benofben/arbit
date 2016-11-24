@@ -22,5 +22,5 @@ downloadtimeFundamentals = datetime.time(16,30,0)
 # It's now unclear what timezone this is.  It might be gmt, in which case the files show up a little after 9.
 # the mail job that is part of this needs fundamentals (which now includes scraped quotes) to finish first.
 
-# ... showing up at 10pm eastern.
+# This is showing up at 10pm eastern.
 downloadtimeEDGAR = datetime.time(22,30,0)
