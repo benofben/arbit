@@ -14,6 +14,7 @@ class database():
             self.table.delete()
 
             # wait for the table to get deleted
+            import time
             time.sleep(5)
 
         self.table.schema = (
