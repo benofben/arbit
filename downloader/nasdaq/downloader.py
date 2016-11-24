@@ -31,6 +31,7 @@ def insertSymbolsIntoDB():
             db.addRow(symbolInformation[symbol])
     db.insert()
     print('Inserted symbols into database.')
+    print(db.getSymbols())
 
 def downloadSymbols():
     import os

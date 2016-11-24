@@ -1,4 +1,4 @@
-import yahoo.downloader
+#import yahoo.downloader
 import nasdaq.downloader
 import sched
 import datetime
@@ -16,7 +16,7 @@ class downloader:
     def download(self):
         print('Running quotes download at ' + datetime.datetime.today().isoformat())
         nasdaq.downloader.run()
-        yahoo.downloader.run()
+        #yahoo.downloader.run()
         print('Done with quotes download at ' + datetime.datetime.today().isoformat())
 
         # Reschedule the download to run again tomorrow.

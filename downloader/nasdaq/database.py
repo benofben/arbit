@@ -46,6 +46,8 @@ class database():
 
     def getSymbols(self):
         query = 'SELECT * FROM downloader.symbols'
+        #job = bigquery.job.
+        #result =
 
         symbols = []
         #for symbolInformation in self.client.arbit.symbols.find():
