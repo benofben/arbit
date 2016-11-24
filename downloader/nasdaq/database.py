@@ -44,7 +44,7 @@ class database():
         self.table.insert_data(self.rows)
 
 
-    def getAllSymbols(self):
+    def getSymbols(self):
         symbols = []
         #for symbolInformation in self.client.arbit.symbols.find():
         #    symbols.append(symbolInformation['Symbol'])

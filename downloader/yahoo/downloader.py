@@ -1,7 +1,7 @@
 import constants
 import datetime
 import nasdaq.database
-import yahoo.database
+#import yahoo.database
 
 
 def run():
@@ -10,11 +10,11 @@ def run():
     failedSymbolsFilename = constants.dataDirectory + 'yahoo/failedQuotesSymbols.txt'
     failedSymbolsFile = open(failedSymbolsFilename, 'w')
 
-    quotesDB = yahoo.database.database()
-    quotesDB.dropCollection()
+    #quotesDB = yahoo.database.database()
+    #quotesDB.dropCollection()
 
     symbolsDB = nasdaq.database.database()
-    s = symbolsDB.getAllSymbols()
+    s = symbolsDB.getSymbols()
 
     while s:
         print(str(len(s)) + ' symbols remaining.')
@@ -24,7 +24,7 @@ def run():
         else:
             quotes = loadQuotesFromDisk(symbol)
             quotes['Symbol'] = symbol
-            quotesDB.insert(quotes)
+            #quotesDB.insert(quotes)
 
     failedSymbolsFile.close()
 
@@ -62,8 +62,7 @@ def downloadQuotes(symbol):
     startMonth = '0'
     startDay = '1'
 
-    conn.request('GET',
-                 '/table.csv?s=' + symbol + '&d=' + endMonth + '&e=' + endDay + '&f=' + endYear + '&g=d&a=' + startMonth + '&b=' + startDay + '&c=' + startYear + '&ignore=.csvc')
+    conn.request('GET', '/table.csv?s=' + symbol + '&d=' + endMonth + '&e=' + endDay + '&f=' + endYear + '&g=d&a=' + startMonth + '&b=' + startDay + '&c=' + startYear + '&ignore=.csvc')
     response = conn.getresponse()
     print(response.status, response.reason)
     data = response.read()
