@@ -45,6 +45,9 @@ class database():
 
 
     def getSymbols(self):
+        for row in self.table.fetch_data():
+            print(row)
+
         query = 'SELECT * FROM downloader.symbols'
         #job = bigquery.job.
         #result =
