@@ -62,7 +62,7 @@ def reformatExchange(exchange):
             if (not IPOyear.isdigit()):
                 IPOyear = 0
 
-        writer.writerow(exchange, Symbol, Name, LastSale, MarketCap, IPOyear, Sector, Industry)
+        writer.writerow([exchange, Symbol, Name, LastSale, MarketCap, IPOyear, Sector, Industry])
 
     inputFile.close()
     outputFile.close()
