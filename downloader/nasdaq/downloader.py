@@ -9,11 +9,13 @@ import nasdaq.database
 exchanges = ['NYSE', 'NASDAQ']
 
 
-def download():
+def delete():
     if os.path.exists(constants.dataDirectory + 'symbols'):
         shutil.rmtree(constants.dataDirectory + 'symbols')
     os.makedirs(constants.dataDirectory + 'symbols')
 
+
+def download():
     for exchange in exchanges:
         download(exchange)
 
@@ -36,16 +38,15 @@ def download(exchange):
 
 def reformat():
     for exchange in exchanges:
-        symbolInformation = reformatFile(exchange)
-        for symbol in symbolInformation:
-            symbols.append(symbolInformation[symbol])
-    return symbols
+        reformat(exchange)
 
 
 def reformat(exchange):
-    symbolInformation = {}
     inputFile = open(constants.dataDirectory + 'symbols/' + exchange + '.csv', 'r')
     reader = csv.reader(inputFile)
+
+    outputFile = open(constants.dataDirectory + 'symbols/' + exchange + 'reformat.csv', 'w')
+    writer = csv.writer(outputFile)
 
     for Symbol, Name, LastSale, MarketCap, unused_ADRTSO, IPOyear, Sector, Industry, unused_SummaryQuote, unused_Null in reader:
         if (Symbol == 'Symbol'):
@@ -55,22 +56,16 @@ def reformat(exchange):
             Symbol = Symbol.replace('^', '.')
             Symbol = Symbol.replace('/', '.')
 
-            symbolInformation[Symbol] = {}
-            symbolInformation[Symbol]['Symbol'] = Symbol
-            symbolInformation[Symbol]['Exchange'] = exchange
-            symbolInformation[Symbol]['Name'] = Name
             if (LastSale == 'n/a'):
                 LastSale = 0
-            symbolInformation[Symbol]['LastSale'] = float(LastSale)
-            symbolInformation[Symbol]['MarketCap'] = float(MarketCap)
+
             if (not IPOyear.isdigit()):
                 IPOyear = 0
-            symbolInformation[Symbol]['IPOYear'] = IPOyear
-            symbolInformation[Symbol]['Sector'] = Sector
-            symbolInformation[Symbol]['Industry'] = Industry
+
+        writer.writerow(exchange, Symbol, Name, LastSale, MarketCap, IPOyear, Sector, Industry)
 
     inputFile.close()
-    return symbolInformation
+    outputFile.close()
 
 
 def load():
@@ -84,6 +79,7 @@ def load():
 
 
 def run():
+    delete()
     download()
     reformat()
     load()
