@@ -45,7 +45,7 @@ def reformatExchange(exchange):
     inputFile = open(constants.dataDirectory + 'symbols/' + exchange + '.csv', 'r')
     reader = csv.reader(inputFile)
 
-    outputFile = open(constants.dataDirectory + 'symbols/' + exchange + 'reformat.csv', 'w')
+    outputFile = open(constants.dataDirectory + 'symbols/' + exchange + '.reformat.csv', 'w')
     writer = csv.writer(outputFile)
 
     for Symbol, Name, LastSale, MarketCap, unused_ADRTSO, IPOyear, Sector, Industry, unused_SummaryQuote, unused_Null in reader:
