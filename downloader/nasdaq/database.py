@@ -13,10 +13,6 @@ class database():
         if self.table.exists():
             self.table.delete()
 
-            # wait for the table to get deleted
-            import time
-            time.sleep(5)
-
         self.table.schema = (
             bigquery.table.SchemaField(name='Symbol', field_type='STRING'),
             bigquery.table.SchemaField(name='Exchange', field_type='STRING'),
