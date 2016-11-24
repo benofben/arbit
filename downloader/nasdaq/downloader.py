@@ -69,13 +69,17 @@ def reformatExchange(exchange):
 
 
 def load():
-    pass
+    print('Writing symbols to the database...')
 
-#    db = nasdaq.database.database()
-#    db.insert()
+    db = nasdaq.database.database()
+    db.delete()
+    db.create()
 
-#    print('Inserted symbols into database.')
-#    print(db.getSymbols())
+    for exchange in exchanges:
+        filename = constants.dataDirectory + 'symbols/' + exchange + '.reformat.csv'
+        db.upload(filename)
+
+    print('Done writing symbols to the database.')
 
 
 def run():
