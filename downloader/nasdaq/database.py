@@ -12,6 +12,7 @@ class database():
 
         if self.table.exists():
             self.table.delete()
+            assert not self.table.exists()
 
         self.table.schema = (
             bigquery.table.SchemaField(name='Symbol', field_type='STRING'),
