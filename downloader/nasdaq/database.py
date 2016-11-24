@@ -36,11 +36,13 @@ class database():
 
 
     def getSymbols(self):
-        #query = 'SELECT * FROM downloader.symbols'
-        #job = bigquery.job.
-        #result =
+        query = 'SELECT Symbol FROM downloader.symbols'
+        query_results = client.run_sync_query(query)
+        query_results.use_legacy_sql = False
+        query_results.run()
 
-        for row in self.table.fetch_data():
+        rows = query_results.fetch_data()
+        for row in rows:
             print(row)
 
         symbols = []
