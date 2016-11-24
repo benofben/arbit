@@ -17,10 +17,10 @@ def delete():
 
 def download():
     for exchange in exchanges:
-        download(exchange)
+        downloadExchange(exchange)
 
 
-def download(exchange):
+def downloadExchange(exchange):
     print('Trying to get exchange ' + exchange + '...')
     conn = http.client.HTTPConnection('www.nasdaq.com')
     conn.request('GET', '/screening/companies-by-industry.aspx?exchange=' + exchange + '&render=download')
@@ -38,10 +38,10 @@ def download(exchange):
 
 def reformat():
     for exchange in exchanges:
-        reformat(exchange)
+        reformatExchange(exchange)
 
 
-def reformat(exchange):
+def reformatExchange(exchange):
     inputFile = open(constants.dataDirectory + 'symbols/' + exchange + '.csv', 'r')
     reader = csv.reader(inputFile)
 
