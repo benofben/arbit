@@ -44,6 +44,9 @@ class database():
     def insert(self):
         self.table.insert_data(self.rows)
 
+#with open(csv_file.name, 'rb') as readable:
+#        table.upload_from_file(
+#            readable, source_format='CSV', skip_leading_rows=1)
 
     def getSymbols(self):
         for row in self.table.fetch_data():

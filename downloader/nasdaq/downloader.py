@@ -29,6 +29,7 @@ def insertSymbolsIntoDB():
         symbolInformation = getSymbolInformationForExchange(exchange)
         for symbol in symbolInformation:
             db.addRow(symbolInformation[symbol])
+
     db.insert()
     print('Inserted symbols into database.')
     print(db.getSymbols())
