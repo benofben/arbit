@@ -1,11 +1,15 @@
-import constants
+import os
+import shutil
 import datetime
+import http.client
+import csv
+import constants
 import nasdaq.database
 #import yahoo.database
 
 
 def run():
-    cleanUp()
+    delete()
 
     failedSymbolsFilename = constants.dataDirectory + 'yahoo/failedQuotesSymbols.txt'
     failedSymbolsFile = open(failedSymbolsFilename, 'w')
@@ -14,12 +18,11 @@ def run():
     #quotesDB.dropCollection()
 
     symbolsDB = nasdaq.database.database()
-    s = symbolsDB.getSymbols()
-
-    while s:
+    symbols = symbolsDB.getSymbols()
+    while symbols:
         print(str(len(s)) + ' symbols remaining.')
-        symbol = s.pop()
-        if not downloadQuotes(symbol):
+        symbol = symbols.pop()
+        if not download(symbol):
             failedSymbolsFile.write(symbol + '\n')
         else:
             quotes = loadQuotesFromDisk(symbol)
@@ -29,17 +32,14 @@ def run():
     failedSymbolsFile.close()
 
 
-def cleanUp():
-    import os
+def delete():
     if os.path.exists(constants.dataDirectory + 'yahoo/quotes'):
-        import shutil
         shutil.rmtree(constants.dataDirectory + 'yahoo/quotes')
     os.makedirs(constants.dataDirectory + 'yahoo/quotes/')
 
 
-def downloadQuotes(symbol):
+def download(symbol):
     print('Downloading historical data for ' + symbol + '...')
-    import http.client
     conn = http.client.HTTPConnection('ichart.finance.yahoo.com')
 
     '''
@@ -112,7 +112,6 @@ def loadQuotesFromDisk(symbol):
     quotes['Volume'] = []
     quotes['AdjClose'] = []
 
-    import csv
     reader = csv.reader(inputFile)
 
     for Date, Open, High, Low, Close, Volume, AdjClose in reader:
