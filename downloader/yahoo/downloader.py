@@ -83,7 +83,8 @@ def save(data, symbol):
 def reformat(symbol, outputFile):
     inputFilename = constants.dataDirectory + 'quotes/' + symbol + '.csv'
     inputFile = open(inputFilename, 'r')
-    outputFile.write(inputFile)
+    for line in inputFile:
+        outputFile.write(line)
     inputFile.close()
 
 
