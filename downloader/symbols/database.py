@@ -23,27 +23,27 @@ class database():
 
 
     def create(self):
-        table = self.client.dataset('downloader').table('symbols2')
+        table = self.client.dataset('downloader').table('symbols')
         if not table.exists():
             table = self.setSchema(table)
             table.create()
 
 
     def delete(self):
-        table = self.client.dataset('downloader').table('symbols2')
+        table = self.client.dataset('downloader').table('symbols')
         if table.exists():
             table.delete()
 
 
     def upload(self, filename):
-        table = self.client.dataset('downloader').table('symbols2')
+        table = self.client.dataset('downloader').table('symbols')
         table = self.setSchema(table)
         with open(filename, 'rb') as readable:
             table.upload_from_file(readable, source_format='CSV')
 
 
     def getSymbols(self):
-        query = 'SELECT Symbol FROM downloader.symbols2'
+        query = 'SELECT Symbol FROM downloader.symbols'
         query_results = self.client.run_sync_query(query)
         query_results.use_legacy_sql = False
         query_results.run()
