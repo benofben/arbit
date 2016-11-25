@@ -36,7 +36,7 @@ class database():
         if table.exists():
             table.delete()
 
-            # http://stackoverflow.com/questions/36415265/after-recreating-bigquery-table-streaming-inserts-are-not-working
+            # Need to sleep - http://stackoverflow.com/questions/36415265/after-recreating-bigquery-table-streaming-inserts-are-not-working
             print('Going to sleep for 2 minutes to give delete time to propagate.')
             time.sleep(120)
 
