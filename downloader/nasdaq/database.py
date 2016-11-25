@@ -25,7 +25,7 @@ class database():
     def create(self):
         table = self.client.dataset('downloader').table('symbols')
         if not table.exists():
-            table = setSchema(table)
+            table = self.setSchema(table)
             table.create()
 
 
