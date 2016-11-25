@@ -2,7 +2,7 @@ import sched
 import datetime
 import time
 import constants
-import nasdaq.downloader
+import symbols.downloader
 
 
 class downloader:
@@ -16,7 +16,7 @@ class downloader:
 
     def download(self):
         print('Running symbols download at ' + datetime.datetime.today().isoformat())
-        nasdaq.downloader.run()
+        symbols.downloader.run()
         print('Done with symbols download at ' + datetime.datetime.today().isoformat())
 
         # Reschedule the download to run again tomorrow.

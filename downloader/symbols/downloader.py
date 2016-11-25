@@ -3,7 +3,7 @@ import shutil
 import http.client
 import csv
 import constants
-import nasdaq.database
+import symbols.database
 
 # Options are: NYSE, NASDAQ, AMEX
 exchanges = ['NYSE', 'NASDAQ']
@@ -15,7 +15,7 @@ def run():
     reformat()
     load()
 
-    symbolsDB = nasdaq.database.database()
+    symbolsDB = symbols.database.database()
 
 
 def delete():
@@ -81,7 +81,7 @@ def reformatExchange(exchange):
 def load():
     print('Writing symbols to the database...')
 
-    db = nasdaq.database.database()
+    db = symbols.database.database()
     db.delete()
     db.create()
 
