@@ -15,8 +15,6 @@ def run():
     reformat()
     load()
 
-    symbolsDB = symbols.database.database()
-
 
 def delete():
     if os.path.exists(constants.dataDirectory + 'symbols'):

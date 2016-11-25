@@ -1,4 +1,3 @@
-import time
 from google.cloud import bigquery
 
 class database():
