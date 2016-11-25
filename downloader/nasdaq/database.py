@@ -51,5 +51,6 @@ class database():
         [rows, unused_total_rows, unused_page_token] = query_results.fetch_data()
         symbols = []
         for row in rows:
+            print(row)
             symbols.append(row[0])
         return symbols
