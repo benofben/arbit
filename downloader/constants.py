@@ -2,25 +2,21 @@ import datetime
 
 dataDirectory='/home/benton_lackey/arbit_data/'
 
-# these seem to be updated as they come out.  Run after midnight.
-# We're going to end up lagging a day for this.
-downloadtimeAnalysis = datetime.time(0,0,1)
+# these seem to be updated as they come out
+# We're going to end up lagging a day for this
+downloadtimeAnalysis = datetime.time(0,0,0)
 
 # not sure when these update, but they don't change often
 # want to refresh them before quotes
-downloadtimeSymbols = datetime.time(0,30,0)
+downloadtimeSymbols = datetime.time(0,10,0)
 
-# new quotes don't show up until after 12am.
+# new quotes don't show up until after 12am
 downloadtimeQuotes = datetime.time(0,30,0)
 
-# depends on the symbol files downloaded in quotes
-# could probably run right after market close
-# going to also pull down ohlc.  This will give us data a couple hours earlier than yahoo.
+# depends on the symbols download
+# run right after market close
 downloadtimeFundamentals = datetime.time(16,30,0)
 
 # It looks like new master files show up at 2:01am, though are sometimes delayed as late as 2:14am.
-# It's now unclear what timezone this is.  It might be gmt, in which case the files show up a little after 9.
-# the mail job that is part of this needs fundamentals (which now includes scraped quotes) to finish first.
-
-# This is showing up at 10pm eastern.
+# Something else is showing up at 10pm eastern, but it's unclear from my old comments.  Need to investigate.
 downloadtimeEDGAR = datetime.time(22,30,0)
