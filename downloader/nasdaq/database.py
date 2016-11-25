@@ -10,31 +10,33 @@ class database():
 
     def create(self):
         table = self.client.dataset('downloader').table('symbols')
-
         if not table.exists():
-            table.schema = (
-                bigquery.table.SchemaField(name='Exchange', field_type='STRING'),
-                bigquery.table.SchemaField(name='Symbol', field_type='STRING'),
-                bigquery.table.SchemaField(name='Name', field_type='STRING'),
-                bigquery.table.SchemaField(name='LastSale', field_type='FLOAT'),
-                bigquery.table.SchemaField(name='MarketCap', field_type='FLOAT'),
-                bigquery.table.SchemaField(name='IPOYear', field_type='INTEGER'),
-                bigquery.table.SchemaField(name='Sector', field_type='STRING'),
-                bigquery.table.SchemaField(name='Industry', field_type='STRING')
-            )
             table.create()
 
 
     def delete(self):
         table = self.client.dataset('downloader').table('symbols')
-
         if table.exists():
             table.delete()
 
 
+    def setSchema(self, table):
+        table.schema = (
+            bigquery.table.SchemaField(name='Exchange', field_type='STRING'),
+            bigquery.table.SchemaField(name='Symbol', field_type='STRING'),
+            bigquery.table.SchemaField(name='Name', field_type='STRING'),
+            bigquery.table.SchemaField(name='LastSale', field_type='FLOAT'),
+            bigquery.table.SchemaField(name='MarketCap', field_type='FLOAT'),
+            bigquery.table.SchemaField(name='IPOYear', field_type='INTEGER'),
+            bigquery.table.SchemaField(name='Sector', field_type='STRING'),
+            bigquery.table.SchemaField(name='Industry', field_type='STRING')
+        )
+        return table
+
+
     def upload(self, filename):
         table = self.client.dataset('downloader').table('symbols')
-
+        table = setSchema(table)
         with open(filename, 'rb') as readable:
             table.upload_from_file(readable, source_format='CSV', skip_leading_rows=1)
 
