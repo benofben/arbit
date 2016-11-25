@@ -2,7 +2,7 @@ import sched
 import datetime
 import time
 import constants
-import yahoo.downloader
+import quotes.downloader
 
 
 class downloader:
@@ -16,7 +16,7 @@ class downloader:
 
     def download(self):
         print('Running quotes download at ' + datetime.datetime.today().isoformat())
-        yahoo.downloader.run()
+        quotes.downloader.run()
         print('Done with quotes download at ' + datetime.datetime.today().isoformat())
 
         # Reschedule the download to run again tomorrow.

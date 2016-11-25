@@ -2,8 +2,8 @@ import os
 import shutil
 import http.client
 import constants
-import nasdaq.database
-import yahoo.database
+import symbols.database
+import quotes.database
 
 
 def run():
@@ -20,7 +20,7 @@ def delete():
 
 
 def download():
-    symbolsDB = nasdaq.database.database()
+    symbolsDB = symbols.database.database()
     symbols = symbolsDB.getSymbols()
 
     for symbol in symbols:
