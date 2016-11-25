@@ -18,8 +18,8 @@ class downloader:
         nasdaq.downloader.run()
 
         # Give BigQuery some time to think...
-        time.sleep(5)
-        
+        time.sleep(30)
+
         yahoo.downloader.run()
         print('Done with quotes download at ' + datetime.datetime.today().isoformat())
 
