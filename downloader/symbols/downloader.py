@@ -87,5 +87,4 @@ def load():
         filename = constants.dataDirectory + 'symbols/' + exchange + '.reformat.csv'
         db.upload(filename)
 
-    symbols = db.getSymbols()
-    print('Loaded ' + str(len(symbols)) + ' into the database')
+    print('Loaded ' + str(len(db.getSymbols())) + ' into the database')
