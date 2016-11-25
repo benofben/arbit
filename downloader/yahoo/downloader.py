@@ -23,11 +23,14 @@ def delete():
 def download():
     symbolsDB = nasdaq.database.database()
     symbols = symbolsDB.getSymbols()
+
     outputFilename = constants.dataDirectory + 'quotes/quotes.csv'
-    outputFile = open(inputFilename, 'w')
+    outputFile = open(outputFilename, 'w')
+
     for symbol in symbols:
         if downloadSymbol(symbol):
             reformat(symbol, outputFile)
+
     outputFile.close()
 
 
@@ -82,7 +85,7 @@ def reformat(symbol, outputFile):
     inputFile = open(inputFilename, 'r')
     outputFile.write(inputFile)
     inputFile.close()
-    
+
 
 def upload():
     quotesDB = yahoo.database.database()
