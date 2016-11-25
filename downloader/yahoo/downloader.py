@@ -84,7 +84,7 @@ def reformat(symbol, outputFile):
     inputFilename = constants.dataDirectory + 'quotes/' + symbol + '.csv'
     inputFile = open(inputFilename, 'r')
     for line in inputFile:
-        if line eq 'Date,Open,High,Low,Close,Volume,Adj Close':
+        if line == 'Date,Open,High,Low,Close,Volume,Adj Close':
             print('skipped line')
         else:
             outputFile.write(line)
