@@ -9,6 +9,13 @@ import nasdaq.database
 exchanges = ['NYSE', 'NASDAQ']
 
 
+def run():
+    delete()
+    download()
+    reformat()
+    load()
+
+
 def delete():
     if os.path.exists(constants.dataDirectory + 'symbols'):
         shutil.rmtree(constants.dataDirectory + 'symbols')
@@ -81,10 +88,3 @@ def load():
         db.upload(filename)
 
     print('Done writing symbols to the database.')
-
-
-def run():
-    delete()
-    download()
-    reformat()
-    load()

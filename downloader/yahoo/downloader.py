@@ -11,7 +11,7 @@ import yahoo.database
 def run():
     delete()
     download()
-    upload()
+    load()
 
 
 def delete():
@@ -91,7 +91,7 @@ def reformat(symbol, outputFile):
     inputFile.close()
 
 
-def upload():
+def load():
     quotesDB = yahoo.database.database()
     quotesDB.delete()
     quotesDB.upload(constants.dataDirectory + 'quotes/quotes.csv')
