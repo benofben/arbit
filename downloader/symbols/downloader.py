@@ -80,7 +80,7 @@ def load():
     print('Writing symbols to the database...')
 
     db = symbols.database.database()
-    db.delete()
+    #db.delete()
     db.create()
 
     for exchange in exchanges:

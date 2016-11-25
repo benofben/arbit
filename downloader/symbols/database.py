@@ -23,14 +23,14 @@ class database():
 
 
     def create(self):
-        table = self.client.dataset('downloader').table('symbols')
+        table = self.client.dataset('downloader').table('symbols1')
         if not table.exists():
             table = self.setSchema(table)
             table.create()
 
 
     def delete(self):
-        table = self.client.dataset('downloader').table('symbols')
+        table = self.client.dataset('downloader').table('symbols1')
         if table.exists():
             table.delete()
             import time
@@ -38,14 +38,14 @@ class database():
 
 
     def upload(self, filename):
-        table = self.client.dataset('downloader').table('symbols')
+        table = self.client.dataset('downloader').table('symbols1')
         table = self.setSchema(table)
         with open(filename, 'rb') as readable:
             table.upload_from_file(readable, source_format='CSV')
 
 
     def getSymbols(self):
-        query = 'SELECT Symbol FROM downloader.symbols'
+        query = 'SELECT Symbol FROM downloader.symbols1'
         query_results = self.client.run_sync_query(query)
         query_results.use_legacy_sql = False
         query_results.run()
