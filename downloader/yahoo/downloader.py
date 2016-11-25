@@ -21,7 +21,7 @@ def run():
     symbols = symbolsDB.getSymbols()
     print('symbols: ' + str(symbols))
     while symbols:
-        print(str(len(s)) + ' symbols remaining.')
+        print(str(len(symbols)) + ' symbols remaining.')
         symbol = symbols.pop()
         if not download(symbol):
             failedSymbolsFile.write(symbol + '\n')
