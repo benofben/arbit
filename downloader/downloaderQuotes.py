@@ -16,10 +16,6 @@ class downloader:
     def download(self):
         print('Running quotes download at ' + datetime.datetime.today().isoformat())
         nasdaq.downloader.run()
-
-        # Give BigQuery some time to think...
-        time.sleep(5)
-
         yahoo.downloader.run()
         print('Done with quotes download at ' + datetime.datetime.today().isoformat())
 
