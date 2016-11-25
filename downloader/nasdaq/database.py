@@ -1,18 +1,18 @@
 from google.cloud import bigquery
 
 class database():
-    table = None
+    client = None
 
 
     def __init__(self):
-        bigquery_client = bigquery.Client()
-        dataset = bigquery_client.dataset('downloader')
-        self.table = dataset.table('symbols')
+        self.client = bigquery.Client()
 
 
     def create(self):
-        if not self.table.exists():
-            self.table.schema = (
+        table = self.client.dataset('downloader').table('symbols')
+
+        if not table.exists():
+            table.schema = (
                 bigquery.table.SchemaField(name='Exchange', field_type='STRING'),
                 bigquery.table.SchemaField(name='Symbol', field_type='STRING'),
                 bigquery.table.SchemaField(name='Name', field_type='STRING'),
@@ -22,22 +22,26 @@ class database():
                 bigquery.table.SchemaField(name='Sector', field_type='STRING'),
                 bigquery.table.SchemaField(name='Industry', field_type='STRING')
             )
-            self.table.create()
+            table.create()
 
 
     def delete(self):
-        if self.table.exists():
-            self.table.delete()
+        table = self.client.dataset('downloader').table('symbols')
+
+        if table.exists():
+            table.delete()
 
 
     def upload(self, filename):
+        table = self.client.dataset('downloader').table('symbols')
+
         with open(filename, 'rb') as readable:
-            self.table.upload_from_file(readable, source_format='CSV', skip_leading_rows=1)
+            table.upload_from_file(readable, source_format='CSV', skip_leading_rows=1)
 
 
     def getSymbols(self):
         query = 'SELECT Symbol FROM downloader.symbols'
-        query_results = client.run_sync_query(query)
+        query_results = self.client.run_sync_query(query)
         query_results.use_legacy_sql = False
         query_results.run()
 
