@@ -81,7 +81,7 @@ def load():
         db.upload(filename)
 
     print('Done writing symbols to the database.')
-    print(db.getSymbols())
+
 
 def run():
     delete()
