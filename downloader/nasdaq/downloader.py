@@ -90,4 +90,4 @@ def load():
         db.upload(filename)
 
     symbols = db.getSymbols()
-    print('Loaded ' + len(symbols) + ' into the database')
+    print('Loaded ' + str(len(symbols)) + ' into the database')
