@@ -8,7 +8,7 @@ downloadtimeAnalysis = datetime.time(0,0,1)
 
 # not sure when these update, but they don't change often
 # want to refresh them before quotes
-downloadtimeSybmols = datetime.time(0,30,0)
+downloadtimeSymbols = datetime.time(0,30,0)
 
 # new quotes don't show up until after 12am.
 downloadtimeQuotes = datetime.time(0,30,0)

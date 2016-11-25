@@ -15,6 +15,8 @@ def run():
     reformat()
     load()
 
+    symbolsDB = nasdaq.database.database()
+
 
 def delete():
     if os.path.exists(constants.dataDirectory + 'symbols'):
@@ -87,4 +89,5 @@ def load():
         filename = constants.dataDirectory + 'symbols/' + exchange + '.reformat.csv'
         db.upload(filename)
 
-    print('Done writing symbols to the database.')
+    symbols = db.getSymbols()
+    print('Loaded ' + len(symbols) + ' into the database')
