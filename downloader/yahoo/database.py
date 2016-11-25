@@ -1,4 +1,5 @@
 import datetime
+import time
 from google.cloud import bigquery
 
 class database():
@@ -34,6 +35,9 @@ class database():
         table = self.client.dataset('downloader').table('quotes')
         if table.exists():
             table.delete()
+            # We need to sleep for two minutes because of this:
+            # http://stackoverflow.com/questions/36415265/after-recreating-bigquery-table-streaming-inserts-are-not-working
+            time.sleep(120)
 
 
     def upload(self, filename):
