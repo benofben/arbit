@@ -36,10 +36,6 @@ class database():
         if table.exists():
             table.delete()
 
-            # Need to sleep - http://stackoverflow.com/questions/36415265/after-recreating-bigquery-table-streaming-inserts-are-not-working
-            print('Going to sleep to give delete time to propagate.')
-            time.sleep(10*60)
-
 
     def upload(self, filename):
         table = self.client.dataset('downloader').table('quotes')
