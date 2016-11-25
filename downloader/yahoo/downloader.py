@@ -5,41 +5,33 @@ import http.client
 import csv
 import constants
 import nasdaq.database
-#import yahoo.database
+import yahoo.database
 
 
 def run():
     delete()
-
-    failedSymbolsFilename = constants.dataDirectory + 'yahoo/failedQuotesSymbols.txt'
-    failedSymbolsFile = open(failedSymbolsFilename, 'w')
-
-    #quotesDB = yahoo.database.database()
-    #quotesDB.dropCollection()
-
-    symbolsDB = nasdaq.database.database()
-    symbols = symbolsDB.getSymbols()
-    print('symbols: ' + str(symbols))
-    while symbols:
-        print(str(len(symbols)) + ' symbols remaining.')
-        symbol = symbols.pop()
-        if not download(symbol):
-            failedSymbolsFile.write(symbol + '\n')
-        else:
-            quotes = loadQuotesFromDisk(symbol)
-            quotes['Symbol'] = symbol
-            #quotesDB.insert(quotes)
-
-    failedSymbolsFile.close()
+    download()
+    upload()
 
 
 def delete():
-    if os.path.exists(constants.dataDirectory + 'yahoo/quotes'):
-        shutil.rmtree(constants.dataDirectory + 'yahoo/quotes')
-    os.makedirs(constants.dataDirectory + 'yahoo/quotes/')
+    if os.path.exists(constants.dataDirectory + 'quotes'):
+        shutil.rmtree(constants.dataDirectory + 'quotes')
+    os.makedirs(constants.dataDirectory + 'quotes')
 
 
-def download(symbol):
+def download():
+    symbolsDB = nasdaq.database.database()
+    symbols = symbolsDB.getSymbols()
+    outputFilename = constants.dataDirectory + 'quotes/quotes.csv'
+    outputFile = open(inputFilename, 'w')
+    for symbol in symbols:
+        if downloadSymbol(symbol):
+            reformat(symbol, outputFile)
+    outputFile.close()
+
+
+def downloadSymbol(symbol):
     print('Downloading historical data for ' + symbol + '...')
     conn = http.client.HTTPConnection('ichart.finance.yahoo.com')
 
@@ -70,7 +62,7 @@ def download(symbol):
     conn.close()
     if response.status == 200 and response.reason == 'OK':
         data = data.decode('windows-1252')
-        reformatAndSaveQuotes(data, symbol)
+        save(data, symbol)
         print('Saved historical data for ' + symbol + '.\n')
     else:
         print('Download failed for symbol ' + symbol + '.\n')
@@ -78,54 +70,21 @@ def download(symbol):
     return True
 
 
-def reformatAndSaveQuotes(data, symbol):
-    quotes = []
-    lines = data.split('\n')
-    i = 0
-    for line in lines:
-        if (i > 0):
-            quotes.append(line)
-        i = i + 1
-
-    # we want the list to go from oldest quote to newest
-    quotes.reverse()
-
-    filename = constants.dataDirectory + 'yahoo/quotes/' + symbol + '.csv'
+def save(data, symbol):
+    filename = constants.dataDirectory + 'quotes/' + symbol + '.csv'
     file = open(filename, 'w')
-    i = 0
-    for line in quotes:
-        if (i > 0):
-            file.write(line + '\n')
-        i = i + 1
+    file.write(data)
     file.close()
 
 
-def loadQuotesFromDisk(symbol):
-    inputFilename = constants.dataDirectory + 'yahoo/quotes/' + symbol + '.csv'
+def reformat(symbol, outputFile):
+    inputFilename = constants.dataDirectory + 'quotes/' + symbol + '.csv'
     inputFile = open(inputFilename, 'r')
-
-    quotes = {}
-    quotes['Date'] = []
-    quotes['Open'] = []
-    quotes['High'] = []
-    quotes['Low'] = []
-    quotes['Close'] = []
-    quotes['Volume'] = []
-    quotes['AdjClose'] = []
-
-    reader = csv.reader(inputFile)
-
-    for Date, Open, High, Low, Close, Volume, AdjClose in reader:
-        dt = Date.split('-')
-        Date = datetime.date(int(dt[0]), int(dt[1]), int(dt[2]))
-
-        quotes['Date'].append(Date)
-        quotes['Open'].append(float(Open))
-        quotes['High'].append(float(High))
-        quotes['Low'].append(float(Low))
-        quotes['Close'].append(float(Close))
-        quotes['Volume'].append(int(Volume))
-        quotes['AdjClose'].append(float(AdjClose))
-
+    outputFile.write(inputFile)
     inputFile.close()
-    return quotes
+    
+
+def upload():
+    quotesDB = yahoo.database.database()
+    quotesDB.delete()
+    quotesDB.upload(constants.dataDirectory + 'quotes/quotes.csv')
