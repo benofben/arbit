@@ -1,8 +1,6 @@
 import os
 import shutil
-import datetime
 import http.client
-import csv
 import constants
 import nasdaq.database
 import yahoo.database
