@@ -8,19 +8,6 @@ class database():
         self.client = bigquery.Client()
 
 
-    def create(self):
-        table = self.client.dataset('downloader').table('symbols')
-        if not table.exists():
-            table = setSchema(table)
-            table.create()
-
-
-    def delete(self):
-        table = self.client.dataset('downloader').table('symbols')
-        if table.exists():
-            table.delete()
-
-
     def setSchema(self, table):
         table.schema = (
             bigquery.table.SchemaField(name='Exchange', field_type='STRING'),
@@ -33,6 +20,19 @@ class database():
             bigquery.table.SchemaField(name='Industry', field_type='STRING')
         )
         return table
+
+
+    def create(self):
+        table = self.client.dataset('downloader').table('symbols')
+        if not table.exists():
+            table = setSchema(table)
+            table.create()
+
+
+    def delete(self):
+        table = self.client.dataset('downloader').table('symbols')
+        if table.exists():
+            table.delete()
 
 
     def upload(self, filename):
