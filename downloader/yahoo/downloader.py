@@ -22,7 +22,7 @@ def download():
     symbolsDB = nasdaq.database.database()
     symbols = symbolsDB.getSymbols()
 
-    outputFilename = constants.dataDirectory + 'quotes/quotes.csv'
+    outputFilename = constants.dataDirectory + 'quotes.csv'
     outputFile = open(outputFilename, 'w')
 
     for symbol in symbols:
@@ -93,4 +93,4 @@ def reformat(symbol, outputFile):
 def load():
     quotesDB = yahoo.database.database()
     quotesDB.delete()
-    quotesDB.upload(constants.dataDirectory + 'quotes/quotes.csv')
+    quotesDB.upload(constants.dataDirectory + 'quotes.csv')
