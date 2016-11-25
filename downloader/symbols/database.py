@@ -33,6 +33,8 @@ class database():
         table = self.client.dataset('downloader').table('symbols')
         if table.exists():
             table.delete()
+            import time
+            time.sleep(10*60)
 
 
     def upload(self, filename):
