@@ -19,6 +19,7 @@ def run():
 
     symbolsDB = nasdaq.database.database()
     symbols = symbolsDB.getSymbols()
+    print('symbols: ' + symbols)
     while symbols:
         print(str(len(s)) + ' symbols remaining.')
         symbol = symbols.pop()
