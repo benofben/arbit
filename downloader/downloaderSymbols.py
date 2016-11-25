@@ -2,7 +2,7 @@ import sched
 import datetime
 import time
 import constants
-import yahoo.downloader
+import nasdaq.downloader
 
 
 class downloader:
@@ -15,20 +15,20 @@ class downloader:
 
 
     def download(self):
-        print('Running quotes download at ' + datetime.datetime.today().isoformat())
-        yahoo.downloader.run()
-        print('Done with quotes download at ' + datetime.datetime.today().isoformat())
+        print('Running symbols download at ' + datetime.datetime.today().isoformat())
+        nasdaq.downloader.run()
+        print('Done with symbols download at ' + datetime.datetime.today().isoformat())
 
         # Reschedule the download to run again tomorrow.
         # Assume the system clock uses NY time.
         today = datetime.date.today()
         tomorrow = today + datetime.timedelta(days=1)
 
-        downloadTime = constants.downloadtimeQuotes
+        downloadTime = constants.downloadtimeSymbols
         downloadDateTime = datetime.datetime.combine(tomorrow, downloadTime)
         downloadTime = time.mktime(downloadDateTime.timetuple())
 
-        print('Going to run quotes download next at ' + downloadDateTime.isoformat())
+        print('Going to run symbols download next at ' + downloadDateTime.isoformat())
         self.schedule.enterabs(downloadTime, 0, self.download, ())
 
 

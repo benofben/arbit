@@ -2,13 +2,13 @@ import datetime
 
 dataDirectory='/home/benton_lackey/arbit_data/'
 
-# used in the yahoo downloader
-startDate = datetime.date.today() - datetime.timedelta(days=365)
-endDate = datetime.date.today()
-
-# these seem to be updates as they come out.  Run after midnight.
+# these seem to be updated as they come out.  Run after midnight.
 # We're going to end up lagging a day for this.
 downloadtimeAnalysis = datetime.time(0,0,1)
+
+# not sure when these update, but they don't change often
+# want to refresh them before quotes
+downloadtimeSybmols = datetime.time(0,30,0)
 
 # new quotes don't show up until after 12am.
 downloadtimeQuotes = datetime.time(0,30,0)
