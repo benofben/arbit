@@ -39,7 +39,7 @@ class database():
         table = self.client.dataset('downloader').table('symbols')
         table = self.setSchema(table)
         with open(filename, 'rb') as readable:
-            table.upload_from_file(readable, source_format='CSV', skip_leading_rows=1)
+            table.upload_from_file(readable, source_format='CSV')
 
 
     def getSymbols(self):
