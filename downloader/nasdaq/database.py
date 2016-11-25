@@ -37,7 +37,7 @@ class database():
 
     def upload(self, filename):
         table = self.client.dataset('downloader').table('symbols')
-        table = setSchema(table)
+        table = self.setSchema(table)
         with open(filename, 'rb') as readable:
             table.upload_from_file(readable, source_format='CSV', skip_leading_rows=1)
 
