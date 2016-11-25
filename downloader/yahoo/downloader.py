@@ -9,6 +9,7 @@ import yahoo.database
 def run():
     delete()
     download()
+    reformat()
     load()
 
 
@@ -22,14 +23,8 @@ def download():
     symbolsDB = nasdaq.database.database()
     symbols = symbolsDB.getSymbols()
 
-    outputFilename = constants.dataDirectory + 'quotes.csv'
-    outputFile = open(outputFilename, 'w')
-
     for symbol in symbols:
-        if downloadSymbol(symbol):
-            reformat(symbol, outputFile)
-
-    outputFile.close()
+        downloadSymbol(symbol)
 
 
 def downloadSymbol(symbol):
@@ -63,7 +58,10 @@ def downloadSymbol(symbol):
     conn.close()
     if response.status == 200 and response.reason == 'OK':
         data = data.decode('windows-1252')
-        save(data, symbol)
+        outputFilename = constants.dataDirectory + 'quotes/' + symbol + '.csv'
+        outputFile = open(outputFilename, 'w')
+        outputFile.write(data)
+        outputFile.close()
         print('Saved historical data for ' + symbol + '.\n')
     else:
         print('Download failed for symbol ' + symbol + '.\n')
@@ -71,14 +69,13 @@ def downloadSymbol(symbol):
     return True
 
 
-def save(data, symbol):
-    filename = constants.dataDirectory + 'quotes/' + symbol + '.csv'
-    file = open(filename, 'w')
-    file.write(data)
-    file.close()
+def reformat():
+    outputFilename = constants.dataDirectory + 'quotes.csv'
+    outputFile = open(outputFilename, 'w')
+    outputFile.close()
 
 
-def reformat(symbol, outputFile):
+def reformatSymbol(symbol):
     inputFilename = constants.dataDirectory + 'quotes/' + symbol + '.csv'
     inputFile = open(inputFilename, 'r')
     for line in inputFile:
