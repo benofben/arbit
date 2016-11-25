@@ -48,7 +48,7 @@ class database():
         query_results.use_legacy_sql = False
         query_results.run()
 
-        rows = query_results.fetch_data()
+        rows, unused_total_rows, unused_page_token = query_results.fetch_data()
         for row in rows:
             print(row)
 

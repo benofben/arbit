@@ -55,6 +55,7 @@ def reformatExchange(exchange):
         else:
             Symbol = Symbol.replace('^', '.')
             Symbol = Symbol.replace('/', '.')
+            Symbol = Symbol.trim()
 
             if (LastSale == 'n/a'):
                 LastSale = 0
