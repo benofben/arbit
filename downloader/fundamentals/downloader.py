@@ -20,14 +20,14 @@ def download(filename, today):
     s = symbolsDB.getSymbols()
     outputFile = open(filename, 'w')
     for symbol in s:
-#        try:
+        try:
             data = downloadSymbol(symbol)
             fundamentals = parse(data)
             line = symbol + ',' + today + ',' + str(fundamentals['Open']) + ',' + str(fundamentals['High']) + ',' + str(fundamentals['Low']) + ',' + str(fundamentals['Close']) + ',' + str(fundamentals['Shares']) + ',' + str(fundamentals['EPS']) + ',' + str(fundamentals['InstitutionalOwnership']) + ',' + str(fundamentals['Dividend']) + '\n'
             outputFile.write(line)
             print('Saved fundamental data for ' + symbol + '.\n')
-#        except:
-#            print('Download of fundamental data for ' + symbol + ' failed.\n')
+        except:
+            print('Download of fundamental data for ' + symbol + ' failed.\n')
     outputFile.close()
 
 
