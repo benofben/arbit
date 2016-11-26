@@ -1,12 +1,13 @@
-import google.downloader
 import sched
 import datetime
 import time
 import constants
+import fundamentals.downloader
 
 
 class downloader:
     schedule = sched.scheduler(time.time, time.sleep)
+
 
     def __init__(self):
         # We don't want to run immediately because we won't get a close price
@@ -22,7 +23,7 @@ class downloader:
 
     def download(self):
         print('Running fundamentals download at ' + datetime.datetime.today().isoformat())
-        google.downloader.run()
+        fundamentals.downloader.run()
         print('Done with fundamentals download at ' + datetime.datetime.today().isoformat())
 
         # Reschedule the download to run again tomorrow.

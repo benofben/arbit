@@ -1,9 +1,9 @@
-import edgar.downloader
-import edgar.mail
 import sched
 import datetime
 import time
 import constants
+import edgar.downloader
+import edgar.mail
 
 
 class downloader:
