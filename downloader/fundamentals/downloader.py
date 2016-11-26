@@ -1,3 +1,4 @@
+import os
 import http.client
 import datetime
 import symbols.database
@@ -5,30 +6,31 @@ import fundamentals.database
 
 
 def run():
-    download()
-    upload()
-
-def download():
     now = datetime.datetime.now()
+    today = str(now.year) + '-' + str(now.month) + '-' + str(now.day)
+    filename = constants.dataDirectory + 'fundamentals/' + today + '.csv'
+
+    download(filename, today)
+    upload(filename)
+
+
+def download(filename, today):
     symbolsDB = symbols.database.database()
     s = symbolsDB.getAllSymbols()
+    outputFile = open(filename, 'w')
     for symbol in s:
-        downloadSymbol(fundamentalsDB, now, symbol)
+        try:
+            data = downloadSymbol(symbol)
+            fundamentals = parse(data)
+            line = symbol + ',' + today + ',' + fundamentals['Open'] + ',' + fundamentals['High'] + ',' + fundamentals['Low'] + ',' + fundamentals['Close'] + ',' + fundamentals['Shares'] + ',' + fundamentals['EPS'] + ',' + fundamentals['InstitutionalOwnership'] + ',' + fundamentals['Dividend'] + '\n'
+            outputFile.write(line)
+            print('Saved fundamental data for ' + symbol + '.\n')
+        except:
+            print('Download of fundamental data for ' + symbol + ' failed.\n')
+    outputFile.close()
 
 
-def downloadSymbol(fundamentalsDB, now, symbol):
-    try:
-        data = downloadFundamentals(symbol)
-        fundamentals = parseFundamentals(data)
-        fundamentals['Symbol'] = symbol
-        fundamentals['Date'] = now
-        fundamentalsDB.insert(fundamentals)
-        print('Saved fundamental data for ' + symbol + '.\n')
-    except:
-        print('Download of fundamental data for ' + symbol + ' failed.\n')
-
-
-def downloadFundamentals(symbol):
+def downloadSymbol(symbol):
     print('Downloading fundamental data for ' + symbol + '...')
 
     conn = http.client.HTTPConnection('www.google.com')
@@ -45,7 +47,7 @@ def downloadFundamentals(symbol):
     return data
 
 
-def parseFundamentals(data):
+def parse(data):
     fundamentals = {}
 
     temp = data.split('<span class="pr">')
@@ -135,9 +137,9 @@ def parseFundamentals(data):
     return fundamentals
 
 
-def upload():
+def upload(filename):
     print('Writing fundamentals to the database...')
     db = fundamentals.database.database()
     db.create()
-    db.upload(constants.dataDirectory + 'quotes.csv')
+    db.upload(filename)
     print('Done uploading fundamentals to the database')
