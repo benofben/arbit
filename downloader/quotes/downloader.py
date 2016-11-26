@@ -95,7 +95,8 @@ def reformatSymbol(inputFile, outputFile):
 
 def upload():
     print('Writing quotes to the database...')
-    db = yahoo.database.database()
+    db = quotes.database.database()
     db.delete()
+    db.create()
     db.upload(constants.dataDirectory + 'quotes.csv')
     print('Done uploading quotes to the database')

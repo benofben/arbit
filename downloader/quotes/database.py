@@ -1,5 +1,3 @@
-import datetime
-import time
 from google.cloud import bigquery
 
 class database():
@@ -24,12 +22,13 @@ class database():
         self.table = self.dataset.table('quotes', schema)
 
 
+    def delete(self):
+        if self.table.exists():
+            self.table.delete()
+
+
     def create(self):
         self.table.create()
-
-
-    def delete(self):
-        self.table.delete()
 
 
     def upload(self, filename):
