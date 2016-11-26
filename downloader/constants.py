@@ -2,10 +2,6 @@ import datetime
 
 dataDirectory='/home/benton_lackey/arbit_data/'
 
-# these seem to be updated as they come out
-# We're going to end up lagging a day for this
-downloadtimeAnalysis = datetime.time(0,0,0)
-
 # not sure when these update, but they don't change often
 # want to refresh them before quotes
 downloadtimeSymbols = datetime.time(0,10,0)
