@@ -1,23 +1,22 @@
 import http.client
 import datetime
-import nasdaq.database
-import google.database
+import symbols.database
+import fundamentals.database
 
 
 def run():
-    fundamentalsDB = google.database.database()
+    download()
+    upload()
+
+def download():
     now = datetime.datetime.now()
-
-    symbolsDB = nasdaq.database.database()
+    symbolsDB = symbols.database.database()
     s = symbolsDB.getAllSymbols()
-    while s:
-        print(str(len(s)) + ' symbols remaining.')
-        symbol = s.pop()
-        symbol = symbol.replace('\n', '')
-        runForSymbol(symbol, fundamentalsDB, now)
+    for symbol in s:
+        downloadSymbol(fundamentalsDB, now, symbol)
 
 
-def runForSymbol(symbol, fundamentalsDB, now):
+def downloadSymbol(fundamentalsDB, now, symbol):
     try:
         data = downloadFundamentals(symbol)
         fundamentals = parseFundamentals(data)
@@ -134,3 +133,11 @@ def parseFundamentals(data):
         fundamentals['InstitutionalOwnership'] /= 100
 
     return fundamentals
+
+
+def upload():
+    print('Writing fundamentals to the database...')
+    db = fundamentals.database.database()
+    db.create()
+    db.upload(constants.dataDirectory + 'quotes.csv')
+    print('Done uploading fundamentals to the database')
