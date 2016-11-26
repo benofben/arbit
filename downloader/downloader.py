@@ -1,11 +1,18 @@
 import sched
 import datetime
 import time
-import constants
-import quotes.downloader
 
 
 class downloader:
+    dataDirectory='/home/benton_lackey/arbit_data/'
+
+    downloadtime = {
+        'symbols':datetime.time(0,10,0),
+        'quotes':datetime.time(0,30,0),
+        'fundamentals':datetime.time(16,30,0),
+        'edgar':datetime.time(22,30,0)
+    }
+
     schedule = sched.scheduler(time.time, time.sleep)
 
 
@@ -15,20 +22,20 @@ class downloader:
 
 
     def download(self):
-        print('Running quotes download at ' + datetime.datetime.today().isoformat())
-        quotes.downloader.run()
-        print('Done with quotes download at ' + datetime.datetime.today().isoformat())
+        print('Running download at ' + datetime.datetime.today().isoformat())
+        symbols.downloader.run()
+        print('Done with download at ' + datetime.datetime.today().isoformat())
 
         # Reschedule the download to run again tomorrow.
         # Assume the system clock uses NY time.
         today = datetime.date.today()
         tomorrow = today + datetime.timedelta(days=1)
 
-        downloadTime = constants.downloadtimeQuotes
+        downloadTime = constants.downloadtimeSymbols
         downloadDateTime = datetime.datetime.combine(tomorrow, downloadTime)
         downloadTime = time.mktime(downloadDateTime.timetuple())
 
-        print('Going to run quotes download next at ' + downloadDateTime.isoformat())
+        print('Going to run download next at ' + downloadDateTime.isoformat())
         self.schedule.enterabs(downloadTime, 0, self.download, ())
 
 

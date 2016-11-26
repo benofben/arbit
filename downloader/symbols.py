@@ -9,6 +9,17 @@ import symbols.database
 # Options are: NYSE, NASDAQ, AMEX
 exchanges = ['NYSE', 'NASDAQ']
 
+        schema = (
+            bigquery.table.SchemaField(name='Exchange', field_type='STRING'),
+            bigquery.table.SchemaField(name='Symbol', field_type='STRING'),
+            bigquery.table.SchemaField(name='Name', field_type='STRING'),
+            bigquery.table.SchemaField(name='LastSale', field_type='FLOAT'),
+            bigquery.table.SchemaField(name='MarketCap', field_type='FLOAT'),
+            bigquery.table.SchemaField(name='IPOYear', field_type='INTEGER'),
+            bigquery.table.SchemaField(name='Sector', field_type='STRING'),
+            bigquery.table.SchemaField(name='Industry', field_type='STRING')
+        )
+
 
 def run():
     delete()

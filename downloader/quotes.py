@@ -7,6 +7,17 @@ import symbols.database
 import quotes.database
 
 
+        schema = (
+            bigquery.table.SchemaField(name='Symbol', field_type='STRING'),
+            bigquery.table.SchemaField(name='Date', field_type='DATE'),
+            bigquery.table.SchemaField(name='Open', field_type='FLOAT'),
+            bigquery.table.SchemaField(name='High', field_type='FLOAT'),
+            bigquery.table.SchemaField(name='Low', field_type='FLOAT'),
+            bigquery.table.SchemaField(name='Close', field_type='FLOAT'),
+            bigquery.table.SchemaField(name='Volume', field_type='INTEGER'),
+            bigquery.table.SchemaField(name='AdjustedClose', field_type='FLOAT')
+        )
+
 def run():
     delete()
     download()
