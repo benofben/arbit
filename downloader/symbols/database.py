@@ -36,7 +36,7 @@ class database():
 
     def upload(self, filename):
         with open(filename, 'rb') as readable:
-            self.table.upload_from_file(readable, source_format='CSV')
+            self.table.upload_from_file(readable, source_format='CSV', skip_leading_rows=1)
 
 
     def getSymbols(self):
