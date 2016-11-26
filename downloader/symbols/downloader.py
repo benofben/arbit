@@ -10,9 +10,9 @@ exchanges = ['NYSE', 'NASDAQ']
 
 
 def run():
-    delete()
-    download()
-    reformat()
+    #delete()
+    #download()
+    #reformat()
     load()
 
 
@@ -81,7 +81,7 @@ def load():
 
     db = symbols.database.database()
     #db.delete()
-    db.create()
+    #db.create()
 
     for exchange in exchanges:
         filename = constants.dataDirectory + 'symbols/' + exchange + '.reformat.csv'
