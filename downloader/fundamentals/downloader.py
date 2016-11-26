@@ -27,7 +27,7 @@ def download(filename, today):
             outputFile.write(line)
             print('Saved fundamental data for ' + symbol + '.\n')
         except:
-            print('Download of fundamental data for ' + symbol + ' failed.\n')
+            print('Download or parse of fundamental data for ' + symbol + ' failed.\n')
     outputFile.close()
 
 
