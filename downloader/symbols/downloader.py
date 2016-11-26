@@ -11,10 +11,10 @@ exchanges = ['NYSE', 'NASDAQ']
 
 
 def run():
-    #delete()
-    #download()
-    #reformat()
-    load()
+    delete()
+    download()
+    reformat()
+    upload()
 
 
 def delete():
@@ -77,7 +77,7 @@ def reformatExchange(exchange):
     outputFile.close()
 
 
-def load():
+def upload():
     print('Writing symbols to the database...')
 
     db = symbols.database.database()
@@ -86,10 +86,9 @@ def load():
 
     for exchange in exchanges:
         filename = constants.dataDirectory + 'symbols/' + exchange + '.reformat.csv'
-        print('Loading file ' + filename)
-        assert os.path.exists(filename)
+        print('Uploading file ' + filename)
         db.upload(filename)
 
-    print('Sleeping 5 seconds for the upload to finish...')
+    print('Sleeping 5 seconds to wait for the upload to finish...')
     time.sleep(5)
-    print('Loaded ' + str(len(db.getSymbols())) + ' symbols into the database')
+    print('Uploaded ' + str(len(db.getSymbols())) + ' symbols into the database')

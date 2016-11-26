@@ -23,15 +23,11 @@ class database():
 
 
     def create(self):
-        assert not self.table.exists()
         self.table.create()
-        assert self.table.exists()
 
 
     def delete(self):
-        assert self.table.exists()
         self.table.delete()
-        assert not self.table.exists()
 
 
     def upload(self, filename):
