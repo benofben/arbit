@@ -8,7 +8,7 @@ class database():
         self.client = bigquery.Client()
 
 
-    def getSchema(self, table):
+    def getSchema(self):
         schema = (
             bigquery.table.SchemaField(name='Exchange', field_type='STRING'),
             bigquery.table.SchemaField(name='Symbol', field_type='STRING'),
