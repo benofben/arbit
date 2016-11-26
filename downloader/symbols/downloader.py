@@ -89,6 +89,4 @@ def upload():
         print('Uploading file ' + filename)
         db.upload(filename)
 
-    print('Sleeping 5 seconds to wait for the upload to finish...')
-    time.sleep(5)
-    print('Uploaded ' + str(len(db.getSymbols())) + ' symbols into the database')
+    print('Done uploading symbols to the database')

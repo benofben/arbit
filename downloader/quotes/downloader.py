@@ -10,7 +10,7 @@ def run():
     delete()
     download()
     reformat()
-    load()
+    upload()
 
 
 def delete():
@@ -20,9 +20,8 @@ def delete():
 
 
 def download():
-    symbolsDB = symbols.database.database()
-    symbols = symbolsDB.getSymbols()
-
+    db = symbols.database.database()
+    symbols = db.getSymbols()
     for symbol in symbols:
         downloadSymbol(symbol)
 
@@ -72,22 +71,30 @@ def downloadSymbol(symbol):
 def reformat():
     outputFilename = constants.dataDirectory + 'quotes.csv'
     outputFile = open(outputFilename, 'w')
+
+    path = constants.dataDirectory + 'quotes/'
+    inputFilenames = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
+
+    for inputFilename in inputFilenames:
+        inputFile = open(inputFilename, 'r')
+        reformatSymbol(inputFile, outputFile)
+        inputFile.close()
+
     outputFile.close()
 
 
-def reformatSymbol(symbol):
-    inputFilename = constants.dataDirectory + 'quotes/' + symbol + '.csv'
-    inputFile = open(inputFilename, 'r')
+def reformatSymbol(inputFile, outputFile):
     for line in inputFile:
         if line.startswith('Date'):
             # Then this is a header line
             print('skipped line')
         else:
             outputFile.write(line)
-    inputFile.close()
 
 
-def load():
-    quotesDB = yahoo.database.database()
-    quotesDB.delete()
-    quotesDB.upload(constants.dataDirectory + 'quotes.csv')
+def upload():
+    print('Writing quotes to the database...')
+    db = yahoo.database.database()
+    db.delete()
+    db.upload(constants.dataDirectory + 'quotes.csv')
+    print('Done uploading quotes to the database')
