@@ -1,3 +1,6 @@
+# this isn't working currently
+# it seems to have moved here: https://www.briefing.com/investor/calendars/upgrades-downgrades/
+
 def getAnalysisForDate(currentDate, ratingsChangesDB):
     # skip if we already have data for this day
     upgrades = ratingsChangesDB.fetch(currentDate, 'Upgrade')
