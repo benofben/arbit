@@ -80,8 +80,8 @@ def load():
     print('Writing symbols to the database...')
 
     db = symbols.database.database()
-    #db.delete()
-    #db.create()
+    db.delete()
+    db.create()
 
     for exchange in exchanges:
         filename = constants.dataDirectory + 'symbols/' + exchange + '.reformat.csv'
@@ -89,4 +89,4 @@ def load():
         assert os.path.exists(filename)
         db.upload(filename)
 
-    print('Loaded ' + str(len(db.getSymbols())) + ' into the database')
+    print('Loaded ' + str(len(db.getSymbols())) + ' symbols into the database')
