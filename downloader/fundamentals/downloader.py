@@ -23,7 +23,7 @@ def download(filename, today):
 #        try:
             data = downloadSymbol(symbol)
             fundamentals = parse(data)
-            line = symbol + ',' + today + ',' + fundamentals['Open'] + ',' + fundamentals['High'] + ',' + fundamentals['Low'] + ',' + fundamentals['Close'] + ',' + fundamentals['Shares'] + ',' + fundamentals['EPS'] + ',' + fundamentals['InstitutionalOwnership'] + ',' + fundamentals['Dividend'] + '\n'
+            line = symbol + ',' + today + ',' + str(fundamentals['Open']) + ',' + str(fundamentals['High']) + ',' + str(fundamentals['Low']) + ',' + str(fundamentals['Close']) + ',' + str(fundamentals['Shares']) + ',' + str(fundamentals['EPS']) + ',' + str(fundamentals['InstitutionalOwnership']) + ',' + str(fundamentals['Dividend']) + '\n'
             outputFile.write(line)
             print('Saved fundamental data for ' + symbol + '.\n')
 #        except:
