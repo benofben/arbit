@@ -8,8 +8,8 @@ import quotes.database
 
 
 def run():
-    delete()
-    download()
+    #delete()
+    #download()
     reformat()
     upload()
 
@@ -70,6 +70,7 @@ def downloadSymbol(symbol):
 
 
 def reformat():
+    print('Reformating the quotes...')
     outputFilename = constants.dataDirectory + 'quotes.csv'
     outputFile = open(outputFilename, 'w')
 
