@@ -44,6 +44,7 @@ def downloadSymbol(symbol):
     if response.status == 200 and response.reason == 'OK':
         data = data.decode('windows-1252')
     else:
+        print(response)
         raise Exception('Download failed for symbol ' + symbol)
     return data
 
