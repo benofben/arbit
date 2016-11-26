@@ -2,6 +2,7 @@ import os
 import shutil
 import http.client
 import csv
+import time
 import constants
 import symbols.database
 
@@ -89,4 +90,6 @@ def load():
         assert os.path.exists(filename)
         db.upload(filename)
 
+    print('Sleeping 5 seconds for the upload to finish...')
+    time.sleep(5)
     print('Loaded ' + str(len(db.getSymbols())) + ' symbols into the database')
