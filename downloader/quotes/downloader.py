@@ -21,8 +21,8 @@ def delete():
 
 def download():
     db = symbols.database.database()
-    symbols = db.getSymbols()
-    for symbol in symbols:
+    s = db.getSymbols()
+    for symbol in s:
         downloadSymbol(symbol)
 
 
