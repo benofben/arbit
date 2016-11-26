@@ -85,7 +85,7 @@ def load():
 
     for exchange in exchanges:
         filename = constants.dataDirectory + 'symbols/' + exchange + '.reformat.csv'
-        print(filename)
+        print('Working on file ' + filename)
         assert os.path.exists(filename)
         db.upload(filename)
 

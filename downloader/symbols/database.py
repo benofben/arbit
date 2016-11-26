@@ -2,13 +2,13 @@ from google.cloud import bigquery
 
 class database():
     client = None
+    dataset = None
+    table = None
 
 
     def __init__(self):
         self.client = bigquery.Client()
-
-
-    def getSchema(self):
+        self.dataset = self.client.dataset('downloader')
         schema = (
             bigquery.table.SchemaField(name='Exchange', field_type='STRING'),
             bigquery.table.SchemaField(name='Symbol', field_type='STRING'),
@@ -19,30 +19,24 @@ class database():
             bigquery.table.SchemaField(name='Sector', field_type='STRING'),
             bigquery.table.SchemaField(name='Industry', field_type='STRING')
         )
-        return schema
+        self.table = dataset.table('symbols', schema)
 
 
     def create(self):
-        dataset = self.client.dataset('downloader')
-        table = dataset.table('symbols', self.getSchema())
-        assert not table.exists()
-        table.create()
-        assert table.exists()
+        assert not self.table.exists()
+        self.table.create()
+        assert self.table.exists()
 
 
     def delete(self):
-        dataset = self.client.dataset('downloader')
-        table = dataset.table('symbols', self.getSchema())
-        assert table.exists()
-        table.delete()
-        assert not table.exists()
+        assert self.table.exists()
+        self.table.delete()
+        assert not self.table.exists()
 
 
     def upload(self, filename):
-        dataset = self.client.dataset('downloader')
-        table = dataset.table('symbols', self.getSchema())
         with open(filename, 'rb') as readable:
-            table.upload_from_file(readable, source_format='CSV')
+            self.table.upload_from_file(readable, source_format='CSV')
 
 
     def getSymbols(self):
