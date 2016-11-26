@@ -8,8 +8,8 @@ import quotes.database
 
 
 def run():
-    #delete()
-    #download()
+    delete()
+    download()
     reformat()
     upload()
 
