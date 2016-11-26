@@ -79,20 +79,21 @@ def reformat():
 
     for inputFilename in inputFilenames:
         inputFile = open(path + inputFilename, 'r')
-        reformatSymbol(inputFile, outputFile)
+        symbol = inputFilename.replace('.csv', '')
+        reformatSymbol(inputFile, outputFile, symbol)
         inputFile.close()
 
     outputFile.close()
     print('Done reformating quotes')
 
 
-def reformatSymbol(inputFile, outputFile):
+def reformatSymbol(inputFile, outputFile, symbol):
     for line in inputFile:
         if line.startswith('Date'):
             # Then this is a header line
             pass
         else:
-            outputFile.write(line)
+            outputFile.write(symbol + ',' + line)
 
 
 def upload():
