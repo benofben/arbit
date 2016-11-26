@@ -19,7 +19,7 @@ class database():
             bigquery.table.SchemaField(name='Sector', field_type='STRING'),
             bigquery.table.SchemaField(name='Industry', field_type='STRING')
         )
-        self.table = dataset.table('symbols', schema)
+        self.table = self.dataset.table('symbols', schema)
 
 
     def create(self):
