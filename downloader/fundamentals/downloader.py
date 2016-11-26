@@ -17,7 +17,7 @@ def run():
 
 def download(filename, today):
     symbolsDB = symbols.database.database()
-    s = symbolsDB.getAllSymbols()
+    s = symbolsDB.getSymbols()
     outputFile = open(filename, 'w')
     for symbol in s:
         try:
