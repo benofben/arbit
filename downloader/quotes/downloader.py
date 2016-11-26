@@ -83,13 +83,14 @@ def reformat():
         inputFile.close()
 
     outputFile.close()
+    print('Done reformating quotes')
 
 
 def reformatSymbol(inputFile, outputFile):
     for line in inputFile:
         if line.startswith('Date'):
             # Then this is a header line
-            print('skipped line')
+            pass
         else:
             outputFile.write(line)
 
