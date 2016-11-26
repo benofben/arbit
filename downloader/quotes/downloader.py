@@ -78,7 +78,7 @@ def reformat():
     inputFilenames = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
 
     for inputFilename in inputFilenames:
-        inputFile = open(inputFilename, 'r')
+        inputFile = open(path + inputFilename, 'r')
         reformatSymbol(inputFile, outputFile)
         inputFile.close()
 
