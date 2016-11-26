@@ -44,7 +44,6 @@ class database():
         query_results = self.client.run_sync_query(query)
         query_results.use_legacy_sql = False
         query_results.run()
-        assert query_results.complete
         [rows, unused_total_rows, unused_page_token] = query_results.fetch_data()
         symbols = []
         for row in rows:
