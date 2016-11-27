@@ -41,9 +41,10 @@ class database():
         hour = int(form4Information['acceptanceDatetime'][8:10])
         minute = int(form4Information['acceptanceDatetime'][10:12])
         second = int(form4Information['acceptanceDatetime'][12:14])
+        d = datetime.datetime(year, month, day, hour, minute, second)
 
         # Render this is a weird BigQuery format
-        acceptanceDatetime = year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second
+        acceptanceDatetime = str(d.year) + '-' + str(d.month) + '-' + str(d.day) + ' ' + str(d.hour) + ':' + str(d.minute) + ':' + str(d.second)
 
         year = int(form4Information['transactionDate'][0:4])
         month = int(form4Information['transactionDate'][5:7])
