@@ -42,6 +42,7 @@ def downloadSymbol(symbol):
     while response.status == 302:
         print('Got a 302.  Following the redirect...')
         location = response.getheader('Location')
+        print(location)
         conn.request('GET', location)
         response = conn.getresponse()
     data = response.read()
