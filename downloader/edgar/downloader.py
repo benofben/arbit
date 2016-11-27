@@ -134,7 +134,7 @@ def downloadForm4File(ftp, filename):
     downloadFilename = downloadDirectoryName + downloadFilename
 
     if os.path.exists(downloadFilename):
-        raise Exception('Skipping existing form 4 file ' + filename)
+        print('Skipping existing form 4 file ' + filename)
     else:
         try:
             ftp.retrbinary('RETR ' + filename, open(downloadFilename, 'wb').write)
