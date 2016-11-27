@@ -47,26 +47,26 @@ def parse(filename):
         isDirector = ownershipDocument['reportingOwner'][0]['reportingOwnerRelationship'][0]['isDirector'][0]
         isDirector = convertTo01(isDirector)
     except KeyError:
-        isDirector = 'F'
+        isDirector = False
 
     try:
         isOfficer = ownershipDocument['reportingOwner'][0]['reportingOwnerRelationship'][0]['isOfficer'][0]
         isOfficer = convertTo01(isOfficer)
     except KeyError:
-        isOfficer = 'F'
+        isOfficer = False
 
     try:
         isTenPercentOwner = \
         ownershipDocument['reportingOwner'][0]['reportingOwnerRelationship'][0]['isTenPercentOwner'][0]
         isTenPercentOwner = convertTo01(isTenPercentOwner)
     except KeyError:
-        isTenPercentOwner = 'F'
+        isTenPercentOwner = False
 
     try:
         isOther = ownershipDocument['reportingOwner'][0]['reportingOwnerRelationship'][0]['isOther'][0]
         isOther = convertTo01(isOther)
     except KeyError:
-        isOther = 'F'
+        isOther = False
 
     try:
         ownershipDocuments = ownershipDocument['nonDerivativeTable'][0]['nonDerivativeTransaction']
@@ -118,12 +118,12 @@ def parse(filename):
 
 def convertTo01(s):
     if s == '0':
-        return 'F'
+        return False
     elif s == '1':
-        return 'T'
+        return True
     if s == 'false':
-        return 'F'
+        return False
     elif s == 'true':
-        return 'T'
+        return True
     else:
         print('Cannot figure out correct value.')

@@ -1,13 +1,37 @@
-from pymongo import MongoClient
-import datetime
-
+from google.cloud import bigquery
 
 class database():
-    def __init__(self):
-        self.client = MongoClient()
+    client = None
+    dataset = None
+    table = None
 
-    def __del__(self):
-        self.client.disconnect()
+
+    def __init__(self):
+        self.client = bigquery.Client()
+        self.dataset = self.client.dataset('downloader')
+        schema = (
+            bigquery.table.SchemaField(name='SecDocument', field_type='STRING'),
+            bigquery.table.SchemaField(name='AcceptanceDatetime', field_type='DATETIME'),
+            bigquery.table.SchemaField(name='IssuerTradingSymbol', field_type='STRING'),
+            bigquery.table.SchemaField(name='RptOwnerCik', field_type='STRING'),
+            bigquery.table.SchemaField(name='RptOwnerName', field_type='STRING'),
+            bigquery.table.SchemaField(name='IsDirector', field_type='BOOLEAN'),
+            bigquery.table.SchemaField(name='IsOfficer', field_type='BOOLEAN'),
+            bigquery.table.SchemaField(name='IsTenPercentOwner', field_type='BOOLEAN'),
+            bigquery.table.SchemaField(name='IsOther', field_type='BOOLEAN'),
+            bigquery.table.SchemaField(name='TransactionDate', field_type='DATE'),
+            bigquery.table.SchemaField(name='TransactionShares', field_type='FLOAT'),
+            bigquery.table.SchemaField(name='TransactionPricePerShare', field_type='FLOAT'),
+            bigquery.table.SchemaField(name='TransactionAcquired', field_type='BOOLEAN'),
+            bigquery.table.SchemaField(name='SharesOwned', field_type='FLOAT')
+        )
+        self.table = self.dataset.table('form4', schema)
+
+
+    def create(self):
+        if not self.table.exists():
+            self.table.create()
+
 
     def insert(self, form4Information):
         year = int(form4Information['acceptanceDatetime'][0:4])
@@ -23,31 +47,21 @@ class database():
         day = int(form4Information['transactionDate'][8:10])
         transactionDate = datetime.datetime(year, month, day)
 
-        form4 = {
-            'SecDocument': form4Information['secDocument'],
-            'AcceptanceDatetime': acceptanceDatetime,
-            'IssuerTradingSymbol': form4Information['issuerTradingSymbol'],
-            'RptOwnerCik': form4Information['rptOwnerCik'],
-            'RptOwnerName': form4Information['rptOwnerName'],
-            'IsDirector': form4Information['isDirector'],
-            'IsOfficer': form4Information['isOfficer'],
-            'IsTenPercentOwner': form4Information['isTenPercentOwner'],
-            'IsOther': form4Information['isOther'],
-            'TransactionDate': transactionDate,
-            'TransactionShares': form4Information['transactionShares'],
-            'TransactionPricePerShare': form4Information['transactionPricePerShare'],
-            'TransactionAcquiredDisposed': form4Information['transactionAcquiredDisposedCode'],
-            'SharesOwned': form4Information['sharesOwned'],
-        }
-        self.client.arbit.form4.insert(form4)
-
-    def fetch(self, currentDate):
-        d = currentDate
-        startDatetime = datetime.datetime(d.year, d.month, d.day, 0, 0, 0)
-        endDatetime = datetime.datetime(d.year, d.month, d.day, 23, 59, 59)
-
-        forms = []
-        for form in self.client.arbit.form4.find({'TransactionAcquiredDisposed': 'A',
-                                                  'AcceptanceDatetime': {'$gte': startDatetime, '$lt': endDatetime}}):
-            forms.append(form)
-        return forms
+        row = (
+            form4Information['secDocument'],
+            acceptanceDatetime,
+            form4Information['issuerTradingSymbol'],
+            form4Information['rptOwnerCik'],
+            form4Information['rptOwnerName'],
+            form4Information['isDirector'],
+            form4Information['isOfficer'],
+            form4Information['isTenPercentOwner'],
+            form4Information['isOther'],
+            transactionDate,
+            form4Information['transactionShares'],
+            form4Information['transactionPricePerShare'],
+            form4Information['transactionAcquiredDisposedCode'],
+            form4Information['sharesOwned'],
+        )
+        rows=[row]
+        self.table.insert_data(rows)

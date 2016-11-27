@@ -4,14 +4,15 @@ import constants
 import os
 import gzip
 import edgar.form4
-#import edgar.database
+import edgar.database
 
 
 def run():
     ftp = ftplib.FTP('ftp.sec.gov')
     ftp.login()
 
-    #form4DB = edgar.database.database()
+    db = edgar.database.database()
+    db.create()
 
     directoryNames = getDirectoryNames()
 
@@ -27,22 +28,15 @@ def run():
             constants.dataDirectory + 'edgar/masterFiles/' + masterFilename)
 
         for form4Filename in form4Filenames:
-            try:
-                downloadForm4File(ftp, form4Filename)
-                form4Filename = constants.dataDirectory + form4Filename
-                if os.path.exists(form4Filename):
-                    print('Parsing Form 4 file ' + form4Filename)
-                    transactions = edgar.form4.parse(form4Filename)
-                    for transaction in transactions:
-                        try:
-                            pass
-                            form4DB.insert(transaction)
-                        except:
-                            pass
-                        # print('Duplicate record')
-            except:
-                # Either couldn't download file or it already exists
-                pass
+            downloadForm4File(ftp, form4Filename)
+            form4Filename = constants.dataDirectory + form4Filename
+            if os.path.exists(form4Filename):
+                print('Parsing Form 4 file ' + form4Filename)
+                transactions = edgar.form4.parse(form4Filename)
+                for transaction in transactions:
+                    db.insert(transaction)
+            else:
+                print('Failed to download Form 4 file ' + form4Filename)
 
     ftp.quit()
 
@@ -133,8 +127,7 @@ def downloadMasterFile(ftp, filename):
 
 def downloadForm4File(ftp, filename):
     downloadFilename = filename.split('/')
-    downloadDirectoryName = constants.dataDirectory + downloadFilename[0] + '/' + downloadFilename[1] + '/' + \
-                            downloadFilename[2] + '/'
+    downloadDirectoryName = constants.dataDirectory + downloadFilename[0] + '/' + downloadFilename[1] + '/' + downloadFilename[2] + '/'
     if not os.path.exists(downloadDirectoryName):
         os.makedirs(downloadDirectoryName)
     downloadFilename = downloadFilename[3]
