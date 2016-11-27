@@ -22,7 +22,7 @@ class downloader:
     def download(self):
         print('Running EDGAR download at ' + datetime.datetime.today().isoformat())
         edgar.downloader.run()
-        edgar.mail.run()
+        #edgar.mail.run()
         print('Done with EDGAR download at ' + datetime.datetime.today().isoformat())
 
         # Reschedule the download to run again tomorrow.
