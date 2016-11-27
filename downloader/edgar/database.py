@@ -50,6 +50,11 @@ class database():
         d = datetime.datetime(year, month, day)
         transactionDate = str(d.year) + '-' + str(d.month) + '-' + str(d.day)
 
+        if(form4Information['transactionAcquiredDisposedCode']=='A'):
+            transactionAcquired = True
+        else
+            transactionAcquired = False
+
         row = (
             form4Information['secDocument'],
             acceptanceDatetime,
@@ -63,7 +68,7 @@ class database():
             transactionDate,
             form4Information['transactionShares'],
             form4Information['transactionPricePerShare'],
-            form4Information['transactionAcquiredDisposedCode'],
+            transactionAcquired,
             form4Information['sharesOwned'],
         )
         rows=[row]
