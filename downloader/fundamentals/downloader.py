@@ -39,8 +39,14 @@ def downloadSymbol(symbol):
 
     response = conn.getresponse()
     print(response.status, response.reason)
+    while response.status == 302:
+        print('Got a 302.  Following the redirect...')
+        location = response.getheader('Location')
+        conn.request('GET', location)
     data = response.read()
     conn.close()
+
+
     if response.status == 200 and response.reason == 'OK':
         data = data.decode('windows-1252')
     else:
