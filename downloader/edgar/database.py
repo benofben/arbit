@@ -52,7 +52,7 @@ class database():
 
         if(form4Information['transactionAcquiredDisposedCode']=='A'):
             transactionAcquired = True
-        else
+        else:
             transactionAcquired = False
 
         row = (
