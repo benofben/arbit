@@ -3,7 +3,7 @@ import datetime
 import time
 import constants
 import edgar.downloader
-import edgar.mail
+#import edgar.mail
 
 
 class downloader:
