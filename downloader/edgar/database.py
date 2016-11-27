@@ -67,4 +67,5 @@ class database():
             form4Information['sharesOwned'],
         )
         rows=[row]
+        print(rows)
         self.table.insert_data(rows)
