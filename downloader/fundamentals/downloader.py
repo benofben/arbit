@@ -43,6 +43,7 @@ def downloadSymbol(symbol):
         print('Got a 302.  Following the redirect...')
         location = response.getheader('Location')
         conn.request('GET', location)
+        response = conn.getresponse()
     data = response.read()
     conn.close()
 
