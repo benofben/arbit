@@ -10,10 +10,6 @@ class downloader:
 
 
     def __init__(self):
-        self.schedule.enterabs(time.time(), 0, self.download, ())
-        self.schedule.run()
-
-        '''
         # We don't want to run immediately because we won't get a close price
         today = datetime.date.today()
 
@@ -24,7 +20,6 @@ class downloader:
         print('Going to run fundamentals download next at ' + downloadDateTime.isoformat())
         self.schedule.enterabs(downloadTime, 0, self.download, ())
         self.schedule.run()
-        '''
 
 
     def download(self):
