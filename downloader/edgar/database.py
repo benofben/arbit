@@ -1,4 +1,5 @@
 from google.cloud import bigquery
+import datetime
 
 class database():
     client = None
