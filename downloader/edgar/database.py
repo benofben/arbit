@@ -70,6 +70,8 @@ class database():
             form4Information['sharesOwned'],
         )
         rows=[row]
-        print(rows)
         result = self.table.insert_data(rows)
-        print(result)
+
+        if result != []:
+            print(rows)
+            print(result)
