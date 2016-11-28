@@ -35,20 +35,18 @@ class database():
 
 
     def insert(self, form4Information):
-        year = int(form4Information['acceptanceDatetime'][0:4])
-        month = int(form4Information['acceptanceDatetime'][4:6])
-        day = int(form4Information['acceptanceDatetime'][6:8])
-        hour = int(form4Information['acceptanceDatetime'][8:10])
-        minute = int(form4Information['acceptanceDatetime'][10:12])
-        second = int(form4Information['acceptanceDatetime'][12:14])
-        d = datetime.datetime(year, month, day, hour, minute, second)
-        acceptanceDatetime = str(d.year) + '-' + str(d.month) + '-' + str(d.day) + ' ' + str(d.hour) + ':' + str(d.minute) + ':' + str(d.second)
+        year = form4Information['acceptanceDatetime'][0:4]
+        month = form4Information['acceptanceDatetime'][4:6]
+        day = form4Information['acceptanceDatetime'][6:8]
+        hour = form4Information['acceptanceDatetime'][8:10]
+        minute = form4Information['acceptanceDatetime'][10:12]
+        second = form4Information['acceptanceDatetime'][12:14]
+        acceptanceDatetime = year + '-' + month + '-' + day + 'T' + hour + ':' + minute + ':' + second
 
-        year = int(form4Information['transactionDate'][0:4])
-        month = int(form4Information['transactionDate'][5:7])
-        day = int(form4Information['transactionDate'][8:10])
-        d = datetime.datetime(year, month, day)
-        transactionDate = str(d.year) + '-' + str(d.month) + '-' + str(d.day)
+        year = form4Information['transactionDate'][0:4]
+        month = form4Information['transactionDate'][5:7]
+        day = form4Information['transactionDate'][8:10]
+        transactionDate = year + '-' + month + '-' + day
 
         if(form4Information['transactionAcquiredDisposedCode']=='A'):
             transactionAcquired = True
