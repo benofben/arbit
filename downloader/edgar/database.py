@@ -73,4 +73,5 @@ class database():
         )
         rows=[row]
         print(rows)
-        self.table.insert_data(rows)
+        result = self.table.insert_data(rows)
+        print(result)
