@@ -1,4 +1,4 @@
-import util.xmltodict
+import edgar.xmltodict
 import os
 
 
@@ -36,7 +36,7 @@ def parse(filename):
     seperator = '</XML>'
     contents = contents.split(seperator, 1)[0]
 
-    ownershipDocument = util.xmltodict.xmltodict(contents)
+    ownershipDocument = edgar.xmltodict.xmltodict(contents)
 
     issuerTradingSymbol = ownershipDocument['issuer'][0]['issuerTradingSymbol'][0]
     rptOwnerCik = ownershipDocument['reportingOwner'][0]['reportingOwnerId'][0]['rptOwnerCik'][0]
