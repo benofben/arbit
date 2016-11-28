@@ -32,9 +32,12 @@ def run():
             form4Filename = constants.dataDirectory + form4Filename
             if os.path.exists(form4Filename):
                 print('Parsing Form 4 file ' + form4Filename)
-                transactions = edgar.form4.parse(form4Filename)
-                for transaction in transactions:
-                    db.insert(transaction)
+                try:
+                    transactions = edgar.form4.parse(form4Filename)
+                    for transaction in transactions:
+                        db.insert(transaction)
+                except:
+                    print('Failed to parse Form 4 file ' + form4Filename)
             else:
                 print('Failed to download Form 4 file ' + form4Filename)
 

@@ -39,7 +39,6 @@ def parse(filename):
     ownershipDocument = util.xmltodict.xmltodict(contents)
 
     issuerTradingSymbol = ownershipDocument['issuer'][0]['issuerTradingSymbol'][0]
-
     rptOwnerCik = ownershipDocument['reportingOwner'][0]['reportingOwnerId'][0]['rptOwnerCik'][0]
     rptOwnerName = ownershipDocument['reportingOwner'][0]['reportingOwnerId'][0]['rptOwnerName'][0]
 
