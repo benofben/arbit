@@ -1,17 +1,19 @@
 import csv
-import datetime
+from datetime import datetime
 
 inputFilename='/Users/ben/Downloads/ES201606_TS.csv'
 inputFile = open(inputFilename, 'r')
-
 reader = csv.reader(inputFile)
 
-for  datetime, price, size, side in reader:
+# Here's an example row:
+# 2016-02-29 00:19:35.987,193525,1,2
+
+for  dt, price, size, side in reader:
     if price=='Price':
         # Skip the header row
         pass
     else:
-        datetime = datetime.strptime('Jun 1 2005  1:33PM', '%b %d %Y %I:%M%p')
+        dt = datetime.strptime(dt, '%Y-%m-%d %H:%M:%S.%f')
         price = float(price)
         size = int(size)
         side = int(side)
