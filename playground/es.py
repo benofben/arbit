@@ -3,9 +3,10 @@ from datetime import datetime
 
 class es():
     orderbook = {}
-    capital = 0
-    position = 0
-    buyprice = 0
+
+    realizedpl = 0
+    pl = 0
+    buyprice = []
 
     def __init__(self):
         inputFilename='/Users/ben/Downloads/ES201606_TS.csv'
@@ -30,30 +31,19 @@ class es():
                 else:
                     self.orderbook['bid'] = price
 
-                if self.position==0:
-                    self.buy()
-
-                try:
-                    if self.position != 0 and self.orderbook['bid']-self.buyprice > 0:
-                        self.sell()
-                except KeyError:
-                    pass
-
-                print(str(self.position) + ' ' + str(self.capital))
+                print(str(len(self.buyprice)) + ' ' + str(self.realizedpl)+ ' ' + str(self.pl))
 
         inputFile.close()
 
     def buy(self):
         try:
-            self.position += 1
-            self.buyprice = self.orderbook['ask']
+            self.buyprice.append(self.orderbook['ask'])
         except KeyError:
             pass
 
     def sell(self):
         try:
-            self.position -= 1
-            self.capital += self.orderbook['bid'] - self.buyprice
+            self.realizedpl += self.orderbook['bid'] - self.buyprice.pop()
         except KeyError:
             pass
 
