@@ -18,5 +18,5 @@ for  dt, price, size, side in reader:
         size = int(size)
         side = int(side)
 
-    print(datetime)
+    print(dt)
 inputFile.close()
