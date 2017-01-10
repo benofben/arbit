@@ -8,6 +8,8 @@ reader = csv.reader(inputFile)
 # Here's an example row:
 # 2016-02-29 00:19:35.987,193525,1,2
 
+orderbook = {}
+
 for  dt, price, size, side in reader:
     if price=='Price':
         # Skip the header row
@@ -18,5 +20,9 @@ for  dt, price, size, side in reader:
         size = int(size)
         side = int(side)
 
-    print(dt)
+        if side==0:
+            orderbook['ask'] = price
+        else:
+            orderbook['bid'] = price
+
 inputFile.close()
