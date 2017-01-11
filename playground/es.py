@@ -3,7 +3,6 @@ from datetime import datetime
 
 class es():
     orderbook = {}
-
     realizedpl = 0
     pl = 0
     buyprice = []
