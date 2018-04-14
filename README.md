@@ -12,7 +12,7 @@ Sometime after that, the code was modified to use Oracle and I had to custom bui
 During 2016 I rewrote it to use GCP BigQuery and AppEngine.  At the time there were a lot of issues with the BigQuery driver and it seemed like pure serverless wasn't quite there as AppEngine was missing various language features.  The goal at the time was to use Cloud ML and Cloud Datalab.
 
 ## Roadmap
-Since the GCP attempt, AWS came out with Sagemaker.  Between that, s3, Lamba and Athena, it seems like giving the AWS ecosystem a try is in order.  I'm going to try to port everything there.
+In November 2017, AWS came out with Sagemaker.  Between that, s3, Lamba and Athena, it seems like giving the AWS ecosystem a try is in order.  I'm going to try to port everything there.
 
 First off, I'm going to do some work to size the data volume and make sure I don't accidentally spend $100k/month...
 
