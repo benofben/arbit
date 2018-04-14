@@ -14,3 +14,7 @@ During 2016 I rewrote it to use GCP BigQuery and AppEngine.  At the time there w
 ## Roadmap
 Since the GCP attempt, AWS came out with Sagemaker.  Between that, s3, Lamba and Athena, it seems like giving the AWS ecosystem a try is in order.  I'm going to try to port everything there.
 
+First off, I'm going to do some work to size the data volume and make sure I don't accidentally spend $100k/month...
+
+* Google Drive - [Arbit](https://drive.google.com/open?id=1GocLSCYCmF52XVj9gMokjTZNxCbrsHfv)
+* Google Sheet - [Arbit - Cost Analysis](https://docs.google.com/spreadsheets/d/1Tqnlqs20LnuvpxmK2S-3PH58dGlq5k-4G2KZ-V5jbcs/edit?usp=sharing)
