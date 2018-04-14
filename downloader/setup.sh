@@ -11,6 +11,7 @@ role_arn="arn:aws:iam::675101987453:role/basic_lambda_role"
 # https://medium.com/@jacobsteeves/aws-lambda-from-the-command-line-7efab7f3ebd9
 
 zip -r main.zip main.py
+
 aws lambda create-function \
   --function-name add \
   --runtime python3.6 \
@@ -18,8 +19,6 @@ aws lambda create-function \
   --handler main.add \
   --role ${role_arn}
 
-aws lambda invoke \
-  --invocation-type RequestResponse \
-  --function-name add \
-  --payload '{"a":1, "b":2 }' \
-  outputfile.txt
+aws lambda update-function-code \
+--function-name add \
+--zip-file fileb://main.zip
