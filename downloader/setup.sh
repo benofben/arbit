@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-role_arn="arn:aws:iam::675101987453:role/basic_lambda_role"
+role_arn="arn:aws:iam::675101987453:role/arbit_role"
 
 # This script assumes a configured AWS CLI and that the role_arn above is set.
 # (1) Create lambda functions for the downloader
