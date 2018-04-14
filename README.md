@@ -18,3 +18,27 @@ First off, I'm going to do some work to size the data volume and make sure I don
 
 * Google Drive - [Arbit](https://drive.google.com/open?id=1GocLSCYCmF52XVj9gMokjTZNxCbrsHfv)
 * Google Sheet - [Arbit - Cost Analysis](https://docs.google.com/spreadsheets/d/1Tqnlqs20LnuvpxmK2S-3PH58dGlq5k-4G2KZ-V5jbcs/edit?usp=sharing)
+
+# Setup
+
+First off, you're going to need a local copy of this repo:
+
+    git clone https://github.com/benofben/arbit.git
+    cd arbit
+
+You'll also need to install and configure the AWS CLI:
+
+    pip install --upgrade --user awscli
+    aws configure
+
+You can make sure that the CLI is working by running:
+
+    aws ec2 describe-regions
+
+Next, you'll need a role to create lambdas, etc.  To create that run:
+
+    aws iam create-role \
+      --role-name arbit_role \
+      --assume-role-policy-document file://arbit_role.json
+
+You'll need to grab the role_arn from there.  Be sure to paste it at the top of 'arbit/downloader/setup.sh'
