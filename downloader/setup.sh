@@ -5,4 +5,8 @@
 # (2) Download old data
 # (3) Setup jobs to download new nightly data
 
-aws create-function
+aws create-function \
+--function-name edgar \
+--runtime python3.6 \
+--role <value> \
+--handler <value>
