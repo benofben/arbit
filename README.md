@@ -18,3 +18,20 @@ First off, I'm going to do some work to size the data volume and make sure I don
 
 * Google Drive - [Arbit](https://drive.google.com/open?id=1GocLSCYCmF52XVj9gMokjTZNxCbrsHfv)
 * Google Sheet - [Arbit - Cost Analysis](https://docs.google.com/spreadsheets/d/1Tqnlqs20LnuvpxmK2S-3PH58dGlq5k-4G2KZ-V5jbcs/edit?usp=sharing)
+
+## Walkthrough
+
+First off, you're going to need a local copy of this repo:
+
+    git clone https://github.com/benofben/arbit.git
+    cd arbit
+
+You'll also need to install and configure the AWS CLI:
+
+    pip install --upgrade --user awscli
+    aws configure
+
+With all that in place, you'll want to set up the downloader by running:
+
+    cd downloader
+    ./setup.sh
