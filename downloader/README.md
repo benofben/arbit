@@ -1,24 +1,12 @@
 # downloader
 
-First off, you're going to need a local copy of this repo:
+The SEC used to provide access to EDGAR via FTP.  They've dropped that and it seems to be HTTP now.  A writeup on that is [here](https://www.sec.gov/edgar/searchedgar/accessing-edgar-data.htm).
 
-    git clone https://github.com/benofben/arbit.git
-    cd arbit
+The root for the http access is [here](https://www.sec.gov/Archives/edgar/daily-index/).
 
-You'll also need to install and configure the AWS CLI:
+# Setup
 
-    pip install --upgrade --user awscli
-    aws configure
-
-Next, you'll need a role to create lambdas, etc.  To create that run:
-
-    aws iam create-role \
-      --role-name basic_lambda_role \
-      --assume-role-policy-document file://basic_lambda_role.json
-
-You'll need to grab the role_arn from there and add it to 'setup.sh'.
-
-With all that in place, you'll want to set up the downloader by running:
+Just run this:
 
     cd downloader
     ./setup.sh
