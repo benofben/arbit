@@ -1,12 +1,2 @@
-# Python related
-*.pyc
-__pycache__
-
 # SSH private key
-*.pem
-
-# Apple files
-*.DS_Store
-
-# PyCharm file
-*.idea
+arbit.pem

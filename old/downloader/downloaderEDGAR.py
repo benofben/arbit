@@ -1,13 +1,3 @@
-import datetime
-
-# It looks like new master files show up at 2:01am, though are sometimes delayed as late as 2:14am.
-# Something else is showing up at 10pm eastern, but it's unclear from my old comments.  Need to investigate.
-downloadtimeEDGAR = datetime.time(22,30,0)
-
-
-
-
-
 import sched
 import datetime
 import time
