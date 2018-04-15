@@ -9,7 +9,7 @@ There was a brief, glorious, period in there around 2008 where the API integrati
 
 Sometime after that, the code was modified to use Oracle and I had to custom build the cx_Oracle driver.  By 2015, it used python3, mongodb and ran on AWS.  It also included a little PHP and d3 visualization.
 
-During 2016 I rewrote it to use GCP BigQuery and AppEngine.  At the time there were a lot of issues with the BigQuery driver and it seemed like pure serverless wasn't quite there as AppEngine was missing various language features.  The goal at the time was to use Cloud ML and Cloud Datalab.
+During 2016 I rewrote it to use GCP BigQuery and AppEngine.  At the time there were a lot of issues with the BigQuery driver and it seemed like pure serverless wasn't quite there as AppEngine was missing various language features.  The goal at the time was to use Cloud ML and Cloud Datalab.  In 2018 Cloud Functions looked like a solution but they're still in beta and only support node.js (eww).
 
 ## Roadmap
 In November 2017, AWS came out with Sagemaker.  Between that, S3, Lambda and Athena, it seems like giving the AWS ecosystem a try is in order.  I'm going to try to port everything there.
