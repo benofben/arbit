@@ -10,12 +10,12 @@ role_arn="arn:aws:iam::675101987453:role/arbit_role"
 zip -r main.zip *.py
 
 aws lambda create-function \
-  --function-name edgar.downloadDay \
+  --function-name edgarDownloadDay \
   --runtime python3.6 \
   --zip-file fileb://main.zip \
   --handler main.run \
   --role ${role_arn}
 
 aws lambda update-function-code \
---function-name edgar.downloadDay \
+--function-name edgarDownloadDay \
 --zip-file fileb://main.zip
