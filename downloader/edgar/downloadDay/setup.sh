@@ -19,4 +19,4 @@ aws lambda create-function \
   --zip-file fileb://main.zip \
   --handler main.run \
   --role ${role_arn} \
-  --timeout 300
+  --timeout 3
