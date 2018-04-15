@@ -18,5 +18,4 @@ aws lambda create-function \
   --runtime python3.6 \
   --zip-file fileb://main.zip \
   --handler main.run \
-  --role ${role_arn} \
-  --timeout 3
+  --role ${role_arn}
