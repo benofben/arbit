@@ -22,8 +22,8 @@ def getForm4URLs(date):
 
     print('Parsing the master file...')
     form4URLs=[]
-    f = io.StringIO(text)
-    reader = csv.reader(f, delimiter='|')
+    file = io.StringIO(text)
+    reader = csv.reader(file, delimiter='|')
     for row in reader:
         if len(row) != 5:
             # This is a header
@@ -37,8 +37,8 @@ def getForm4URLs(date):
 def run(event, context):
     date = event['date']
     date = datetime.datetime.strptime(date, '%Y-%m-%d')
-    print('Downloading from EDGAR for the date ' + str(date))
 
+    print('Downloading from EDGAR for the date ' + str(date))
     form4URLs=getForm4URLs(date)
 
     # Download and parse each Form 4

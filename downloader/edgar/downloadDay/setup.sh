@@ -11,10 +11,10 @@ rm main.zip
 zip -r main.zip *.py
 
 aws lambda delete-function \
-  --function-name edgarDownloadDay
+  --function-name edgar-download-day
 
 aws lambda create-function \
-  --function-name edgarDownloadDay \
+  --function-name edgar-download-day \
   --runtime python3.6 \
   --zip-file fileb://main.zip \
   --handler main.run \
