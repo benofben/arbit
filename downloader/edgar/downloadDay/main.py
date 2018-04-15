@@ -52,5 +52,7 @@ def run(event, context):
         transactions+=form4.parse(text)
         break
 
+    print('Found the transactions: ')
+    print(transactions)
+
     print('Writing the transactions to S3...')
-    return str(transactions)
