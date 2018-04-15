@@ -36,26 +36,25 @@ def parse(text):
 
     try:
         isDirector = ownershipDocument['reportingOwner'][0]['reportingOwnerRelationship'][0]['isDirector'][0]
-        isDirector = convertTo01(isDirector)
+        isDirector = convertToBoolean(isDirector)
     except KeyError:
         isDirector = False
 
     try:
         isOfficer = ownershipDocument['reportingOwner'][0]['reportingOwnerRelationship'][0]['isOfficer'][0]
-        isOfficer = convertTo01(isOfficer)
+        isOfficer = convertToBoolean(isOfficer)
     except KeyError:
         isOfficer = False
 
     try:
-        isTenPercentOwner = \
-        ownershipDocument['reportingOwner'][0]['reportingOwnerRelationship'][0]['isTenPercentOwner'][0]
-        isTenPercentOwner = convertTo01(isTenPercentOwner)
+        isTenPercentOwner = ownershipDocument['reportingOwner'][0]['reportingOwnerRelationship'][0]['isTenPercentOwner'][0]
+        isTenPercentOwner = convertToBoolean(isTenPercentOwner)
     except KeyError:
         isTenPercentOwner = False
 
     try:
         isOther = ownershipDocument['reportingOwner'][0]['reportingOwnerRelationship'][0]['isOther'][0]
-        isOther = convertTo01(isOther)
+        isOther = convertToBoolean(isOther)
     except KeyError:
         isOther = False
 
@@ -72,12 +71,9 @@ def parse(text):
         try:
             transactionDate = nonDerivativeTransaction['transactionDate'][0]['value'][0]
             transactionShares = nonDerivativeTransaction['transactionAmounts'][0]['transactionShares'][0]['value'][0]
-            transactionPricePerShare = \
-            nonDerivativeTransaction['transactionAmounts'][0]['transactionPricePerShare'][0]['value'][0]
-            transactionAcquiredDisposedCode = \
-            nonDerivativeTransaction['transactionAmounts'][0]['transactionAcquiredDisposedCode'][0]['value'][0]
-            sharesOwned = \
-            nonDerivativeTransaction['postTransactionAmounts'][0]['sharesOwnedFollowingTransaction'][0]['value'][0]
+            transactionPricePerShare = nonDerivativeTransaction['transactionAmounts'][0]['transactionPricePerShare'][0]['value'][0]
+            transactionAcquiredDisposedCode = nonDerivativeTransaction['transactionAmounts'][0]['transactionAcquiredDisposedCode'][0]['value'][0]
+            sharesOwned = nonDerivativeTransaction['postTransactionAmounts'][0]['sharesOwnedFollowingTransaction'][0]['value'][0]
 
             if float(transactionPricePerShare) == 0:
                 pass
@@ -107,7 +103,7 @@ def parse(text):
     return transactions
 
 
-def convertTo01(s):
+def convertToBoolean(s):
     if s == '0':
         return False
     elif s == '1':

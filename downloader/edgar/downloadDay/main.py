@@ -44,15 +44,17 @@ def run(event, context):
     # Download and parse each Form 4
     print('We have ' + str(len(form4URLs)) + ' to download.')
     transactions=[]
+    i=0
     for url in form4URLs:
         print('Working on file ' + url)
         response = urllib.request.urlopen(url)
         data = response.read()
         text = data.decode('utf-8')
-        transactions+=form4.parse(text)
-        break
+        transactions=form4.parse(text)
 
-    print('Found the transactions: ')
-    print(transactions)
+        i+=1
+        if i>10:
+            break
 
     print('Writing the transactions to S3...')
+    return(transactions)
