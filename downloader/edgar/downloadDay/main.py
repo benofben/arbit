@@ -53,4 +53,4 @@ def run(event, context):
         break
 
     print('Writing the transactions to S3...')
-    return 1
+    return str(transactions)
