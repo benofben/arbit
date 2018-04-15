@@ -15,9 +15,7 @@ In November 2017, AWS came out with Sagemaker.  Between that, S3, Lambda and Ath
 
 ## Roadmap
 
-GCP released serverless functions.  Those, BigQuery and Cloud Datalab seem like the way forward for now.
-
-* Google Drive - [Arbit](https://drive.google.com/open?id=1GocLSCYCmF52XVj9gMokjTZNxCbrsHfv)
+GCP released serverless functions.  Those, BigQuery and Cloud Datalab seem like the way forward for now.  I'm capturing architecture diagrams and so forth [here](https://drive.google.com/open?id=1GocLSCYCmF52XVj9gMokjTZNxCbrsHfv).
 
 # Setup
 
