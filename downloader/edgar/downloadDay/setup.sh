@@ -7,15 +7,15 @@ role_arn="arn:aws:iam::675101987453:role/arbit_role"
 # (2) Download old data
 # (3) Setup jobs to download new nightly data
 
-zip -r main.zip main.py
+zip -r main.zip *.py
 
 aws lambda create-function \
-  --function-name downloadDay \
+  --function-name edgar.downloadDay \
   --runtime python3.6 \
   --zip-file fileb://main.zip \
   --handler main.run \
   --role ${role_arn}
 
 aws lambda update-function-code \
---function-name downloadDay \
+--function-name edgar.downloadDay \
 --zip-file fileb://main.zip
