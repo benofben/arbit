@@ -45,6 +45,7 @@ run(event, context):
     print('We have ' + str(len(form4URLs) + ' to download.')
     transactions=[]
     for url in form4URLs:
+        print('Working on file ' + url)
         response = urllib.request.urlopen(url)
         data = response.read()
         text = data.decode('utf-8')
