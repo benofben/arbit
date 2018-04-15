@@ -14,7 +14,7 @@ During 2016, I rewrote it to use GCP BigQuery and AppEngine.  At the time there 
 ## Current
 In November 2017, AWS came out with Sagemaker.  Between that, S3, Lambda and Athena, it seems like giving the AWS ecosystem a try is in order.  I'm going to try to port everything there.
 
-I'm capturing architecture documents on [here](https://drive.google.com/open?id=1GocLSCYCmF52XVj9gMokjTZNxCbrsHfv).
+I'm capturing architecture documents [here](https://drive.google.com/open?id=1GocLSCYCmF52XVj9gMokjTZNxCbrsHfv).
 
 # Setup
 
