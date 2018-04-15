@@ -41,4 +41,4 @@ Next, you'll need a role to create lambdas, etc.  To create that run:
       --role-name arbit_role \
       --assume-role-policy-document file://arbit_role.json
 
-You'll need to grab the role_arn from there.  Be sure to paste it at the top of 'arbit/downloader/setup.sh'
+You'll need to grab the role_arn from there.  Be sure to paste it at the top of `arbit/downloader/setup.sh`
