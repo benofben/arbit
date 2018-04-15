@@ -19,6 +19,11 @@ GCP released serverless functions.  Those, BigQuery and Cloud Datalab seem like 
 
 # Setup
 
+Cloud Functions are currently beta, so you'll have to run this:
+
+    gcloud components update &&
+    gcloud components install beta
+
 You're going to need a copy of the Google Cloud SDK, which you can grab [here](https://cloud.google.com/sdk/).  That includes the gcloud CLI.  To set that up run:
 
     gcloud init
