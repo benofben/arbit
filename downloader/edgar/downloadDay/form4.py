@@ -28,7 +28,7 @@ def parse(text):
     seperator = '</XML>'
     contents = contents.split(seperator, 1)[0]
 
-    ownershipDocument = edgar.xmltodict.xmltodict(contents)
+    ownershipDocument = xmltodict.xmltodict(contents)
 
     issuerTradingSymbol = ownershipDocument['issuer'][0]['issuerTradingSymbol'][0]
     rptOwnerCik = ownershipDocument['reportingOwner'][0]['reportingOwnerId'][0]['rptOwnerCik'][0]

@@ -6,7 +6,7 @@ import io
 import form4
 
 
-getForm4URLs(date):
+def getForm4URLs(date):
     print('Composing the URL of the master file...')
     date = datetime.date(date.year, date.month, date.day)
     year = str(date.year)
@@ -34,7 +34,7 @@ getForm4URLs(date):
 
     return form4URLs
 
-run(event, context):
+def run(event, context):
     date = event['date']
     date = datetime.datetime.strptime(date, '%Y-%m-%d')
     print('Downloading from EDGAR for the date ' + str(date))
@@ -42,7 +42,7 @@ run(event, context):
     form4URLs=getForm4URLs(date)
 
     # Download and parse each Form 4
-    print('We have ' + str(len(form4URLs) + ' to download.')
+    print('We have ' + str(len(form4URLs)) + ' to download.')
     transactions=[]
     for url in form4URLs:
         print('Working on file ' + url)
@@ -50,7 +50,7 @@ run(event, context):
         data = response.read()
         text = data.decode('utf-8')
         transactions+=form4.parse(text)
+        break
 
     print('Writing the transactions to S3...')
-
-    return transactions
+    return 1
