@@ -10,7 +10,7 @@ That links index files like this: https://www.sec.gov/Archives/edgar/daily-index
 
 # Setup
 
-Run this:
+Just run this:
 
     cd downloader
     ./setup.sh
