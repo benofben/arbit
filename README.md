@@ -11,13 +11,10 @@ Sometime after that, the code was modified to use Oracle and I had to custom bui
 
 During 2016, I rewrote it to use GCP BigQuery and AppEngine.  At the time there were a lot of issues with the BigQuery driver and it seemed like pure serverless wasn't quite there as AppEngine was missing various language features and isn't serverless anyway.  The goal at the time was to use Cloud ML and Cloud Datalab.  In 2018, Cloud Functions looked like a solution but they're still in beta and only support node.js.
 
-## Roadmap
+## Current
 In November 2017, AWS came out with Sagemaker.  Between that, S3, Lambda and Athena, it seems like giving the AWS ecosystem a try is in order.  I'm going to try to port everything there.
 
-First off, I'm going to do some work to size the data volume and make sure I don't accidentally spend $100k/month...
-
-* Google Drive - [Arbit](https://drive.google.com/open?id=1GocLSCYCmF52XVj9gMokjTZNxCbrsHfv)
-* Google Sheet - [Arbit - Cost Analysis](https://docs.google.com/spreadsheets/d/1Tqnlqs20LnuvpxmK2S-3PH58dGlq5k-4G2KZ-V5jbcs/edit?usp=sharing)
+I'm capturing architecture documents on [here](https://drive.google.com/open?id=1GocLSCYCmF52XVj9gMokjTZNxCbrsHfv).
 
 # Setup
 
