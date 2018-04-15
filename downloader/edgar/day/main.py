@@ -42,6 +42,8 @@ def run(event, context):
     print('We have ' + str(len(form4URLs)) + ' Form 4 URLs for the date ' + str(date))
     i=0
     for url in form4URLs:
+        print(url)
+        
         #invoke SQS somehow...
 
         i+=1
