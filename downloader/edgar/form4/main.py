@@ -1,10 +1,9 @@
 import xmltodict
+import urllib
 import io
 
 
-def parse(text):
-    file = io.StringIO(text)
-
+def parse(file):
     for line in file:
         if line.startswith('<SEC-DOCUMENT>'):
             secDocument = line.replace('<SEC-DOCUMENT>', '')
@@ -114,3 +113,14 @@ def convertToBoolean(s):
         return True
     else:
         print('Cannot figure out correct value.')
+
+
+def run(event, context):
+    url = event['url']
+
+    print('Working on Form 4 with the url ' + url)
+    response = urllib.request.urlopen(url)
+    data = response.read()
+    text = data.decode('utf-8')
+    file = io.StringIO(text)
+    transactions = parse(file)

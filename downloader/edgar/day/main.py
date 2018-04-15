@@ -1,9 +1,8 @@
 import datetime
 import math
 import urllib
-import csv
 import io
-import form4
+import csv
 
 
 def getForm4URLs(date):
@@ -37,24 +36,14 @@ def getForm4URLs(date):
 def run(event, context):
     date = event['date']
     date = datetime.datetime.strptime(date, '%Y-%m-%d')
-
-    print('Downloading from EDGAR for the date ' + str(date))
     form4URLs=getForm4URLs(date)
 
     # Download and parse each Form 4
-    print('We have ' + str(len(form4URLs)) + ' to download.')
-    transactions=[]
+    print('We have ' + str(len(form4URLs)) + ' Form 4 URLs for the date ' + str(date))
     i=0
     for url in form4URLs:
-        print('Working on file ' + url)
-        response = urllib.request.urlopen(url)
-        data = response.read()
-        text = data.decode('utf-8')
-        transactions.extend(form4.parse(text))
+        #invoke SQS somehow...
 
         i+=1
         if i>100:
             break
-
-    print('Writing the transactions to S3...')
-    return(transactions)
