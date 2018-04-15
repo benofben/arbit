@@ -50,10 +50,10 @@ def run(event, context):
         response = urllib.request.urlopen(url)
         data = response.read()
         text = data.decode('utf-8')
-        transactions=form4.parse(text)
+        transactions.extend(form4.parse(text))
 
         i+=1
-        if i>10:
+        if i>100:
             break
 
     print('Writing the transactions to S3...')
