@@ -23,7 +23,7 @@ First off, start up a GCP Cloudshell in the [console](https://console.cloud.goog
 
 Arbit requires some BigQuery setup.  We need to create a dataset called downloader.
 
-    xxxx
+    bq mk --dataset downloader
 
 Create a machine to run Arbit with the command:
 
