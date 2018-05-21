@@ -34,6 +34,7 @@ Now SSH to that machine and make a local copy of this repo:
     git clone https://github.com/benofben/arbit.git
     cd arbit
 
-In a more engineered world you might run Arbit inside of GKE or something similar.  For now we're taking a different approach with the predecessor to Kubernetes, nohup:
+In a more engineered world you might run Arbit inside of GKE or something similar.  For now we're taking a different approach with the predecessor to Kubernetes, screen:
 
-    xxxx
+    cd downloader/edgar
+    screen -S edgar python3 edgar.py
