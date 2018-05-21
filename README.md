@@ -19,13 +19,15 @@ I'm going to stand this up on GCP, likely with some VMs and BigQuery.  That seem
 
 # Setup
 
-First off, start up a GCP Cloudshell in the [console](https://console.cloud.google.com/).  From there, create a machine to run Arbit with the command:
+First off, start up a GCP Cloudshell in the [console](https://console.cloud.google.com/).  
 
-    asd
-
-Arbit requires some BigQuery setup.  You can do that by running the commands:
+Arbit requires some BigQuery setup.  We need to create a dataset called downloader.
 
     cascaded
+
+Create a machine to run Arbit with the command:
+
+    gcloud compute instances create downloader
 
 Now SSH to that machine and make a local copy of this repo:
 
