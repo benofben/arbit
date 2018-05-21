@@ -23,7 +23,7 @@ First off, start up a GCP Cloudshell in the [console](https://console.cloud.goog
 
 Arbit requires some BigQuery setup.  We need to create a dataset called downloader.
 
-    cascaded
+    xxxx
 
 Create a machine to run Arbit with the command:
 
@@ -34,6 +34,6 @@ Now SSH to that machine and make a local copy of this repo:
     git clone https://github.com/benofben/arbit.git
     cd arbit
 
-In a more engineered world you might run Arbit inside of GKE or something.  For now we're taking a different approach with the predecessor to Kubernetes, nohup:
+In a more engineered world you might run Arbit inside of GKE or something similar.  For now we're taking a different approach with the predecessor to Kubernetes, nohup:
 
-    asd
+    xxxx
