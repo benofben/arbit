@@ -17,15 +17,21 @@ In November 2017, AWS came out with Sagemaker.  Between that, S3, Lambda and Ath
 
 I'm going to stand this up on GCP, likely with some VMs and BigQuery.  That seems simpler.
 
-# Architecture
-
-I'm capturing architecture documents [here](https://drive.google.com/open?id=1GocLSCYCmF52XVj9gMokjTZNxCbrsHfv).
-
 # Setup
 
-Start up a GCP Cloudshell.  In that, you're going to need a local copy of this repo:
+First off, start up a GCP Cloudshell in the [console](https://console.cloud.google.com/).  From there, create a machine to run Arbit with the command:
+
+    asd
+
+Arbit requires some BigQuery setup.  You can do that by running the commands:
+
+    cascaded
+
+Now SSH to that machine and make a local copy of this repo:
 
     git clone https://github.com/benofben/arbit.git
     cd arbit
 
-Now do something...
+In a more engineered world you might run Arbit inside of GKE or something.  For now we're taking a different approach with the predecessor to Kubernetes, nohup:
+
+    asd
