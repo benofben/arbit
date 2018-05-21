@@ -11,31 +11,21 @@ Sometime after that, the code was modified to use Oracle and I had to custom bui
 
 During 2016, I rewrote it to use GCP BigQuery and AppEngine.  At the time there were a lot of issues with the BigQuery driver and it seemed like pure serverless wasn't quite there as AppEngine was missing various language features and isn't serverless anyway.  The goal at the time was to use Cloud ML and Cloud Datalab.  In 2018, Cloud Functions looked like a solution but they're still in beta and only support node.js.
 
-## Current
-In November 2017, AWS came out with Sagemaker.  Between that, S3, Lambda and Athena, it seems like giving the AWS ecosystem a try is in order.  I'm going to try to port everything there.
+In November 2017, AWS came out with Sagemaker.  Between that, S3, Lambda and Athena, it seemed like giving the AWS ecosystem a try is in order.  It turned out Lambda has a 5 minute limit on function duration.  That's because it's a synchronous request/reply model.  That then cascaded into a nightmarish architecture that would require Lambda, SNS/SQS, DynamoDB, EMR and S3 all to ETL some files around.  Given all that, I decided we're too early for serverless.
+
+# Current
+
+I'm going to stand this up on GCP, likely with some VMs and BigQuery.  That seems simpler.
+
+# Architecture
 
 I'm capturing architecture documents [here](https://drive.google.com/open?id=1GocLSCYCmF52XVj9gMokjTZNxCbrsHfv).
 
 # Setup
 
-First off, you're going to need a local copy of this repo:
+Start up a GCP Cloudshell.  In that, you're going to need a local copy of this repo:
 
     git clone https://github.com/benofben/arbit.git
     cd arbit
 
-You'll also need to install and configure the AWS CLI:
-
-    pip install --upgrade --user awscli
-    aws configure
-
-You can make sure that the CLI is working by running:
-
-    aws ec2 describe-regions
-
-Next, you'll need a role to create lambdas, etc.  To create that run:
-
-    aws iam create-role \
-      --role-name arbit_role \
-      --assume-role-policy-document file://arbit_role.json
-
-You'll need to grab the role_arn from there.  Be sure to paste it at the top of `arbit/downloader/setup.sh`
+Now do something...
