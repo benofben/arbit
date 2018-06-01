@@ -1,7 +1,6 @@
 import sched
 import datetime
 import time
-import main
 
 
 class downloader:

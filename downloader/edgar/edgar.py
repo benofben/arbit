@@ -34,7 +34,10 @@ def getForm4URLs(date):
     return form4URLs
 
 def run():
-    date = event['date']
+    today = datetime.date.today()
+    yesterday = today - datetime.timedelta(days=1)
+
+    date = yesterday
     date = datetime.datetime.strptime(date, '%Y-%m-%d')
     form4URLs=getForm4URLs(date)
 
