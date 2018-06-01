@@ -33,7 +33,7 @@ def getForm4URLs(date):
 
     return form4URLs
 
-def run(event, context):
+def run():
     date = event['date']
     date = datetime.datetime.strptime(date, '%Y-%m-%d')
     form4URLs=getForm4URLs(date)
