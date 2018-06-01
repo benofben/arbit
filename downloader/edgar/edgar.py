@@ -4,6 +4,7 @@ import urllib.request
 import io
 import csv
 import form4
+import database
 
 def getForm4URLs(date):
     print('Composing the URL of the master file...')
@@ -32,11 +33,7 @@ def getForm4URLs(date):
 
     return form4URLs
 
-def run():
-    today = datetime.date.today()
-    yesterday = today - datetime.timedelta(days=1)
-    date = yesterday
-
+def downloadDate(date):
     form4URLs=getForm4URLs(date)
 
     # Download and parse each Form 4
@@ -45,10 +42,7 @@ def run():
     for url in form4URLs:
         print(url)
         transactions=form4.download(url)
-        print(transactions)
-        
+
         i+=1
         if i>10:
             break
-
-run()

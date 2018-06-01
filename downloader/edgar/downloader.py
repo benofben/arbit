@@ -23,14 +23,13 @@ class downloader:
 
     def download(self):
         print('Running EDGAR download at ' + datetime.datetime.today().isoformat())
-        edgar.run()
+        edgar.downloadDate(datetime.date.today())
         print('Done with EDGAR download at ' + datetime.datetime.today().isoformat())
 
         # Reschedule the download to run again tomorrow.
         # Assume the system clock uses NY time.
         today = datetime.date.today()
         tomorrow = today + datetime.timedelta(days=1)
-
         downloadDateTime = datetime.datetime.combine(tomorrow, downloadTime)
         downloadTime = time.mktime(downloadDateTime.timetuple())
 
