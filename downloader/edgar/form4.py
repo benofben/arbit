@@ -115,12 +115,11 @@ def convertToBoolean(s):
         print('Cannot figure out correct value.')
 
 
-def run(event, context):
-    url = event['url']
-
+def download(url):
     print('Working on Form 4 with the url ' + url)
     response = urllib.request.urlopen(url)
     data = response.read()
     text = data.decode('utf-8')
     file = io.StringIO(text)
     transactions = parse(file)
+    return transactions
