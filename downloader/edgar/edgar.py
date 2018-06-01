@@ -3,7 +3,7 @@ import math
 import urllib.request
 import io
 import csv
-
+import form4
 
 def getForm4URLs(date):
     print('Composing the URL of the master file...')
@@ -44,6 +44,7 @@ def run():
     i=0
     for url in form4URLs:
         print(url)
+        transactions=form4.download(url)
 
         i+=1
         if i>10:
