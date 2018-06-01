@@ -8,7 +8,7 @@ import csv
 def getForm4URLs(date):
     print('Composing the URL of the master file...')
     year = str(date.year)
-    quarter = 'QTR' + str(1 + math.ceil(date.month / 4))
+    quarter = 'QTR' + str(math.ceil(date.month / 3))
     date = date.strftime('%Y%m%d')
     url = 'https://www.sec.gov/Archives/edgar/daily-index/'+ year + '/' + quarter + '/master.' + date + '.idx'
     print('The URL of the master file is ' + url)
