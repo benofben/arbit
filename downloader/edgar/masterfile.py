@@ -47,3 +47,5 @@ def run(event, context):
         i+=1
         if i>10:
             break
+
+run()
