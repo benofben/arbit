@@ -37,7 +37,4 @@ In the cloud shell (or VM), create a local copy of the repo:
 
     git clone https://github.com/benofben/arbit.git
 
-In a more engineered world you might run Arbit inside of GKE or something similar.  For now we're taking a different approach with the predecessor to Kubernetes, screen:
-
-    cd arbit/downloader/edgar
-    screen -S edgar python3 edgar.py
+In a more engineered world you might run Arbit inside of GKE or something similar.  For now we're taking a different approach with the predecessor to Kubernetes, screen.  You can find writeups on how to start individual components in the READMEs under the downloader directory.
