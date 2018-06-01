@@ -45,7 +45,8 @@ def run():
     for url in form4URLs:
         print(url)
         transactions=form4.download(url)
-
+        print(transactions)
+        
         i+=1
         if i>10:
             break
