@@ -1,6 +1,6 @@
 import datetime
 import math
-import urllib
+import urllib.request
 import io
 import csv
 
@@ -35,8 +35,8 @@ def getForm4URLs(date):
 def run():
     today = datetime.date.today()
     yesterday = today - datetime.timedelta(days=1)
-
     date = yesterday
+
     form4URLs=getForm4URLs(date)
 
     # Download and parse each Form 4
