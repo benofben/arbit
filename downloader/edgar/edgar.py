@@ -7,7 +7,6 @@ import csv
 
 def getForm4URLs(date):
     print('Composing the URL of the master file...')
-    date = datetime.date(date.year, date.month, date.day)
     year = str(date.year)
     quarter = 'QTR' + str(1 + math.ceil(date.month / 4))
     date = date.strftime('%Y%m%d')
@@ -38,7 +37,6 @@ def run():
     yesterday = today - datetime.timedelta(days=1)
 
     date = yesterday
-    date = datetime.datetime.strptime(date, '%Y-%m-%d')
     form4URLs=getForm4URLs(date)
 
     # Download and parse each Form 4
