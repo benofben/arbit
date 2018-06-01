@@ -43,9 +43,7 @@ def run(event, context):
     i=0
     for url in form4URLs:
         print(url)
-        
-        #invoke SQS somehow...
 
         i+=1
-        if i>100:
+        if i>10:
             break
