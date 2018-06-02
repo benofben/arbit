@@ -39,14 +39,8 @@ def downloadDate(date):
 
     # Download and parse each Form 4
     print('We have ' + str(len(form4URLs)) + ' Form 4 URLs for the date ' + str(date))
-    i=0
     for url in form4URLs:
         print(url)
         transactions=form4.download(url)
-
         for transaction in transactions:
             db.insert(transaction)
-
-        i+=1
-        if i>10:
-            break
