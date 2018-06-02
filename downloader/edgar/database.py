@@ -32,15 +32,15 @@ class database():
         ]
 
         table_ref = self.dataset.table('form4')
-        table = bigquery.Table(table_ref, schema=schema)
+        self.table = bigquery.Table(table_ref, schema=schema)
 
         # Create the table or pass if it already exists
         try:
-            self.table = self.client.create_table(table)
+            self.table = self.client.create_table(self.table)
         except google.api_core.exceptions.Conflict:
             pass
 
-        assert table.table_id == 'form4'
+        assert self.table.table_id == 'form4'
 
 
     def insert(self, form4Information):
