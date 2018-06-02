@@ -34,7 +34,7 @@ def getForm4URLs(date):
     return form4URLs
 
 def downloadDate(date):
-    db = edgar.database.database()
+    db = database.database()
     db.create()
 
     form4URLs=getForm4URLs(date)
@@ -48,7 +48,6 @@ def downloadDate(date):
 
         for transaction in transactions:
             db.insert(transaction)
-
 
         i+=1
         if i>10:
