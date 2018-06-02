@@ -13,6 +13,8 @@ class database():
     def __init__(self):
         self.client = bigquery.Client()
         self.dataset = self.client.dataset('downloader')
+        self.table = self.dataset.table('form4')
+
         schema = (
             bigquery.table.SchemaField(name='SecDocument', field_type='STRING'),
             bigquery.table.SchemaField(name='AcceptanceDatetime', field_type='DATETIME'),
@@ -29,7 +31,6 @@ class database():
             bigquery.table.SchemaField(name='TransactionAcquired', field_type='BOOLEAN'),
             bigquery.table.SchemaField(name='SharesOwned', field_type='FLOAT')
         )
-        self.table = self.dataset.table('form4', schema)
 
 
     def create(self):
