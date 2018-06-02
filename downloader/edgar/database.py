@@ -7,13 +7,9 @@ import datetime
 
 class database():
     client = None
-    dataset = None
     table = None
 
     def __init__(self):
-        self.client = bigquery.Client()
-        self.dataset = self.client.dataset('downloader')
-
         schema = [
             bigquery.SchemaField('SecDocument', 'STRING'),
             bigquery.SchemaField('AcceptanceDatetime', 'DATETIME'),
@@ -31,7 +27,7 @@ class database():
             bigquery.SchemaField('SharesOwned', 'FLOAT')
         ]
 
-        table_ref = self.dataset.table('form4')
+        table_ref = self.client.dataset('downloader').table('form4')
         self.table = bigquery.Table(table_ref, schema=schema)
 
         # Create the table or pass if it already exists
