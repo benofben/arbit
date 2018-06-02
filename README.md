@@ -15,26 +15,19 @@ In November 2017, AWS came out with Sagemaker.  Between that, S3, Lambda and Ath
 
 # Current
 
-I'm going to stand this up on GCP, likely with some VMs and BigQuery.  That seems simpler.
+I'm going to stand this up on GCP, with some VMs and BigQuery.  That seems simpler.
 
 # Setup
 
 I've created two GCP projects:
+
 * arbit-dev
 * arbit-prod
 
-I'm currently working out of arbit-prod.  Login to the [console](https://console.cloud.google.com/) and open a cloud shell.  I'm working out of a cloud shell, not a VM to reduce costs while fiddling around.
-
-Alternatively, you might create a machine to run arbit with the command:
-
-    gcloud compute instances create downloader
+I'm currently working out of arbit-prod.  First off, login to the [console](https://console.cloud.google.com/) and open a cloud shell.  
 
 Arbit requires some BigQuery setup.  We need to create a dataset called downloader.
 
     bq mk --dataset downloader
-
-In the cloud shell (or VM), create a local copy of the repo:
-
-    git clone https://github.com/benofben/arbit.git
 
 In a more engineered world you might run Arbit inside of GKE or something similar.  For now we're taking a different approach with the predecessor to Kubernetes, screen.  You can find writeups on how to start individual components in the READMEs under the downloader directory.
