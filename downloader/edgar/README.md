@@ -18,6 +18,8 @@ Your environment is now woefully inadequate.  To fix it do this:
     sudo apt -y install python3 python3-dev python3-pip
     pip3 install --upgrade google-cloud
 
+TODO: something to auth the VM against BigQuery.  Bleh.
+
 To start the EDGAR downloader run this:
 
     git clone https://github.com/benofben/arbit.git
