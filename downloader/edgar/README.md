@@ -10,13 +10,26 @@ We're going to need to create a VM to run the download.  The f1-micro costs $3.8
       --zone us-east1-b \
       --machine-type f1-micro
 
+Your environment is now woefully inadequate.  To fix it do this:
+
+    sudo apt update
+    sudo apt -y install git-all
+    sudo apt -y install python3 python3-dev python3-pip
+    pip3 install --upgrade google-cloud
+
 To start the EDGAR downloader run this:
 
-    sudo apt -y install git-all
     git clone https://github.com/benofben/arbit.git
     cd arbit/downloader/edgar
-    screen -S edgar python3 downloader.py
+    screen -S edgar
+    python3 downloader.py
+
+Then type ^ad to detach.
 
 To get historical data, you'll need to start one of these too:
 
-    screen -S edgar-historical python3 downloadAll.py
+    cd arbit/downloader/edgar
+    screen -S edgar-historical
+    python3 downloadAll.py
+
+Then type ^ad to detach.
