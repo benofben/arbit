@@ -10,6 +10,10 @@ class database():
     table = None
 
     def __init__(self):
+        self.client = bigquery.Client()
+        dataset = self.client.dataset('downloader')
+        table_ref = dataset.table('form4')
+
         schema = [
             bigquery.SchemaField('SecDocument', 'STRING'),
             bigquery.SchemaField('AcceptanceDatetime', 'DATETIME'),
@@ -27,7 +31,6 @@ class database():
             bigquery.SchemaField('SharesOwned', 'FLOAT')
         ]
 
-        table_ref = self.client.dataset('downloader').table('form4')
         self.table = bigquery.Table(table_ref, schema=schema)
 
         # Create the table or pass if it already exists
