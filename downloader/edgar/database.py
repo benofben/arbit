@@ -1,4 +1,5 @@
 from google.cloud import bigquery
+import google.api_core.exceptions.Conflict
 import datetime
 
 # probably need a function to de-dup the table
