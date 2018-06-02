@@ -6,11 +6,12 @@ import datetime
 
 class database():
     client = None
-
+    dataset = None
+    table = None
 
     def __init__(self):
         self.client = bigquery.Client()
-        dataset = client.dataset('downloader')
+        self.dataset = self.client.dataset('downloader')
 
         schema = [
             bigquery.SchemaField('SecDocument', 'STRING'),
@@ -29,12 +30,12 @@ class database():
             bigquery.SchemaField('SharesOwned', 'FLOAT')
         ]
 
-        table_ref = dataset.table('form4')
+        table_ref = self.dataset.table('form4')
         table = bigquery.Table(table_ref, schema=schema)
 
         # Create the table or pass if it already exists
         try:
-            table = self.client.create_table(table)
+            self.table = self.client.create_table(table)
         except google.api_core.exceptions.Conflict:
             pass
 
