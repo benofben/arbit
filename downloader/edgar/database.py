@@ -12,7 +12,7 @@ class database():
 
     def __init__(self):
         self.client = bigquery.Client()
-        self.dataset_ref = self.client.dataset('downloader')
+        dataset_ref = self.client.dataset('downloader')
 
         schema = [
             bigquery.SchemaField('SecDocument', 'STRING'),
@@ -31,9 +31,9 @@ class database():
             bigquery.SchemaField('SharesOwned', 'FLOAT')
         ]
 
-        self.table_ref = dataset_ref.table('form4')
-        self.table = bigquery.Table(table_ref, schema=schema)
-        self.table = client.create_table(table)
+        table_ref = dataset_ref.table('form4')
+        table = bigquery.Table(table_ref, schema=schema)
+        table = self.client.create_table(table)
         assert table.table_id == 'form4'
 
 
