@@ -78,9 +78,7 @@ class database():
             transactionAcquired,
             form4Information['sharesOwned'],
         )
-        rows=[row]
-        result = self.table.insert_data(rows)
 
-        if result != []:
-            print(rows)
-            print(result)
+        rows_to_insert = [row]
+        errors = self.client.insert_rows(self.table, rows_to_insert)
+        assert errors == []
