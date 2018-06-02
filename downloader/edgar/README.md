@@ -29,7 +29,6 @@ Then type ^ad to detach.
 
 To get historical data, you'll need to start one of these too:
 
-    cd arbit/downloader/edgar
     screen -S edgar-historical
     python3 downloadAll.py
 
