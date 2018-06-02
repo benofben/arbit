@@ -13,24 +13,28 @@ class database():
     def __init__(self):
         self.client = bigquery.Client()
         self.dataset = self.client.dataset('downloader')
-        self.table = self.dataset.table('form4')
 
-        schema = (
-            bigquery.table.SchemaField(name='SecDocument', field_type='STRING'),
-            bigquery.table.SchemaField(name='AcceptanceDatetime', field_type='DATETIME'),
-            bigquery.table.SchemaField(name='IssuerTradingSymbol', field_type='STRING'),
-            bigquery.table.SchemaField(name='RptOwnerCik', field_type='STRING'),
-            bigquery.table.SchemaField(name='RptOwnerName', field_type='STRING'),
-            bigquery.table.SchemaField(name='IsDirector', field_type='BOOLEAN'),
-            bigquery.table.SchemaField(name='IsOfficer', field_type='BOOLEAN'),
-            bigquery.table.SchemaField(name='IsTenPercentOwner', field_type='BOOLEAN'),
-            bigquery.table.SchemaField(name='IsOther', field_type='BOOLEAN'),
-            bigquery.table.SchemaField(name='TransactionDate', field_type='DATE'),
-            bigquery.table.SchemaField(name='TransactionShares', field_type='FLOAT'),
-            bigquery.table.SchemaField(name='TransactionPricePerShare', field_type='FLOAT'),
-            bigquery.table.SchemaField(name='TransactionAcquired', field_type='BOOLEAN'),
-            bigquery.table.SchemaField(name='SharesOwned', field_type='FLOAT')
-        )
+        schema = [
+            bigquery.SchemaField('SecDocument', 'STRING'),
+            bigquery.SchemaField('AcceptanceDatetime', 'DATETIME'),
+            bigquery.SchemaField('IssuerTradingSymbol', 'STRING'),
+            bigquery.SchemaField('RptOwnerCik', 'STRING'),
+            bigquery.SchemaField('RptOwnerName', 'STRING'),
+            bigquery.SchemaField('IsDirector', 'BOOLEAN'),
+            bigquery.SchemaField('IsOfficer', 'BOOLEAN'),
+            bigquery.SchemaField('IsTenPercentOwner', 'BOOLEAN'),
+            bigquery.SchemaField('IsOther', 'BOOLEAN'),
+            bigquery.SchemaField('TransactionDate', 'DATE'),
+            bigquery.SchemaField('TransactionShares', 'FLOAT'),
+            bigquery.SchemaField('TransactionPricePerShare', 'FLOAT'),
+            bigquery.SchemaField('TransactionAcquired', 'BOOLEAN'),
+            bigquery.SchemaField('SharesOwned', 'FLOAT')
+        ]
+
+        self.table_ref = dataset_ref.table('form4')
+        self.table = bigquery.Table(table_ref, schema=schema)
+        self.table = client.create_table(table)
+        assert table.table_id == 'form4'
 
 
     def create(self):
