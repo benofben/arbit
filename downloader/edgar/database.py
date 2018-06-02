@@ -1,6 +1,9 @@
 from google.cloud import bigquery
 import datetime
 
+# probably need a function to de-dup the table
+# that would be called at the end of the day
+
 class database():
     client = None
     dataset = None
