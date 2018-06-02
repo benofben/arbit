@@ -12,7 +12,7 @@ class downloader:
 
     def __init__(self):
         today = datetime.date.today()
-        downloadDateTime = datetime.datetime.combine(today, downloadTime)
+        downloadDateTime = datetime.datetime.combine(today, self.downloadTime)
         downloadTime = time.mktime(downloadDateTime.timetuple())
 
         print('Going to run EDGAR download next at ' + downloadDateTime.isoformat())
@@ -28,7 +28,7 @@ class downloader:
         # Assume the system clock uses NY time.
         today = datetime.date.today()
         tomorrow = today + datetime.timedelta(days=1)
-        downloadDateTime = datetime.datetime.combine(tomorrow, downloadTime)
+        downloadDateTime = datetime.datetime.combine(tomorrow, self.downloadTime)
         downloadTime = time.mktime(downloadDateTime.timetuple())
 
         print('Going to run EDGAR download next at ' + downloadDateTime.isoformat())
