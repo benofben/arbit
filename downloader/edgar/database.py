@@ -12,7 +12,7 @@ class database():
 
     def __init__(self):
         self.client = bigquery.Client()
-        self.dataset_ref = client.dataset('downloader')
+        self.dataset_ref = self.client.dataset('downloader')
 
         schema = [
             bigquery.SchemaField('SecDocument', 'STRING'),
