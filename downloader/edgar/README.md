@@ -13,6 +13,7 @@ We're going to need to create a VM to run the download.  The f1-micro costs $3.8
 Your environment is now woefully inadequate.  To fix it do this:
 
     sudo apt update
+    sudo apt -y upgrade
     sudo apt -y install git-all
     sudo apt -y install python3 python3-dev python3-pip
     pip3 install --upgrade google-cloud
