@@ -35,8 +35,6 @@ def getForm4URLs(date):
 
 def downloadDate(date):
     db = database.database()
-    db.create()
-
     form4URLs=getForm4URLs(date)
 
     # Download and parse each Form 4

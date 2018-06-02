@@ -12,7 +12,7 @@ class database():
 
     def __init__(self):
         self.client = bigquery.Client()
-        self.dataset = self.client.dataset('downloader')
+        self.dataset_ref = client.dataset('downloader')
 
         schema = [
             bigquery.SchemaField('SecDocument', 'STRING'),
@@ -35,11 +35,6 @@ class database():
         self.table = bigquery.Table(table_ref, schema=schema)
         self.table = client.create_table(table)
         assert table.table_id == 'form4'
-
-
-    def create(self):
-        if not self.table.exists():
-            self.table.create()
 
 
     def insert(self, form4Information):
