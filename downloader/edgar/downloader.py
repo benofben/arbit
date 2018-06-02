@@ -6,10 +6,8 @@ import edgar
 class downloader:
     schedule = sched.scheduler(time.time, time.sleep)
 
-    # It looks like new master files show up at 2:01am, though are sometimes delayed as late as 2:14am.
-    # Something else is showing up at 10pm eastern, but it's unclear from my old comments.  Need to investigate.
-    # ... showing up at 10pm eastern.
-    # My old notes make no sense and contradict each other.  Ned to investigate...
+    # It looks like master files are showing up right around 10:03 PM with some outliers.
+    # Downloading at 10:30 PM should give us enough room.
     downloadTime = datetime.time(22,30,0)
 
     def __init__(self):
