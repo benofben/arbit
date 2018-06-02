@@ -12,10 +12,11 @@ We're going to need to create a VM to run the download.  The f1-micro costs $3.8
 
 To start the EDGAR downloader run this:
 
+    sudo apt -y install git-all
     git clone https://github.com/benofben/arbit.git
     cd arbit/downloader/edgar
     screen -S edgar python3 downloader.py
 
 To get historical data, you'll need to start one of these too:
 
-    screen -S edgarhistorical python3 downloadAll.py
+    screen -S edgar-historical python3 downloadAll.py
