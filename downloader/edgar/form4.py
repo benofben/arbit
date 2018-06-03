@@ -116,7 +116,6 @@ def convertToBoolean(s):
 
 
 def download(url):
-    print('Working on Form 4 with the url ' + url)
     response = urllib.request.urlopen(url)
     data = response.read()
     text = data.decode('utf-8')
