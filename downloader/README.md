@@ -44,3 +44,7 @@ You're also going to need to add this to the bottom of your .profile.  While we'
 Finally, do this:
 
     source ~/.profile
+
+I had a lot of issues with persistent session, screen and such having old environmental variables.  It might not hurt to apply the nuclear option and run:
+
+    sudo reboot
