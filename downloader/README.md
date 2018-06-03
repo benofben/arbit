@@ -2,7 +2,7 @@
 
 ## Setup
 
-We're going to need to create a VM to run the download.  The f1-micro costs $3.88 a month with the sustained use discount, so it's unlikely to break the bank.  Spin one of those up from the cloud shell with the command:
+We're going to need to create a VM to run the download.  The f1-micro costs $3.88 a month with the sustained use discount, so it's unlikely to break the bank.  We want it to be in the east region for time zone reasons.  Spin one of those up from the cloud shell with the command:
 
     gcloud compute instances create downloader-edgar \
       --zone us-east1-b \
