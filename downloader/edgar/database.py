@@ -11,8 +11,8 @@ class database():
 
     def __init__(self):
         self.client = bigquery.Client()
-        dataset = self.client.dataset('downloader')
-        table_ref = dataset.table('form4')
+        dataset_ref = self.client.dataset('downloader')
+        table_ref = dataset_ref.table('form4')
 
         schema = [
             bigquery.SchemaField('SecDocument', 'STRING'),
