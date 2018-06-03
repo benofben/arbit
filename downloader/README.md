@@ -19,19 +19,27 @@ Your environment is woefully inadequate.  To fix it do this:
     pip3 install --upgrade google-cloud
     git clone https://github.com/benofben/arbit.git
 
-Due to an effort from Google to make BigQuery more difficult to use than it was previously (read as "enterprise-y"), it now requires a byzantine setup to run properly.  You'll need to create a service account and do some weirdness with keys.
+Due to an effort from Google to make BigQuery more difficult to use than it was previously (read as "enterprise-y"), it now requires a byzantine setup to run properly.  You'll need to create a service account and do some weirdness with keys.  
 
-In a cloud shell run this:
+First off, you need to auth gcloud by running:
+
+    gcloud init
+
+Now run this:
 
     SERVICE_ACCOUNT=downloader
     PROJECT_ID=arbit-prod
-    gcloud iam service-accounts create downloader
+    gcloud iam service-accounts create ${SERVICE_ACCOUNT}
     gcloud projects add-iam-policy-binding ${PROJECT_ID} \
       --member "serviceAccount:${SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com" \
       --role "roles/owner"
-    gcloud iam service-accounts keys create key.json \
+    gcloud iam service-accounts keys create ${SERVICE_ACCOUNT}.key.json \
       --iam-account ${SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com
 
-You'll need to copy that key file to the downloader VM and then run:
+You're also going to need to add this to the bottom of your .profile
 
-    export GOOGLE_APPLICATION_CREDENTIALS="key.json"
+    export GOOGLE_APPLICATION_CREDENTIALS="downloader.key.json"
+
+Finally, do this:
+
+    source ~/.profile
