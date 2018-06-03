@@ -38,7 +38,7 @@ Now run this:
 
 You're also going to need to add this to the bottom of your .profile
 
-    export GOOGLE_APPLICATION_CREDENTIALS="downloader.key.json"
+    export GOOGLE_APPLICATION_CREDENTIALS=~/downloader.key.json
 
 Finally, do this:
 
