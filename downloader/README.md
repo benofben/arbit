@@ -21,7 +21,7 @@ Your environment is woefully inadequate.  To fix it do this:
 
 Due to an effort from Google to make BigQuery more difficult to use than it was previously (read as "enterprise-y"), it now requires a byzantine setup to run properly.  You'll need to create a service account and do some weirdness with keys.  
 
-First off, you need to auth gcloud by running:
+First off, you need to auth gcloud on your new VM by running:
 
     gcloud init
 
