@@ -7,14 +7,17 @@ import datetime
 
 class database():
     client = None
+    dataset_ref = None
+    table_ref = None
     table = None
+    schema = None
 
     def __init__(self):
         self.client = bigquery.Client()
-        dataset_ref = self.client.dataset('downloader')
-        table_ref = dataset_ref.table('form4')
+        self.dataset_ref = self.client.dataset('downloader')
+        self.table_ref = dataset_ref.table('form4')
 
-        schema = [
+        self.schema = [
             bigquery.SchemaField('SecDocument', 'STRING'),
             bigquery.SchemaField('AcceptanceDatetime', 'DATETIME'),
             bigquery.SchemaField('IssuerTradingSymbol', 'STRING'),
@@ -31,16 +34,15 @@ class database():
             bigquery.SchemaField('SharesOwned', 'FLOAT')
         ]
 
-        self.table = bigquery.Table(table_ref, schema=schema)
+        self.table = bigquery.Table(self.table_ref, schema=self.schema)
 
         # Create the table or pass if it already exists
-        #try:
-        #    self.table = self.client.create_table(self.table)
-        #except google.api_core.exceptions.Conflict:
-        #    pass
+        try:
+            self.table = self.client.create_table(self.table)
+        except google.api_core.exceptions.Conflict:
+            pass
 
         assert self.table.table_id == 'form4'
-
 
     def insert(self, form4Information):
         year = form4Information['acceptanceDatetime'][0:4]
