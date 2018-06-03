@@ -2,7 +2,7 @@
 
 ## Setup
 
-In an effort to make BigQuery more difficult to use than it was previously, BigQuery now requires a byzantine setup to run properly.  You'll need to create a service account and do some weirdness with keys.
+Due to an effort from Google to make BigQuery more difficult to use than it was previously (read as "enterprise-y"), it now requires a byzantine setup to run properly.  You'll need to create a service account and do some weirdness with keys.
 
 In a cloud shell run this:
 
