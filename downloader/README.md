@@ -2,7 +2,7 @@
 
 ## Setup
 
-We're going to need to create a VM to run the download.  The f1-micro costs $3.88 a month with the sustained use discount, so it's unlikely to break the bank.  We want it to be in the east region for time zone reasons.  Spin one of those up from the cloud shell with the command:
+We're going to need to create a VM to run the download.  The f1-micro costs $3.88 a month with the sustained use discount, so it's unlikely to break the bank.  Spin one of those up from the cloud shell with the command:
 
     gcloud compute instances create downloader-edgar \
       --zone us-east1-b \
@@ -36,9 +36,10 @@ Now run this:
     gcloud iam service-accounts keys create ${SERVICE_ACCOUNT}.key.json \
       --iam-account ${SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com
 
-You're also going to need to add this to the bottom of your .profile
+You're also going to need to add this to the bottom of your .profile.  While we're at, it let's set the time zone to New York too.
 
     export GOOGLE_APPLICATION_CREDENTIALS=~/downloader.key.json
+    TZ='America/New_York'; export TZ
 
 Finally, do this:
 
