@@ -79,5 +79,5 @@ class database():
         )
 
         rows_to_insert = [row]
-        errors = self.client.insert_data(self.table, rows_to_insert)
+        errors = self.client.insert_rows(self.table, rows_to_insert)
         assert errors == []
