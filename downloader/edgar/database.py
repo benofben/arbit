@@ -43,6 +43,7 @@ class database():
             pass
 
         assert self.table.table_id == 'form4'
+        self.table = client.get_table(self.table_ref)
 
     def insert(self, form4Information):
         year = form4Information['acceptanceDatetime'][0:4]
