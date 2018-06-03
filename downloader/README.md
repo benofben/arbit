@@ -2,6 +2,23 @@
 
 ## Setup
 
+We're going to need to create a VM to run the download.  The f1-micro costs $3.88 a month with the sustained use discount, so it's unlikely to break the bank.  Spin one of those up from the cloud shell with the command:
+
+    gcloud compute instances create downloader-edgar \
+      --zone us-east1-b \
+      --machine-type f1-micro
+
+We're probably going to need to size the machine up to run all the downloaders...
+
+Your environment is woefully inadequate.  To fix it do this:
+
+    sudo apt update
+    sudo apt -y upgrade
+    sudo apt -y install git-all
+    sudo apt -y install python3 python3-dev python3-pip
+    pip3 install --upgrade google-cloud
+    git clone https://github.com/benofben/arbit.git
+
 Due to an effort from Google to make BigQuery more difficult to use than it was previously (read as "enterprise-y"), it now requires a byzantine setup to run properly.  You'll need to create a service account and do some weirdness with keys.
 
 In a cloud shell run this:
@@ -15,6 +32,6 @@ In a cloud shell run this:
     gcloud iam service-accounts keys create key.json \
       --iam-account ${SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com
 
-You'll need to copy that key file to every machine running a downloader component and then run:
+You'll need to copy that key file to the downloader VM and then run:
 
     export GOOGLE_APPLICATION_CREDENTIALS="key.json"
