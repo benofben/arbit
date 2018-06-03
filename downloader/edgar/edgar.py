@@ -15,7 +15,11 @@ def getForm4URLs(date):
     print('The URL of the master file is ' + url)
 
     print('Downloading the master file...')
-    response = urllib.request.urlopen(url)
+    try:
+        response = urllib.request.urlopen(url)
+    except urllib.error.HTTPError:
+        print('No master file for today.')
+        return []
     data = response.read()
     text = data.decode('utf-8')
 
