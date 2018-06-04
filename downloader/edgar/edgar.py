@@ -46,4 +46,7 @@ def downloadDate(date):
     for url in form4URLs:
         transactions=form4.download(url)
         for transaction in transactions:
+
+##### next up, lump all the tranactions together
+
             db.insert(transaction)
