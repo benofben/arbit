@@ -43,10 +43,8 @@ def downloadDate(date):
 
     # Download and parse each Form 4
     print('We have ' + str(len(form4URLs)) + ' Form 4 URLs for the date ' + str(date))
+    transactions=[]
     for url in form4URLs:
-        transactions=form4.download(url)
-        for transaction in transactions:
+        transactions.append(form4.download(url))
 
-##### next up, lump all the tranactions together
-
-            db.insert(transaction)
+    db.insert(transactions)

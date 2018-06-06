@@ -45,42 +45,48 @@ class database():
         assert self.table.table_id == 'form4'
         self.table = self.client.get_table(self.table_ref)
 
-    def insert(self, form4Information):
-        year = form4Information['acceptanceDatetime'][0:4]
-        month = form4Information['acceptanceDatetime'][4:6]
-        day = form4Information['acceptanceDatetime'][6:8]
-        hour = form4Information['acceptanceDatetime'][8:10]
-        minute = form4Information['acceptanceDatetime'][10:12]
-        second = form4Information['acceptanceDatetime'][12:14]
+    def formatRow(self, transaction):
+        year = transaction['acceptanceDatetime'][0:4]
+        month = transaction['acceptanceDatetime'][4:6]
+        day = transaction['acceptanceDatetime'][6:8]
+        hour = transaction['acceptanceDatetime'][8:10]
+        minute = transaction['acceptanceDatetime'][10:12]
+        second = transaction['acceptanceDatetime'][12:14]
         acceptanceDatetime = year + '-' + month + '-' + day + 'T' + hour + ':' + minute + ':' + second
 
-        year = form4Information['transactionDate'][0:4]
-        month = form4Information['transactionDate'][5:7]
-        day = form4Information['transactionDate'][8:10]
+        year = transaction['transactionDate'][0:4]
+        month = transaction['transactionDate'][5:7]
+        day = transaction['transactionDate'][8:10]
         transactionDate = year + '-' + month + '-' + day
 
-        if(form4Information['transactionAcquiredDisposedCode']=='A'):
+        if(transaction['transactionAcquiredDisposedCode']=='A'):
             transactionAcquired = True
         else:
             transactionAcquired = False
 
         row = (
-            form4Information['secDocument'],
+            transaction['secDocument'],
             acceptanceDatetime,
-            form4Information['issuerTradingSymbol'],
-            form4Information['rptOwnerCik'],
-            form4Information['rptOwnerName'],
-            form4Information['isDirector'],
-            form4Information['isOfficer'],
-            form4Information['isTenPercentOwner'],
-            form4Information['isOther'],
+            transaction['issuerTradingSymbol'],
+            transaction['rptOwnerCik'],
+            transaction['rptOwnerName'],
+            transaction['isDirector'],
+            transaction['isOfficer'],
+            transaction['isTenPercentOwner'],
+            transaction['isOther'],
             transactionDate,
-            form4Information['transactionShares'],
-            form4Information['transactionPricePerShare'],
+            transaction['transactionShares'],
+            transaction['transactionPricePerShare'],
             transactionAcquired,
-            form4Information['sharesOwned'],
+            transaction['sharesOwned']
         )
+        return row
 
-        rows_to_insert = [row]
-        errors = self.client.insert_rows(self.table, rows_to_insert)
-        assert errors == []
+    def insert(self, transactions):
+        rows=[]
+        for transaction in transactions:
+            row = formatRow(transaction)
+            rows.append(row)
+
+        #errors = self.client.insert_rows(self.table, rows)
+        #assert errors == []
