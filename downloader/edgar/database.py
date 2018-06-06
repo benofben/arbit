@@ -88,5 +88,5 @@ class database():
             row = self.formatRow(transaction)
             rows.append(row)
 
-        #errors = self.client.insert_rows(self.table, rows)
-        #assert errors == []
+        errors = self.client.insert_rows(self.table, rows)
+        assert errors == []
