@@ -48,7 +48,8 @@ def downloadDate(date):
         transactions = form4.download(url)
         for transaction in transactions:
             t.append(transaction)
-
+            print(t)
+    
     print('Done with download.  Writing to BigQuery...')
     print(t)
     db.insert(t)
