@@ -83,6 +83,7 @@ class database():
         return row
 
     def insert(self, transactions):
+        print(transactions)
         rows=[]
         for transaction in transactions:
             row = self.formatRow(transaction)
