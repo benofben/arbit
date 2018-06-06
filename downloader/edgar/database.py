@@ -87,7 +87,7 @@ class database():
         rows=[]
         for transaction in transactions:
             row = self.formatRow(transaction)
-            rows.append(row)
+            rows=rows.append(row)
 
         print(rows)
         errors = self.client.insert_rows(self.table, rows)
