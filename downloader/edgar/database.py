@@ -83,13 +83,11 @@ class database():
         return row
 
     def insert(self, transactions):
-        print(transactions)
         rows=[]
         for transaction in transactions:
             row = self.formatRow(transaction)
             rows.append(row)
 
-        print(rows)
         if len(rows)>0:
             errors = self.client.insert_rows(self.table, rows)
             assert errors == []

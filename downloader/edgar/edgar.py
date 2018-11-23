@@ -49,6 +49,5 @@ def downloadDate(date):
             t.append(transaction)
 
     print('Done with download.  Writing to BigQuery...')
-    print(t)
     db = database.database()
     db.insert(t)
