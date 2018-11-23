@@ -41,10 +41,6 @@ You're also going to need to add this to the bottom of your .profile.  While we'
     export GOOGLE_APPLICATION_CREDENTIALS=~/downloader.key.json
     TZ='America/New_York'; export TZ
 
-Finally, do this:
-
-    source ~/.profile
-
-I had a lot of issues with persistent session, screen and such having old environmental variables.  It might not hurt to apply the nuclear option and run:
+Finally, do this to make sure the values are picked up:
 
     sudo reboot
