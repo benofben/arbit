@@ -38,7 +38,6 @@ def getForm4URLs(date):
     return form4URLs
 
 def downloadDate(date):
-    db = database.database()
     form4URLs=getForm4URLs(date)
 
     # Download and parse each Form 4
@@ -50,5 +49,6 @@ def downloadDate(date):
             t.append(transaction)
 
     print('Done with download.  Writing to BigQuery...')
-    #print(t)
-    #db.insert(t)
+    print(t)
+    db = database.database()
+    db.insert(t)
