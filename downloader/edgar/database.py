@@ -90,5 +90,6 @@ class database():
             rows.append(row)
 
         print(rows)
-        errors = self.client.insert_rows(self.table, rows)
-        assert errors == []
+        if len(rows)>0:
+            errors = self.client.insert_rows(self.table, rows)
+            assert errors == []
