@@ -116,7 +116,14 @@ def convertToBoolean(s):
 
 
 def download(url):
-    response = urllib.request.urlopen(url)
+    response = None
+    while not response:
+        try:
+            response = urllib.request.urlopen(url)
+        except urllib.error.URLError as e:
+            print(e.reason)
+            response = None
+
     data = response.read()
     text = data.decode('utf-8')
     file = io.StringIO(text)
