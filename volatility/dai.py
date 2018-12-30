@@ -4,13 +4,11 @@ from h2oai_client import Client
 h2oai = Client(address='http://129.213.63.69:12345', username='ben', password='ben')
 
 train = h2oai.create_dataset_sync('/train.csv')
-validate = h2oai.create_dataset_sync('/validate.csv')
 test = h2oai.create_dataset_sync('/test.csv')
 
 experiment = h2oai.start_experiment_sync(
     dataset_key = train.key,
     testset_key = test.key,
-    validset_key = validate.key,
     
     target_col = 'LABEL',
     is_classification = True,
