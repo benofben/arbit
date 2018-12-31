@@ -2,7 +2,7 @@ import csv
 
 with open('output.csv', 'w') as outputfile:
     writer = csv.writer(outputfile)
-    output_row=['TICKER', 'DATE', 'OPEN', 'HIGH', 'LOW', 'CLOSE', 'VOLUME', 'LABEL']
+    output_row=['TICKER', 'DATE', 'HIGH', 'LOW', 'CLOSE', 'VOLUME', 'LABEL']
     writer.writerow(output_row)
 
     with open('stock_prices_sample.csv') as inputfile:
@@ -14,5 +14,9 @@ with open('output.csv', 'w') as outputfile:
             else:
                 label=False
 
-            output_row=[row['TICKER'], row['DATE'], row['OPEN'], row['HIGH'], row['LOW'], row['CLOSE'], row['VOLUME'], label]
+            high=float(row['HIGH'])/float(row['OPEN'])
+            low=float(row['LOW'])/float(row['OPEN'])
+            close=float(row['CLOSE'])/float(row['OPEN'])
+
+            output_row=[row['TICKER'], row['DATE'], high, low, close, row['VOLUME'], label]
             writer.writerow(output_row)
