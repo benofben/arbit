@@ -9,16 +9,13 @@ test = h2oai.create_dataset_sync('/test.csv')
 experiment = h2oai.start_experiment_sync(
     dataset_key = train.key,
     testset_key = test.key,
-    
-    target_col = 'LABEL',
-    is_classification = True,
 
     accuracy = 10,
     time = 10,
     interpretability = 1,
 
-    scorer = "AUC",
-    seed = 1234,
+    is_classification = True,
+    target_col = 'LABEL',
 
     is_timeseries=True,
     time_col='DATE',
