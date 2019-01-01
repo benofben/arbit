@@ -19,8 +19,8 @@ experiment = h2oai.start_experiment_sync(
 
     is_timeseries=True,
     time_col='DATE',
-    num_gap_periods=2,
-    num_prediction_periods=2
+    num_gap_periods=1,
+    num_prediction_periods=1
 )
 
 print("Final Model Score on Validation Data: " + str(round(experiment.valid_score, 3)))
