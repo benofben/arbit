@@ -6,7 +6,8 @@ with open('train.csv', 'w') as trainfile:
     with open('test.csv', 'w') as testfile:
         test = csv.writer(testfile)
 
-        output_row=['TICKER', 'DATE', 'HIGH', 'LOW', 'CLOSE', 'VOLUME', 'LABEL']
+#        output_row=['TICKER', 'DATE', 'HIGH', 'LOW', 'CLOSE', 'VOLUME', 'LABEL']
+        output_row=['TICKER', 'DATE', 'OPEN', 'HIGH', 'LOW', 'CLOSE', 'VOLUME', 'LABEL']
         train.writerow(output_row)
         test.writerow(output_row)
 
@@ -31,7 +32,8 @@ with open('train.csv', 'w') as trainfile:
                 n_close=round(close/open*100,2)
                 n_volume=round(volume*open/1000000,2)
 
-                output_row=[row['TICKER'], row['DATE'], n_high, n_low, n_close, n_volume, label]
+#                output_row=[row['TICKER'], row['DATE'], n_high, n_low, n_close, n_volume, label]
+                output_row=[row['TICKER'], row['DATE'], row['OPEN'], row['HIGH'], row['LOW'], row['CLOSE'], row['VOLUME'], label]
 
                 if i<800:
                     train.writerow(output_row)
