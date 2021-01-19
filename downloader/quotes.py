@@ -18,7 +18,7 @@ def delete():
 
 
 def download(symbols):
-    for symbol in symbols:
+    for symbol in 'F', 'COP':
         downloadSymbol(symbol)
 
 
@@ -59,6 +59,7 @@ def reformat():
     print('Reformating the quotes...')
     outputFilename = constants.dataDirectory + 'quotes.csv'
     outputFile = open(outputFilename, 'w')
+    outputFile.write('Symbol,Date,Open,High,Low,Close,Adj Close,Volume\n')
 
     path = constants.dataDirectory + 'quotes/'
     inputFilenames = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]

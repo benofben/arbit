@@ -1,26 +1,24 @@
 import datetime
-import nasdaq.database
-import yahoo.database
-
+import quotes
+quotes = quotes.run()
 
 def run():
     capital = 25000
 
-    startDate = datetime.date.today() - datetime.timedelta(days=360 * 3)
+
+    startDate = datetime.date.today() - datetime.timedelta(days = 360 * 3)
     endDate = datetime.date.today()
     currentDate = startDate
 
-    symbolsDB = nasdaq.database.database()
-    symbols = symbolsDB.getAllSymbols()
-
-    quotesDB = yahoo.database.database()
     while currentDate < endDate:
-        [capital, bestSymbol] = runForDate(capital, currentDate, quotesDB, symbols)
-        print(str(currentDate) + ',' + str(capital) + ',' + str(bestSymbol))
-        currentDate = currentDate + datetime.timedelta(days=1)
+        return
+
+#        [capital, bestSymbol] = runForDate(capital, currentDate, quotes, symbols)
+#        print(str(currentDate) + ',' + str(capital) + ',' + str(bestSymbol))
+#        currentDate = currentDate + datetime.timedelta(days=1)
 
 
-def runForDate(capital, currentDate, quotesDB, symbols):
+def runForDate(capital, currentDate, quotes, symbols):
     bestSymbol = None
     if currentDate.weekday() < 5:
         bestSymbol = getBestSymbolForDate(currentDate, quotesDB, symbols)
