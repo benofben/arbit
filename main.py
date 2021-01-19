@@ -1,3 +1,2 @@
-symbols = 'F', 'COP'
-for symbol in symbols:
-    pass
+import downloader
+downloader.run()

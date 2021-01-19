@@ -3,15 +3,12 @@ import shutil
 import http.client
 import datetime
 import constants
-import symbols.database
-import quotes.database
 
 
 def run():
     delete()
     download()
     reformat()
-    upload()
 
 
 def delete():
@@ -21,41 +18,31 @@ def delete():
 
 
 def download():
-    db = symbols.database.database()
-    s = db.getSymbols()
-    for symbol in s:
+    symbols = 'F', 'COP'
+    for symbol in symbols:
         downloadSymbol(symbol)
 
 
 def downloadSymbol(symbol):
     print('Downloading historical data for ' + symbol + '...')
-    conn = http.client.HTTPConnection('ichart.finance.yahoo.com')
 
     '''
-    Notes on the yahoo parameters:
-    d=end month-1
-    e=end day
-    f=end year
-    g=d?
-    a=start month-1 (0 = January)
-    b=start day (2)
-    c=start year (2002)
+    A yahoo URL looks like this:
+    https://query1.finance.yahoo.com/v7/finance/download/COP?period1=378604800&period2=1610928000&interval=1d&events=history
+
+    The time period uses a UNIX epoch.
     '''
 
-    today = datetime.date.today()
-    endYear = today.strftime('%Y')
-    endMonth = str(int(today.strftime('%m')) - 1)
-    endDay = today.strftime('%d')
+    period1 = str(int(datetime.datetime(2010, 1, 1).timestamp()))
+    period2 = str(int(datetime.datetime.today().timestamp()))
 
-    startYear = '2002'
-    startMonth = '0'
-    startDay = '1'
-
-    conn.request('GET', '/table.csv?s=' + symbol + '&d=' + endMonth + '&e=' + endDay + '&f=' + endYear + '&g=d&a=' + startMonth + '&b=' + startDay + '&c=' + startYear + '&ignore=.csvc')
+    conn = http.client.HTTPSConnection('query1.finance.yahoo.com')
+    conn.request('GET', '/v7/finance/download/' + symbol + '?period1=' + period1 + '&period2=' + period2 + '&interval=1d&events=history')
     response = conn.getresponse()
     print(response.status, response.reason)
     data = response.read()
     conn.close()
+
     if response.status == 200 and response.reason == 'OK':
         data = data.decode('windows-1252')
         outputFilename = constants.dataDirectory + 'quotes/' + symbol + '.csv'
@@ -94,12 +81,3 @@ def reformatSymbol(inputFile, outputFile, symbol):
             pass
         else:
             outputFile.write(symbol + ',' + line)
-
-
-def upload():
-    print('Writing quotes to the database...')
-    db = quotes.database.database()
-    db.delete()
-    db.create()
-    db.upload(constants.dataDirectory + 'quotes.csv')
-    print('Done uploading quotes to the database')
