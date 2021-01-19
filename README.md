@@ -13,21 +13,7 @@ During 2016, I rewrote it to use GCP BigQuery and AppEngine.  At the time there 
 
 In November 2017, AWS came out with Sagemaker.  Between that, S3, Lambda and Athena, it seemed like giving the AWS ecosystem a try was in order.  It turned out Lambda has a 5 minute limit on function duration.  That's because it's a synchronous request/reply model.  That then cascaded into a nightmarish architecture that would require Lambda, SNS/SQS, DynamoDB, EMR and S3 all to ETL some files around.  Given all that, I decided we're too early for serverless.
 
-# Current
+In 2018, I tried to stand all this up on GCP.  Therein I discovered the BigQuery driver had some issues.
 
-I'm going to stand this up on GCP, with some VMs and BigQuery.  That seems simpler.
-
-# Setup
-
-I've created two GCP projects:
-
-* arbit-dev
-* arbit-prod
-
-I'm currently working out of arbit-prod.  First off, login to the [console](https://console.cloud.google.com/) and open a cloud shell.  
-
-Arbit requires some BigQuery setup.  We need to create a dataset called downloader.
-
-    bq mk --dataset downloader
-
-In a more engineered world you might run Arbit inside of GKE or something similar.  For now we're taking a different approach with the predecessor to Kubernetes, screen.  You can find writeups on how to start individual components in the READMEs under the downloader directory.
+## Current
+Just fiddling on my laptop like the good old days.  This will probably quickly move to a GCP VM.
