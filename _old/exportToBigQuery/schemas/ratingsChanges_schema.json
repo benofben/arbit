@@ -1,9 +1,0 @@
-[
-  {"name": "BrokerageFirm", "type": "string", "mode": "required"},
-  {"name": "RatingsChange", "type": "string", "mode": "required"},
-  {"name": "Company", "type": "string", "mode": "required"},
-  {"name": "RatingsChangeType", "type": "string", "mode": "required"},
-  {"name": "PriceTarget", "type": "string", "mode": "required"},
-  {"name": "RatingsChangeDate", "type": "datetime", "mode": "required"},
-  {"name": "Ticker", "type": "string", "mode": "required"}
-]
