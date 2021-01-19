@@ -17,3 +17,7 @@ In 2018, I tried to stand all this up on GCP.  Therein I discovered the BigQuery
 
 ## Current
 Just fiddling on my laptop like the good old days.  This will probably quickly move to a GCP VM.
+
+I grabbed a list of S&P 500 symbols from here: https://github.com/datasets/s-and-p-500-companies/blob/master/data/constituents_symbols.txt
+
+I'm using Yahoo for quote data again.

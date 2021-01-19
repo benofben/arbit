@@ -1,2 +1,0 @@
-import downloader
-downloader.run()

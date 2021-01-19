@@ -5,9 +5,9 @@ import datetime
 import constants
 
 
-def run():
+def run(symbols):
     delete()
-    download()
+    download(symbols)
     reformat()
 
 
@@ -17,8 +17,7 @@ def delete():
     os.makedirs(constants.dataDirectory + 'quotes')
 
 
-def download():
-    symbols = 'F', 'COP'
+def download(symbols):
     for symbol in symbols:
         downloadSymbol(symbol)
 
