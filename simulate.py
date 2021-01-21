@@ -1,6 +1,10 @@
 import datetime
-import quotes
-quotes = quotes.run()
+import csv
+import pandas
+
+quotes = pandas.read_csv ('data/quotes.csv')
+print(quotes)
+
 
 def run():
     capital = 25000
@@ -10,11 +14,10 @@ def run():
     currentDate = startDate
 
     while currentDate < endDate:
-        return
-
 #        [capital, bestSymbol] = runForDate(capital, currentDate, quotes, symbols)
 #        print(str(currentDate) + ',' + str(capital) + ',' + str(bestSymbol))
-#        currentDate = currentDate + datetime.timedelta(days=1)
+        print(currentDate)
+        currentDate = currentDate + datetime.timedelta(days=1)
 
 
 def runForDate(capital, currentDate, quotes, symbols):
