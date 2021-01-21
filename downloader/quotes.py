@@ -18,7 +18,7 @@ def delete():
 
 
 def download(symbols):
-    for symbol in 'F', 'COP':
+    for symbol in symbols:
         downloadSymbol(symbol)
 
 
@@ -78,6 +78,6 @@ def reformatSymbol(inputFile, outputFile, symbol):
     for line in inputFile:
         if line.startswith('Date'):
             # Then this is a header line
-            pass
+            outputFile.write('\n')
         else:
             outputFile.write(symbol + ',' + line)

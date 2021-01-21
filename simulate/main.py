@@ -5,7 +5,6 @@ quotes = quotes.run()
 def run():
     capital = 25000
 
-
     startDate = datetime.date.today() - datetime.timedelta(days = 360 * 3)
     endDate = datetime.date.today()
     currentDate = startDate
